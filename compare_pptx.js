@@ -36,16 +36,42 @@ function getSlideContentFeatures(dir) {
     fs.readdirSync(slidesDir).forEach(f => {
         if (!f.endsWith('.xml')) return;
         const content = fs.readFileSync(path.join(slidesDir, f), 'utf8');
+
+        // Count occurrences using regex
+        const spCount = (content.match(/<p:sp>/g) || []).length;
+        const picCount = (content.match(/<p:pic>/g) || []).length;
+        const grpSpCount = (content.match(/<p:grpSp>/g) || []).length;
+        const txBodyCount = (content.match(/<p:txBody>/g) || []).length;
+        const hasBgPr = content.includes('<p:bgPr>');
+        const hasBgRef = content.includes('<p:bgRef>');
+
         results[f] = {
-            hasImages: content.includes('<p:pic>'),
-            hasText: content.includes('<a:t>'),
-            hasShapes: content.includes('<p:sp>'),
-            hasGroups: content.includes('<p:grpSp>'),
-            hasTables: content.includes('<a:tbl>'),
-            approxLength: content.length
+            size: content.length,
+            shapes: spCount,
+            images: picCount,
+            groups: grpSpCount,
+            textBlocks: txBodyCount,
+            hasBackground: hasBgPr || hasBgRef
         };
     });
     return results;
+}
+
+function dumpSlideText(dir, slideName) {
+    const slidePath = path.join(dir, 'ppt', 'slides', slideName);
+    if (!fs.existsSync(slidePath)) {
+        console.log(`Slide ${slideName} not found in ${dir}`);
+        return;
+    }
+    const content = fs.readFileSync(slidePath, 'utf8');
+    // Simple regex to grab text inside <a:t>
+    const texts = content.match(/<a:t>(.*?)<\/a:t>/g) || [];
+    console.log(`--- Text Content for ${slideName} ---`);
+    texts.forEach(t => {
+        const clean = t.replace(/<\/?a:t>/g, '');
+        console.log(`[${clean}]`);
+    });
+    console.log('-----------------------------------');
 }
 
 try {
@@ -81,11 +107,26 @@ try {
             return;
         }
 
+        const diffSize = s2.size - s1.size;
+
         console.log(`Slide ${key}:`);
-        console.log(`  Size: A=${s1.approxLength}, B=${s2.approxLength}`);
-        console.log(`  Images: A=${s1.hasImages}, B=${s2.hasImages}`);
-        console.log(`  Text:   A=${s1.hasText},   B=${s2.hasText}`);
+        console.log(`  Size:     A=${s1.size}, B=${s2.size} (Diff: ${diffSize})`);
+        console.log(`  Images:   A=${s1.images}, B=${s2.images}`);
+        console.log(`  Shapes:   A=${s1.shapes}, B=${s2.shapes}`);
+        console.log(`  Groups:   A=${s1.groups}, B=${s2.groups}`);
+        console.log(`  Texts:    A=${s1.textBlocks}, B=${s2.textBlocks}`);
+        console.log(`  Backgrnd: A=${s1.hasBackground}, B=${s2.hasBackground}`);
     });
+
+    // 4. Detailed Text Dump (Optional)
+    const specificSlide = process.argv[4]; // e.g., 'slide9.xml'
+    if (specificSlide) {
+        console.log(`\nDetailed Text Dump for ${specificSlide}:`);
+        console.log('--- REFERENCE (A) ---');
+        dumpSlideText(dir1, specificSlide);
+        console.log('\n--- GENERATED (B) ---');
+        dumpSlideText(dir2, specificSlide);
+    }
 
 } catch (err) {
     console.error(err);

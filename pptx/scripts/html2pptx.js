@@ -485,7 +485,8 @@ async function extractSlideData(page) {
             const computed = window.getComputedStyle(node);
 
             // Handle inline elements with computed styles
-            if (node.tagName === 'SPAN' || node.tagName === 'B' || node.tagName === 'STRONG' || node.tagName === 'I' || node.tagName === 'EM' || node.tagName === 'U') {
+            const allowedTags = ['SPAN', 'B', 'STRONG', 'I', 'EM', 'U', 'DIV', 'A'];
+            if (allowedTags.includes(node.tagName)) {
               const isBold = computed.fontWeight === 'bold' || parseInt(computed.fontWeight) >= 600;
               if (isBold && !shouldSkipBold(computed.fontFamily)) options.bold = true;
               if (computed.fontStyle === 'italic') options.italic = true;
@@ -579,7 +580,7 @@ async function extractSlideData(page) {
     const elements = [];
     const placeholders = [];
     const icons = [];
-    const textTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI'];
+    const textTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'TH', 'TD'];
     const processed = new Set();
 
 
@@ -598,11 +599,14 @@ async function extractSlideData(page) {
         const hasShadow = computed.boxShadow && computed.boxShadow !== 'none';
 
         if (hasBg || hasBorder || hasShadow) {
-          errors.push(
-            `Text element <${el.tagName.toLowerCase()}> has ${hasBg ? 'background' : hasBorder ? 'border' : 'shadow'}. ` +
-            'Backgrounds, borders, and shadows are only supported on <div> elements, not text elements.'
-          );
-          return;
+          // Exception: Allow TH and TD to have backgrounds/borders (treated as text boxes with style)
+          if (el.tagName !== 'TH' && el.tagName !== 'TD') {
+            errors.push(
+              `Text element <${el.tagName.toLowerCase()}> has ${hasBg ? 'background' : hasBorder ? 'border' : 'shadow'}. ` +
+              'Backgrounds, borders, and shadows are only supported on <div> elements, not text elements.'
+            );
+            return;
+          }
         }
       }
 
