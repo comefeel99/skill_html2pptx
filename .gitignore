@@ -1,3 +1,5 @@
 node_modules
 temp_compare
 temp_pptx_inspect_layout
+.DS_Store
+test_data/.DS_Store

@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Our Journey of Innovation &amp; Growth</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            
+            position: relative;
+            
+            background-color: white;
+        }
+        .accent-bar {
+            background-color: #e63946;
+        }
+        .timeline-line {
+            height: 4px;
+            background-color: #e63946;
+        }
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #e63946;
+            border: 3px solid white;
+            box-shadow: 0 0 0 4px #e63946;
+            z-index: 10;
+        }
+        .timeline-card {
+            border-top: 3px solid #e63946;
+            transition: all 0.3s ease;
+        }
+        .timeline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-icon {
+            color: #e63946;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container mx-auto p-16">
+<!-- Header with title -->
+<div class="flex items-center mb-8">
+<div class="accent-bar w-12 h-2 mr-4"></div>
+<h1 class="text-4xl font-bold text-gray-800">Our Journey of Innovation &amp; Growth</h1>
+</div>
+<!-- Introduction -->
+<div class="mb-10">
+<p class="text-xl text-gray-700">
+                From humble beginnings to becoming the undisputed leader in CIS &amp; Turkey tourism, Dook Travels has evolved through decades of innovation, expansion, and technological advancement.
+            </p>
+</div>
+<!-- Timeline -->
+<div class="relative">
+<!-- Timeline line -->
+<div class="timeline-line absolute w-full top-20"></div>
+<!-- Timeline content -->
+<div class="flex justify-between relative pt-10 pb-4">
+<!-- 2010-2011: The Beginning -->
+<div class="w-1/4 px-4">
+<div class="flex justify-center mb-6">
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-card bg-gray-50 p-6 rounded-lg shadow-sm h-64">
+<div class="flex justify-center mb-4">
+<div class="timeline-icon text-4xl">
+<i class="fas fa-flag"></i>
+</div>
+</div>
+<h3 class="text-xl font-bold text-center text-gray-800 mb-2">2010-2011</h3>
+<h4 class="text-lg font-semibold text-center text-gray-600 mb-4">The Beginning</h4>
+<p class="text-gray-600 text-center">
+                            Pioneered group tours to Uzbekistan &amp; Russia, opening a new frontier for Indian travelers.
+                        </p>
+</div>
+</div>
+<!-- 2012-2016: Market Expansion -->
+<div class="w-1/4 px-4">
+<div class="flex justify-center mb-6">
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-card bg-gray-50 p-6 rounded-lg shadow-sm h-64">
+<div class="flex justify-center mb-4">
+<div class="timeline-icon text-4xl">
+<i class="fas fa-globe-asia"></i>
+</div>
+</div>
+<h3 class="text-xl font-bold text-center text-gray-800 mb-2">2012-2016</h3>
+<h4 class="text-lg font-semibold text-center text-gray-600 mb-4">Market Expansion</h4>
+<p class="text-gray-600 text-center">
+                            Systematically expanded our footprint across the CIS, adding Kazakhstan, Georgia, Armenia, and Azerbaijan.
+                        </p>
+</div>
+</div>
+<!-- 2017-2020: Service Diversification -->
+<div class="w-1/4 px-4">
+<div class="flex justify-center mb-6">
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-card bg-gray-50 p-6 rounded-lg shadow-sm h-64">
+<div class="flex justify-center mb-4">
+<div class="timeline-icon text-4xl">
+<i class="fas fa-sitemap"></i>
+</div>
+</div>
+<h3 class="text-xl font-bold text-center text-gray-800 mb-2">2017-2020</h3>
+<h4 class="text-lg font-semibold text-center text-gray-600 mb-4">Service Diversification</h4>
+<p class="text-gray-600 text-center">
+                            Strengthened our MICE &amp; Corporate travel division, becoming the go-to expert for large-scale incentive tours.
+                        </p>
+</div>
+</div>
+<!-- 2023 &amp; Beyond: Tech &amp; New Horizons -->
+<div class="w-1/4 px-4">
+<div class="flex justify-center mb-6">
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-card bg-gray-50 p-6 rounded-lg shadow-sm h-64">
+<div class="flex justify-center mb-4">
+<div class="timeline-icon text-4xl">
+<i class="fas fa-rocket"></i>
+</div>
+</div>
+<h3 class="text-xl font-bold text-center text-gray-800 mb-2">2023 &amp; Beyond</h3>
+<h4 class="text-lg font-semibold text-center text-gray-600 mb-4">Tech &amp; New Horizons</h4>
+<p class="text-gray-600 text-center">
+                            Launched our state-of-the-art B2B booking portal and expanded our portfolio to include Turkey and key Eastern European destinations.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="absolute bottom-6 right-6">
+<p class="text-gray-500">3/12</p>
+</div>
+</div>
+
+</body></html>
