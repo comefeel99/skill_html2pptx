@@ -235,6 +235,7 @@ function addElements(slideData, targetSlide, pres) {
 
       if (el.style.align) textOptions.align = el.style.align;
       if (el.style.margin) textOptions.margin = el.style.margin;
+      if (el.style.fill) textOptions.fill = el.style.fill;
       if (el.style.rotate !== undefined) textOptions.rotate = el.style.rotate;
       if (el.style.transparency !== null && el.style.transparency !== undefined) textOptions.transparency = el.style.transparency;
 
@@ -967,15 +968,32 @@ async function extractSlideData(page) {
       const rotation = getRotation(computed.transform, computed.writingMode);
       const { x, y, w, h } = getPositionAndSize(el, rect, rotation);
 
+      // Handle transparent text (e.g. background-clip: text gradient)
+      let textColor = rgbToHex(computed.color);
+      if (computed.color === 'rgba(0, 0, 0, 0)' || computed.color === 'transparent') {
+        if (computed.backgroundImage && computed.backgroundImage !== 'none') {
+          // Extract first color from gradient string
+          const colorMatch = computed.backgroundImage.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (colorMatch) {
+            textColor = rgbToHex(colorMatch[0]);
+          } else {
+            // Try hex match
+            const hexMatch = computed.backgroundImage.match(/#[0-9a-fA-F]{6}/);
+            if (hexMatch) textColor = hexMatch[0].replace('#', '');
+            // Final fallback
+            else textColor = '000000';
+          }
+        }
+      }
+
       const baseStyle = {
         fontSize: pxToPoints(computed.fontSize),
         fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
-        color: rgbToHex(computed.color),
+        color: textColor,
         align: computed.textAlign === 'start' ? 'left' : computed.textAlign,
         lineSpacing: pxToPoints(computed.lineHeight),
         paraSpaceBefore: pxToPoints(computed.marginTop),
         paraSpaceAfter: pxToPoints(computed.marginBottom),
-        // PptxGenJS margin array is [left, right, bottom, top] (not [top, right, bottom, left] as documented)
         margin: [
           pxToPoints(computed.paddingLeft),
           pxToPoints(computed.paddingRight),
@@ -985,12 +1003,26 @@ async function extractSlideData(page) {
         bullet: isManualBullet ? { type: 'bullet', code: '2022' } : false
       };
 
+      // Handle Background Color for Table Cells (TH/TD)
+      if (el.tagName === 'TH' || el.tagName === 'TD') {
+        const bgColor = computed.backgroundColor;
+        if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+          const hex = rgbToHex(bgColor);
+          const bgAlpha = extractAlpha(bgColor);
+          if (bgAlpha !== null) {
+            baseStyle.fill = { color: '#' + hex, transparency: bgAlpha };
+          } else {
+            baseStyle.fill = '#' + hex;
+          }
+        }
+      }
+
       const transparency = extractAlpha(computed.color);
       if (transparency !== null) baseStyle.transparency = transparency;
 
       if (rotation !== null) baseStyle.rotate = rotation;
 
-      const hasFormatting = el.querySelector('b, i, u, strong, em, span, br');
+      const hasFormatting = el.querySelector('b, i, u, strong, em, span, div, a, br');
 
       if (hasFormatting) {
         // Text with inline formatting
