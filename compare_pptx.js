@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const file1 = path.resolve('test_data/test1/test1.pptx');
-const file2 = path.resolve('test_output_combined.pptx');
+const file1 = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('test_data/test1/test1.pptx');
+const file2 = process.argv[3] ? path.resolve(process.argv[3]) : path.resolve('test_output_combined.pptx');
 const outDir = path.resolve('temp_compare');
 
 function unzip(file, dir) {

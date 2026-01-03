@@ -669,6 +669,35 @@ async function extractSlideData(page) {
         }
       }
 
+      // Extract standalone icons (e.g. Font Awesome <i class="fa...">)
+      // This handles icons that are direct children of containers (not inside text blocks)
+      const isIconTag = el.tagName === 'I' || el.tagName === 'SPAN';
+      if (isIconTag) {
+        const className = typeof el.className === 'string' ? el.className : (el.getAttribute && el.getAttribute('class')) || '';
+        const isIconClass = className.includes('fa') || className.includes('icon') || className.includes('material-icons');
+        const hasText = el.textContent.trim().length > 0;
+        const rect = el.getBoundingClientRect();
+
+        // Condition: Must have icon class, OR be empty/small with dimensions
+        if (rect.width > 0 && rect.height > 0 && (isIconClass || (!hasText && rect.width < 50))) {
+          if (!el.id) el.id = `icon-${Math.random().toString(36).substr(2, 9)}`;
+
+          icons.push({
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
+          processed.add(el);
+          // Prevent processing children (usually SVG paths or empty text)
+          el.querySelectorAll('*').forEach(child => processed.add(child));
+          return;
+        }
+      }
+
       // Extract DIVs with backgrounds/borders as shapes
       const isContainer = el.tagName === 'DIV' && !textTags.includes(el.tagName);
       if (isContainer) {
