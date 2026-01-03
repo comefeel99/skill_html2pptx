@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>차량 구매 비용 비교</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 901px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 901px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .hyundai-blue {
+            color: #002C5F;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .hyundai-bg {
+            background-color: #002C5F;
+        }
+        .comparison-box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .bar-label {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-12 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-3">차량 구매 비용 비교</h1>
+<p class="text-gray-600 text-lg">기아 K9 중고차와 그랜저 하이브리드 신차의 초기 구매 비용 분석</p>
+</div>
+<!-- Main Content Section -->
+<div class="flex-grow flex flex-col">
+<!-- Comparison Boxes -->
+<div class="flex justify-between mb-8 gap-6">
+<!-- K9 Box -->
+<div class="comparison-box p-6 flex-1">
+<div class="flex items-center mb-4">
+<div class="kia-bg text-white p-3 rounded-full mr-4">
+<i class="fas fa-car text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold kia-red">2022년식 K9 중고차</h3>
+</div>
+<ul class="space-y-3 text-lg">
+<li class="flex justify-between">
+<span><i class="fas fa-tag mr-2 text-gray-500"></i>차량 기본 가격:</span>
+<span class="font-semibold">4,000만원</span>
+</li>
+<li class="flex justify-between">
+<span><i class="fas fa-file-invoice mr-2 text-gray-500"></i>등록 및 세금:</span>
+<span class="font-semibold">약 380만원</span>
+</li>
+<li class="flex justify-between">
+<span><i class="fas fa-shield-alt mr-2 text-gray-500"></i>연간 보험료:</span>
+<span class="font-semibold">약 120만원</span>
+</li>
+<li class="flex justify-between pt-2 border-t border-gray-200">
+<span class="font-bold">총 구매 비용:</span>
+<span class="font-bold kia-red">약 4,500만원</span>
+</li>
+</ul>
+</div>
+<!-- Grandeur Box -->
+<div class="comparison-box p-6 flex-1">
+<div class="flex items-center mb-4">
+<div class="hyundai-bg text-white p-3 rounded-full mr-4">
+<i class="fas fa-car text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold hyundai-blue">그랜저 하이브리드 신차</h3>
+</div>
+<ul class="space-y-3 text-lg">
+<li class="flex justify-between">
+<span><i class="fas fa-tag mr-2 text-gray-500"></i>차량 기본 가격 (익스클루시브):</span>
+<span class="font-semibold">4,781만원</span>
+</li>
+<li class="flex justify-between">
+<span><i class="fas fa-file-invoice mr-2 text-gray-500"></i>세금 및 등록 비용:</span>
+<span class="font-semibold">약 274만원</span>
+</li>
+<li class="flex justify-between">
+<span><i class="fas fa-shield-alt mr-2 text-gray-500"></i>연간 보험료:</span>
+<span class="font-semibold">별도 계산</span>
+</li>
+<li class="flex justify-between pt-2 border-t border-gray-200">
+<span class="font-bold">총 구매 비용:</span>
+<span class="font-bold hyundai-blue">약 5,055만원</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visualization Section -->
+<div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+<h3 class="text-xl font-bold mb-4">총 구매 비용 비교</h3>
+<div class="h-32" id="cost-chart"></div>
+</div>
+<!-- Key Points -->
+<div class="bg-gray-50 p-6 rounded-lg">
+<h3 class="text-xl font-bold mb-3">주요 비교 포인트</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-start">
+<i class="fas fa-money-bill-wave mt-1 mr-3 kia-red"></i>
+<p>K9 중고차는 초기 구매 비용이 약 555만원 저렴</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-percentage mt-1 mr-3 hyundai-blue"></i>
+<p>그랜저 하이브리드는 친환경차 세제 혜택 적용 (취득세 40만원 감면)</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-coins mt-1 mr-3 kia-red"></i>
+<p>K9 중고차는 보험료가 상대적으로 높음 (연간 약 120만원)</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-car-side mt-1 mr-3 hyundai-blue"></i>
+<p>그랜저 하이브리드는 트림에 따라 가격 차이가 큼 (4,291만원~5,181만원)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Data for the chart
+        const costData = [
+            {name: "K9 중고차", value: 4500, color: "#BB162B"},
+            {name: "그랜저 하이브리드", value: 5055, color: "#002C5F"}
+        ];
+        
+        // Set up the chart
+        const margin = {top: 20, right: 30, bottom: 40, left: 100};
+        const width = document.getElementById('cost-chart').offsetWidth - margin.left - margin.right;
+        const height = document.getElementById('cost-chart').offsetHeight - margin.top - margin.bottom;
+        
+        // Create SVG
+        const svg = d3.select("#cost-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+        
+        // X scale
+        const x = d3.scaleLinear()
+            .domain([0, 6000])
+            .range([0, width]);
+        
+        // Y scale
+        const y = d3.scaleBand()
+            .domain(costData.map(d => d.name))
+            .range([0, height])
+            .padding(0.3);
+        
+        // Draw bars
+        svg.selectAll("rect")
+            .data(costData)
+            .join("rect")
+            .attr("x", 0)
+            .attr("y", d => y(d.name))
+            .attr("width", d => x(d.value))
+            .attr("height", y.bandwidth())
+            .attr("fill", d => d.color)
+            .attr("rx", 4)
+            .attr("ry", 4);
+        
+        // Add value labels
+        svg.selectAll(".value-label")
+            .data(costData)
+            .join("text")
+            .attr("class", "value-label")
+            .attr("x", d => x(d.value) - 5)
+            .attr("y", d => y(d.name) + y.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("fill", "white")
+            .attr("font-weight", "bold")
+            .text(d => d.value + "만원");
+        
+        // Add Y axis labels
+        svg.selectAll(".bar-label")
+            .data(costData)
+            .join("text")
+            .attr("class", "bar-label")
+            .attr("x", -10)
+            .attr("y", d => y(d.name) + y.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("fill", d => d.color)
+            .attr("font-size", "14px")
+            .text(d => d.name);
+        
+        // Add X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x)
+                .tickFormat(d => d + "만원")
+                .ticks(5))
+            .selectAll("text")
+            .attr("font-size", "12px");
+    </script>
+
+</body></html>

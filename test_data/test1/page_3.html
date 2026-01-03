@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>중고차 K9 구매 시 추가 비용</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 792px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 792px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .cost-item {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+        }
+        .cost-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-12 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-3">중고차 K9 구매 시 추가 비용</h1>
+<p class="text-gray-600 text-lg">4천만원 기준 K9 중고차 구매 시 발생하는 부대 비용 상세 분석</p>
+</div>
+<!-- Main Content Section -->
+<div class="flex-grow flex">
+<!-- Left Column - Cost Details -->
+<div class="w-1/2 pr-6">
+<div class="card p-6 h-full">
+<h3 class="text-2xl font-bold mb-4 kia-red flex items-center">
+<i class="fas fa-receipt mr-3"></i>부대 비용 항목별 내역
+                    </h3>
+<div class="space-y-1">
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">취득세</span>
+<p class="text-sm text-gray-500">비영업용 승용차 기준, 과세표준액의 7%</p>
+</div>
+<span class="font-semibold">약 280만원</span>
+</div>
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">공채 매입비</span>
+<p class="text-sm text-gray-500">지역별 요율 상이, 즉시 할인 매도 시 비용 발생</p>
+</div>
+<span class="font-semibold">10만원 ~ 30만원</span>
+</div>
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">증지/인지대</span>
+<p class="text-sm text-gray-500">명의이전 시 발생하는 수수료</p>
+</div>
+<span class="font-semibold">약 4,500원</span>
+</div>
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">매도비</span>
+<p class="text-sm text-gray-500">차량 관리, 보관 등에 대한 비용</p>
+</div>
+<span class="font-semibold">30만원 ~ 44만원</span>
+</div>
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">알선 수수료</span>
+<p class="text-sm text-gray-500">딜러의 중개 수수료(차량 가액의 2.2% 이내)</p>
+</div>
+<span class="font-semibold">30만원 ~ 50만원</span>
+</div>
+<div class="cost-item flex justify-between items-center">
+<div>
+<span class="font-bold">성능 점검 책임보험료</span>
+<p class="text-sm text-gray-500">1개월/2,000km 보증을 위한 의무 보험</p>
+</div>
+<span class="font-semibold">약 10만원</span>
+</div>
+<div class="pt-4 mt-2 border-t-2 border-gray-200 flex justify-between items-center">
+<span class="font-bold text-lg">총 추가 비용</span>
+<span class="font-bold text-lg kia-red">약 360만원 ~ 415만원</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column - Visualization &amp; Image -->
+<div class="w-1/2 pl-6 flex flex-col">
+<!-- Pie Chart -->
+<div class="card p-6 mb-6 flex-grow">
+<h3 class="text-xl font-bold mb-4 flex items-center">
+<i class="fas fa-chart-pie mr-2"></i>추가 비용 구성 비율
+                    </h3>
+<div class="h-64" id="cost-chart" data-sk-source-container="chart" data-sk-source-id="T7GVSX" data-sk-source-type="web_search"></div>
+<div class="text-center text-sm text-gray-500 mt-2">* 최대 예상 비용 기준</div>
+</div>
+<!-- Image and Key Points -->
+<div class="flex">
+<div class="w-1/2 pr-3">
+<img alt="기아 K9" class="rounded-lg shadow-sm object-cover h-48 w-full" src="https://picture-search.skywork.ai/aippt/image/sheet/12bb817dd1e242760bac773c3ff90b8c.jpg" data-sk-source-container="img" data-sk-source-url="https://namu.wiki/w/%EA%B8%B0%EC%95%84%20K9?uuid=0d2a6c66-508d-487a-bce4-ce71ac964eb9" data-sk-source-id="1949745836166299649"/>
+</div>
+<div class="w-1/2 pl-3 card p-4">
+<h4 class="font-bold text-lg mb-2">주요 고려사항</h4>
+<ul class="space-y-2 text-sm">
+<li class="flex items-start">
+<i class="fas fa-exclamation-circle text-yellow-500 mr-2 mt-1"></i>
+<span>취득세는 전체 추가 비용의 약 68%를 차지</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-exclamation-circle text-yellow-500 mr-2 mt-1"></i>
+<span>지역별로 공채 매입비 차이 발생</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-exclamation-circle text-yellow-500 mr-2 mt-1"></i>
+<span>매도비와 알선 수수료는 협상 가능</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Data for the pie chart (using maximum values from range)
+        const costData = [
+            {name: "취득세", value: 280, color: "#BB162B"},
+            {name: "공채 매입비", value: 30, color: "#D94C53"},
+            {name: "매도비", value: 44, color: "#E67C82"},
+            {name: "알선 수수료", value: 50, color: "#F2ACB0"},
+            {name: "성능 점검 책임보험료", value: 10, color: "#F8D0D2"},
+            {name: "증지/인지대", value: 0.45, color: "#FCEBEC"} // Very small, might not be visible
+        ];
+        
+        // Set up the chart
+        const width = document.getElementById('cost-chart').offsetWidth;
+        const height = document.getElementById('cost-chart').offsetHeight;
+        const radius = Math.min(width, height) / 2;
+        
+        // Create SVG
+        const svg = d3.select("#cost-chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", `translate(${width / 2},${height / 2})`);
+        
+        // Pie generator
+        const pie = d3.pie()
+            .value(d => d.value)
+            .sort(null);
+            
+        // Arc generator
+        const arc = d3.arc()
+            .innerRadius(radius * 0.3) // Make it a donut chart
+            .outerRadius(radius * 0.8);
+            
+        // Label arc
+        const labelArc = d3.arc()
+            .innerRadius(radius * 0.85)
+            .outerRadius(radius * 0.85);
+            
+        // Generate pie chart
+        const arcs = svg.selectAll("arc")
+            .data(pie(costData))
+            .enter()
+            .append("g")
+            .attr("class", "arc");
+            
+        // Draw slices
+        arcs.append("path")
+            .attr("d", arc)
+            .attr("fill", d => d.data.color)
+            .attr("stroke", "white")
+            .style("stroke-width", "2px");
+            
+        // Add labels
+        arcs.append("text")
+            .attr("transform", d => {
+                // Only show labels for segments that are large enough
+                if (d.data.value < 10) return "translate(0,0)";
+                const pos = labelArc.centroid(d);
+                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                pos[0] = radius * 0.9 * (midAngle < Math.PI ? 1 : -1);
+                return `translate(${pos})`;
+            })
+            .attr("dy", "0.35em")
+            .attr("text-anchor", d => {
+                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                return midAngle < Math.PI ? "start" : "end";
+            })
+            .attr("fill", "#333")
+            .style("font-size", "12px")
+            .style("font-weight", "500")
+            .text(d => {
+                // Only show labels for segments that are large enough
+                if (d.data.value < 10) return "";
+                return `${d.data.name} ${d.data.value}만원`;
+            });
+            
+        // Add center text
+        svg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", "-0.2em")
+            .attr("fill", "#333")
+            .style("font-size", "16px")
+            .style("font-weight", "700")
+            .text("총 추가 비용");
+            
+        svg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", "1.2em")
+            .attr("fill", "#BB162B")
+            .style("font-size", "16px")
+            .style("font-weight", "700")
+            .text("약 415만원");
+    </script>
+
+</body></html>

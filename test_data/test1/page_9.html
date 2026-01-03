@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>최종 비교 및 결론</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 1086px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 1086px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .hyundai-blue {
+            color: #002C5F;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .hyundai-bg {
+            background-color: #002C5F;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .consumer-type-card {
+            transition: transform 0.2s;
+        }
+        .consumer-type-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-12 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-3">최종 비교 및 결론</h1>
+<p class="text-gray-600 text-lg">기아 K9 중고차와 그랜저 하이브리드 신차의 총체적 비교와 소비자 유형별 최적 선택</p>
+</div>
+<!-- Main Content Section -->
+<div class="flex-grow flex flex-col">
+<!-- Summary Cards -->
+<div class="flex justify-between mb-6 gap-6">
+<!-- K9 Card -->
+<div class="card p-6 flex-1">
+<div class="flex items-center mb-3">
+<div class="kia-bg text-white icon-circle mr-4">
+<i class="fas fa-car text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold kia-red">2022년식 K9 중고차</h3>
+</div>
+<ul class="space-y-2">
+<li class="flex items-start">
+<i class="fas fa-check-circle kia-red mt-1 mr-2"></i>
+<span>초기 구매 비용이 약 555만원 저렴</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle kia-red mt-1 mr-2"></i>
+<span>플래그십 세단의 고급스러운 승차감</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle kia-red mt-1 mr-2"></i>
+<span>강력한 V6 엔진의 주행 감성</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-times-circle text-gray-400 mt-1 mr-2"></i>
+<span>5년간 약 2,075만원의 추가 유지비 발생</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-times-circle text-gray-400 mt-1 mr-2"></i>
+<span>제조사 보증 기간 만료 임박</span>
+</li>
+</ul>
+</div>
+<!-- Grandeur Card -->
+<div class="card p-6 flex-1">
+<div class="flex items-center mb-3">
+<div class="hyundai-bg text-white icon-circle mr-4">
+<i class="fas fa-car text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold hyundai-blue">그랜저 하이브리드 신차</h3>
+</div>
+<ul class="space-y-2">
+<li class="flex items-start">
+<i class="fas fa-check-circle hyundai-blue mt-1 mr-2"></i>
+<span>연간 415만원의 유지 비용 절감</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle hyundai-blue mt-1 mr-2"></i>
+<span>최신 기술과 첨단 편의 기능</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle hyundai-blue mt-1 mr-2"></i>
+<span>하이브리드 시스템 10년/20만km 긴 보증</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-times-circle text-gray-400 mt-1 mr-2"></i>
+<span>초기 구매 비용이 더 높음</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-times-circle text-gray-400 mt-1 mr-2"></i>
+<span>플래그십 대비 상대적 위상 열위</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- 5-Year Cost Visualization -->
+<div class="card p-6 mb-6">
+<h3 class="text-xl font-bold mb-4">5년간 총 소유 비용 비교</h3>
+<div class="flex items-center">
+<div class="w-1/4">
+<div class="flex justify-between mb-2">
+<span class="font-medium">K9 중고차</span>
+<span class="font-bold kia-red">약 7,900만원</span>
+</div>
+<div class="flex justify-between">
+<span class="font-medium">그랜저 하이브리드</span>
+<span class="font-bold hyundai-blue">약 6,380만원</span>
+</div>
+</div>
+<div class="flex-grow pl-8">
+<div class="h-20" id="cost-chart"></div>
+</div>
+</div>
+<p class="text-gray-600 mt-3 text-sm">* 초기 구매 비용과 5년간 유지비용(연료, 정비, 보험, 세금)을 합산한 금액</p>
+</div>
+<!-- Consumer Type Recommendations -->
+<h3 class="text-xl font-bold mb-4">소비자 유형별 최적 선택</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="card p-5 consumer-type-card">
+<div class="flex items-center mb-3">
+<div class="bg-yellow-100 text-yellow-600 p-3 rounded-full mr-3">
+<i class="fas fa-coins"></i>
+</div>
+<h4 class="text-lg font-bold">초기 비용 중시형</h4>
+</div>
+<p class="text-gray-600">낮은 초기 구매 비용을 중요시하는 소비자</p>
+<div class="mt-2 text-right">
+<span class="px-4 py-1 bg-red-50 text-red-600 rounded-full font-bold">K9 중고차 추천</span>
+</div>
+</div>
+<div class="card p-5 consumer-type-card">
+<div class="flex items-center mb-3">
+<div class="bg-green-100 text-green-600 p-3 rounded-full mr-3">
+<i class="fas fa-gas-pump"></i>
+</div>
+<h4 class="text-lg font-bold">장기 경제성 중시형</h4>
+</div>
+<p class="text-gray-600">연비와 장기 유지 비용을 중요시하는 소비자</p>
+<div class="mt-2 text-right">
+<span class="px-4 py-1 bg-blue-50 text-blue-600 rounded-full font-bold">그랜저 하이브리드 추천</span>
+</div>
+</div>
+<div class="card p-5 consumer-type-card">
+<div class="flex items-center mb-3">
+<div class="bg-purple-100 text-purple-600 p-3 rounded-full mr-3">
+<i class="fas fa-crown"></i>
+</div>
+<h4 class="text-lg font-bold">주행 감성 중시형</h4>
+</div>
+<p class="text-gray-600">고급스러운 승차감과 강력한 주행 감성 선호</p>
+<div class="mt-2 text-right">
+<span class="px-4 py-1 bg-red-50 text-red-600 rounded-full font-bold">K9 중고차 추천</span>
+</div>
+</div>
+<div class="card p-5 consumer-type-card">
+<div class="flex items-center mb-3">
+<div class="bg-blue-100 text-blue-600 p-3 rounded-full mr-3">
+<i class="fas fa-microchip"></i>
+</div>
+<h4 class="text-lg font-bold">최신 기술 중시형</h4>
+</div>
+<p class="text-gray-600">첨단 기능과 신차 보증의 안정감 선호</p>
+<div class="mt-2 text-right">
+<span class="px-4 py-1 bg-blue-50 text-blue-600 rounded-full font-bold">그랜저 하이브리드 추천</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Data for the chart
+        const costData = [
+            {name: "K9 중고차", initial: 4500, maintenance: 3400, total: 7900, color: "#BB162B"},
+            {name: "그랜저 하이브리드", initial: 5055, maintenance: 1325, total: 6380, color: "#002C5F"}
+        ];
+        
+        // Set up the chart
+        const margin = {top: 10, right: 10, bottom: 10, left: 10};
+        const width = document.getElementById('cost-chart').offsetWidth - margin.left - margin.right;
+        const height = document.getElementById('cost-chart').offsetHeight - margin.top - margin.bottom;
+        
+        // Create SVG
+        const svg = d3.select("#cost-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+        
+        // X scale
+        const x = d3.scaleLinear()
+            .domain([0, 8000])
+            .range([0, width]);
+        
+        // Y scale
+        const y = d3.scaleBand()
+            .domain(costData.map(d => d.name))
+            .range([0, height])
+            .padding(0.4);
+        
+        // Draw stacked bars
+        costData.forEach((d, i) => {
+            // Initial cost bar
+            svg.append("rect")
+                .attr("x", 0)
+                .attr("y", y(d.name))
+                .attr("width", x(d.initial))
+                .attr("height", y.bandwidth())
+                .attr("fill", d.color)
+                .attr("opacity", 0.8)
+                .attr("rx", 4);
+                
+            // Maintenance cost bar
+            svg.append("rect")
+                .attr("x", x(d.initial))
+                .attr("y", y(d.name))
+                .attr("width", x(d.maintenance))
+                .attr("height", y.bandwidth())
+                .attr("fill", d.color)
+                .attr("opacity", 0.5)
+                .attr("rx", 4);
+                
+            // Total label
+            svg.append("text")
+                .attr("x", x(d.total) + 10)
+                .attr("y", y(d.name) + y.bandwidth() / 2)
+                .attr("dy", "0.35em")
+                .attr("text-anchor", "start")
+                .attr("fill", d.color)
+                .attr("font-weight", "bold")
+                .attr("font-size", "14px")
+                .text(d.total + "만원");
+                
+            // Divider line
+            svg.append("line")
+                .attr("x1", x(d.initial))
+                .attr("y1", y(d.name))
+                .attr("x2", x(d.initial))
+                .attr("y2", y(d.name) + y.bandwidth())
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+        });
+        
+        // Legend
+        const legendData = [
+            {label: "초기 구매 비용", color: "opacity: 0.8"},
+            {label: "5년간 유지 비용", color: "opacity: 0.5"}
+        ];
+        
+        const legend = svg.append("g")
+            .attr("transform", `translate(${width - 300}, ${height - 30})`);
+            
+        legendData.forEach((d, i) => {
+            const legendGroup = legend.append("g")
+                .attr("transform", `translate(${i * 150}, 0)`);
+                
+            legendGroup.append("rect")
+                .attr("width", 14)
+                .attr("height", 14)
+                .attr("fill", "#555")
+                .attr("style", d.color)
+                .attr("rx", 2);
+                
+            legendGroup.append("text")
+                .attr("x", 20)
+                .attr("y", 7)
+                .attr("dy", "0.35em")
+                .attr("text-anchor", "start")
+                .attr("fill", "#555")
+                .attr("font-size", "12px")
+                .text(d.label);
+        });
+    </script>
+
+</body></html>

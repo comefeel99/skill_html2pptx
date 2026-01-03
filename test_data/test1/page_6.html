@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>성능 및 편의성 비교</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .hyundai-blue {
+            color: #002C5F;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .hyundai-bg {
+            background-color: #002C5F;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2">성능 및 편의성 비교</h1>
+<p class="text-gray-600 text-lg">두 차량의 주행 성능, 연비, 첨단 편의 및 안전 기능 비교 분석</p>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-5 gap-6 flex-grow">
+<!-- Left Column - Performance Comparison -->
+<div class="col-span-2">
+<div class="card p-6 h-full flex flex-col">
+<h2 class="text-2xl font-bold mb-4">주행 성능 비교</h2>
+<!-- K9 Performance -->
+<div class="mb-6">
+<h3 class="kia-red font-bold text-xl flex items-center">
+<span class="kia-bg rounded-full w-8 h-8 flex items-center justify-center mr-2 text-white text-sm">K9</span>
+                            기아 K9 (2022년식)
+                        </h3>
+<ul class="mt-3 space-y-2">
+<li class="flex items-start">
+<i class="fas fa-engine text-gray-500 mt-1 mr-2"></i>
+<span><b>엔진:</b> V6 3.8L 가솔린 (315마력)</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-cog text-gray-500 mt-1 mr-2"></i>
+<span><b>구동방식:</b> 후륜구동 (RWD)</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-tachometer-alt text-gray-500 mt-1 mr-2"></i>
+<span><b>특징:</b> 강력한 출력, 안정적인 고속 주행</span>
+</li>
+</ul>
+</div>
+<!-- Grandeur Performance -->
+<div class="mb-6">
+<h3 class="hyundai-blue font-bold text-xl flex items-center">
+<span class="hyundai-bg rounded-full w-8 h-8 flex items-center justify-center mr-2 text-white text-sm">GR</span>
+                            그랜저 하이브리드 (신차)
+                        </h3>
+<ul class="mt-3 space-y-2">
+<li class="flex items-start">
+<i class="fas fa-charging-station text-gray-500 mt-1 mr-2"></i>
+<span><b>엔진:</b> 1.6L 터보 + 전기모터 (230마력)</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-cog text-gray-500 mt-1 mr-2"></i>
+<span><b>구동방식:</b> 전륜구동 (FWD)</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-leaf text-gray-500 mt-1 mr-2"></i>
+<span><b>특징:</b> 뛰어난 연비, 정숙성</span>
+</li>
+</ul>
+</div>
+<!-- Fuel Efficiency Chart -->
+<div class="mt-auto">
+<h3 class="text-lg font-bold mb-2">연비 비교 (km/L)</h3>
+<div class="h-24" id="fuel-chart"></div>
+</div>
+</div>
+</div>
+<!-- Middle Column - Interior Image -->
+<div class="col-span-1">
+<div class="card p-4 h-full flex flex-col justify-center items-center">
+<img alt="현대적인 차량 인테리어" class="w-full rounded-lg mb-4" src="https://picture-search.skywork.ai/aippt/image/sheet/b09817d10a1809e2984949d5fdd12ecf.jpg" data-sk-source-container="img" data-sk-source-url="https://www.eacar.co.kr/article/223143207120" data-sk-source-id="1949745836204048384"/>
+<p class="text-center text-sm text-gray-500">최신 디지털 인터페이스가 적용된<br/>현대적인 인테리어</p>
+</div>
+</div>
+<!-- Right Column - Features Comparison -->
+<div class="col-span-2">
+<div class="card p-6 h-full">
+<h2 class="text-2xl font-bold mb-4">편의 및 안전 기능</h2>
+<!-- Features Comparison Table -->
+<div class="overflow-hidden">
+<table class="w-full">
+<thead>
+<tr class="border-b border-gray-200">
+<th class="text-left py-2">기능</th>
+<th class="text-center py-2">
+<span class="kia-red font-medium">K9</span>
+</th>
+<th class="text-center py-2">
+<span class="hyundai-blue font-medium">그랜저 하이브리드</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-100">
+<td class="py-2">고속도로 주행 보조</td>
+<td class="text-center py-2">
+<span class="kia-bg text-white text-xs px-2 py-1 rounded">HDA</span>
+</td>
+<td class="text-center py-2">
+<span class="hyundai-bg text-white text-xs px-2 py-1 rounded">HDA2 (차선변경 지원)</span>
+</td>
+</tr>
+<tr class="border-b border-gray-100">
+<td class="py-2">인포테인먼트</td>
+<td class="text-center py-2">기본 시스템</td>
+<td class="text-center py-2">ccNC (무선 업데이트)</td>
+</tr>
+<tr class="border-b border-gray-100">
+<td class="py-2">헤드업 디스플레이</td>
+<td class="text-center py-2"><i class="fas fa-check kia-red"></i></td>
+<td class="text-center py-2"><i class="fas fa-check hyundai-blue"></i></td>
+</tr>
+<tr class="border-b border-gray-100">
+<td class="py-2">서라운드 뷰</td>
+<td class="text-center py-2"><i class="fas fa-check kia-red"></i></td>
+<td class="text-center py-2"><i class="fas fa-check hyundai-blue"></i></td>
+</tr>
+<tr class="border-b border-gray-100">
+<td class="py-2">디지털 키</td>
+<td class="text-center py-2">기본 버전</td>
+<td class="text-center py-2">디지털 키 2</td>
+</tr>
+<tr>
+<td class="py-2">빌트인 캠</td>
+<td class="text-center py-2">기본 버전</td>
+<td class="text-center py-2">빌트인 캠 2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Summary Points -->
+<div class="mt-6">
+<h3 class="font-bold text-lg mb-2">실질적 가치 평가</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-start">
+<div class="feature-icon kia-bg mr-2 flex-shrink-0">
+<i class="fas fa-car-side"></i>
+</div>
+<p class="text-sm">K9은 고급스러운 승차감과 플래그십 세단의 품격 제공</p>
+</div>
+<div class="flex items-start">
+<div class="feature-icon hyundai-bg mr-2 flex-shrink-0">
+<i class="fas fa-leaf"></i>
+</div>
+<p class="text-sm">그랜저 하이브리드는 최신 기술과 우수한 연비 효율성</p>
+</div>
+<div class="flex items-start">
+<div class="feature-icon kia-bg mr-2 flex-shrink-0">
+<i class="fas fa-couch"></i>
+</div>
+<p class="text-sm">K9은 넓고 안락한 실내공간으로 뒷좌석 편의성 우수</p>
+</div>
+<div class="flex items-start">
+<div class="feature-icon hyundai-bg mr-2 flex-shrink-0">
+<i class="fas fa-microchip"></i>
+</div>
+<p class="text-sm">그랜저는 더 발전된 운전자 보조 시스템 탑재</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Data for the fuel efficiency chart
+        const fuelData = [
+            {name: "K9", value: 8.5, color: "#BB162B"},
+            {name: "그랜저 하이브리드", value: 17, color: "#002C5F"}
+        ];
+        
+        // Set up the chart
+        const margin = {top: 10, right: 10, bottom: 20, left: 40};
+        const width = document.getElementById('fuel-chart').offsetWidth - margin.left - margin.right;
+        const height = document.getElementById('fuel-chart').offsetHeight - margin.top - margin.bottom;
+        
+        // Create SVG
+        const svg = d3.select("#fuel-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+        
+        // X scale
+        const x = d3.scaleBand()
+            .domain(fuelData.map(d => d.name))
+            .range([0, width])
+            .padding(0.3);
+        
+        // Y scale
+        const y = d3.scaleLinear()
+            .domain([0, 20])
+            .range([height, 0]);
+        
+        // Draw bars
+        svg.selectAll("rect")
+            .data(fuelData)
+            .join("rect")
+            .attr("x", d => x(d.name))
+            .attr("y", d => y(d.value))
+            .attr("width", x.bandwidth())
+            .attr("height", d => height - y(d.value))
+            .attr("fill", d => d.color)
+            .attr("rx", 4)
+            .attr("ry", 4);
+        
+        // Add value labels
+        svg.selectAll(".value-label")
+            .data(fuelData)
+            .join("text")
+            .attr("class", "value-label")
+            .attr("x", d => x(d.name) + x.bandwidth()/2)
+            .attr("y", d => y(d.value) - 5)
+            .attr("text-anchor", "middle")
+            .attr("fill", d => d.color)
+            .attr("font-weight", "bold")
+            .attr("font-size", "12px")
+            .text(d => d.value + " km/L");
+        
+        // Add X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("font-size", "10px");
+        
+        // Add Y axis
+        svg.append("g")
+            .call(d3.axisLeft(y).ticks(4))
+            .selectAll("text")
+            .attr("font-size", "10px");
+    </script>
+
+</body></html>

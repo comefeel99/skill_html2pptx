@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>연간 유지 비용 비교</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 961px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 961px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .hyundai-blue {
+            color: #002C5F;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .hyundai-bg {
+            background-color: #002C5F;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .axis-label {
+            font-size: 12px;
+        }
+        .legend-text {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-12 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-3">연간 유지 비용 비교</h1>
+<p class="text-gray-600 text-lg">연료비, 정비비, 보험료, 자동차세 등 두 차량의 유지 비용 분석 및 5년간 총 소유 비용 차이</p>
+</div>
+<!-- Main Content Section -->
+<div class="flex-grow flex flex-col">
+<!-- Annual Cost Comparison -->
+<div class="flex mb-6 gap-6">
+<!-- Cost Chart -->
+<div class="card p-6 flex-grow">
+<h3 class="text-xl font-bold mb-4">연간 유지 비용 항목별 비교</h3>
+<div class="h-44" id="annual-cost-chart" data-sk-source-container="chart" data-sk-source-id="EHBSW2" data-sk-source-type="web_search"></div>
+</div>
+<!-- Annual Summary -->
+<div class="card p-6 w-1/3">
+<h3 class="text-xl font-bold mb-4">연간 총 유지 비용</h3>
+<div class="space-y-4">
+<div>
+<div class="flex items-center">
+<div class="kia-bg w-4 h-4 rounded-sm mr-2"></div>
+<span class="text-lg">K9 중고차</span>
+</div>
+<p class="text-3xl font-bold kia-red mt-1">680만원</p>
+</div>
+<div>
+<div class="flex items-center">
+<div class="hyundai-bg w-4 h-4 rounded-sm mr-2"></div>
+<span class="text-lg">그랜저 하이브리드</span>
+</div>
+<p class="text-3xl font-bold hyundai-blue mt-1">265만원</p>
+</div>
+<div class="pt-3 border-t border-gray-200">
+<p class="text-lg">연간 절감액</p>
+<p class="text-3xl font-bold text-green-600 mt-1">415만원</p>
+</div>
+</div>
+</div>
+</div>
+<!-- 5-Year Total Cost -->
+<div class="card p-6 mb-6">
+<h3 class="text-xl font-bold mb-4">5년간 총 소유 비용 비교</h3>
+<div class="flex">
+<div class="w-2/3 h-32" id="total-cost-chart"></div>
+<div class="w-1/3 pl-6 flex flex-col justify-center">
+<p class="text-lg mb-2">5년간 총 절감액</p>
+<p class="text-4xl font-bold text-green-600">약 2,075만원</p>
+<p class="text-gray-600 mt-2">그랜저 하이브리드 선택 시</p>
+</div>
+</div>
+</div>
+<!-- Key Points -->
+<div class="bg-gray-50 p-6 rounded-lg">
+<h3 class="text-xl font-bold mb-3">주요 비용 차이 요인</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-start">
+<i class="fas fa-gas-pump mt-1 mr-3 text-green-600"></i>
+<p><span class="font-semibold">연료비:</span> 그랜저 하이브리드는 연비가 약 2배 우수하여 연간 133만원 절감 가능</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-tools mt-1 mr-3 text-green-600"></i>
+<p><span class="font-semibold">정비비:</span> 신차는 보증기간 내 정비 비용 부담이 적어 연간 110만원 절감</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-shield-alt mt-1 mr-3 text-green-600"></i>
+<p><span class="font-semibold">보험료:</span> K9은 차량가액과 부품가격이 높아 보험료가 연간 114만원 더 비쌈</p>
+</div>
+<div class="flex items-start">
+<i class="fas fa-receipt mt-1 mr-3 text-green-600"></i>
+<p><span class="font-semibold">자동차세:</span> K9(3,342cc)은 그랜저 하이브리드(1,598cc) 대비 세금이 58만원 높음</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Data for annual costs chart
+        const annualCostData = [
+            {category: "연료비", k9: 283, grandeur: 150},
+            {category: "정비비", k9: 130, grandeur: 20},
+            {category: "보험료", k9: 180, grandeur: 66},
+            {category: "자동차세", k9: 87, grandeur: 29}
+        ];
+        
+        // Data for 5-year total costs
+        const totalCostData = [
+            {name: "K9 중고차", value: 3400, color: "#BB162B"},
+            {name: "그랜저 하이브리드", value: 1325, color: "#002C5F"}
+        ];
+        
+        // Set up the annual costs chart
+        const margin1 = {top: 20, right: 30, bottom: 40, left: 60};
+        const width1 = document.getElementById('annual-cost-chart').offsetWidth - margin1.left - margin1.right;
+        const height1 = document.getElementById('annual-cost-chart').offsetHeight - margin1.top - margin1.bottom;
+        
+        // Create SVG for annual costs
+        const svg1 = d3.select("#annual-cost-chart")
+            .append("svg")
+            .attr("width", width1 + margin1.left + margin1.right)
+            .attr("height", height1 + margin1.top + margin1.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin1.left},${margin1.top})`);
+        
+        // X scale for categories
+        const x0 = d3.scaleBand()
+            .domain(annualCostData.map(d => d.category))
+            .range([0, width1])
+            .padding(0.2);
+        
+        // X scale for grouped bars
+        const x1 = d3.scaleBand()
+            .domain(["k9", "grandeur"])
+            .range([0, x0.bandwidth()])
+            .padding(0.05);
+        
+        // Y scale
+        const y = d3.scaleLinear()
+            .domain([0, 300])
+            .range([height1, 0]);
+        
+        // Color scale
+        const color = d3.scaleOrdinal()
+            .domain(["k9", "grandeur"])
+            .range(["#BB162B", "#002C5F"]);
+        
+        // Draw grouped bars
+        svg1.append("g")
+            .selectAll("g")
+            .data(annualCostData)
+            .join("g")
+            .attr("transform", d => `translate(${x0(d.category)},0)`)
+            .selectAll("rect")
+            .data(d => [
+                {key: "k9", value: d.k9},
+                {key: "grandeur", value: d.grandeur}
+            ])
+            .join("rect")
+            .attr("x", d => x1(d.key))
+            .attr("y", d => y(d.value))
+            .attr("width", x1.bandwidth())
+            .attr("height", d => height1 - y(d.value))
+            .attr("fill", d => color(d.key))
+            .attr("rx", 3)
+            .attr("ry", 3);
+        
+        // Add value labels
+        svg1.append("g")
+            .selectAll("g")
+            .data(annualCostData)
+            .join("g")
+            .attr("transform", d => `translate(${x0(d.category)},0)`)
+            .selectAll("text")
+            .data(d => [
+                {key: "k9", value: d.k9},
+                {key: "grandeur", value: d.grandeur}
+            ])
+            .join("text")
+            .attr("x", d => x1(d.key) + x1.bandwidth() / 2)
+            .attr("y", d => y(d.value) - 5)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "11px")
+            .attr("fill", d => color(d.key))
+            .attr("font-weight", "bold")
+            .text(d => d.value + "만원");
+        
+        // Add X axis
+        svg1.append("g")
+            .attr("transform", `translate(0,${height1})`)
+            .call(d3.axisBottom(x0).tickSize(0))
+            .call(g => g.select(".domain").remove())
+            .selectAll("text")
+            .attr("class", "axis-label");
+        
+        // Add Y axis
+        svg1.append("g")
+            .call(d3.axisLeft(y)
+                .tickFormat(d => d + "만원")
+                .ticks(5))
+            .call(g => g.select(".domain").remove())
+            .selectAll("text")
+            .attr("class", "axis-label");
+        
+        // Add legend
+        const legend1 = svg1.append("g")
+            .attr("transform", `translate(${width1 - 180}, 10)`);
+            
+        legend1.append("rect")
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", "#BB162B");
+            
+        legend1.append("text")
+            .attr("x", 20)
+            .attr("y", 10)
+            .attr("class", "legend-text")
+            .text("K9 중고차");
+            
+        legend1.append("rect")
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", "#002C5F")
+            .attr("transform", "translate(100, 0)");
+            
+        legend1.append("text")
+            .attr("x", 120)
+            .attr("y", 10)
+            .attr("class", "legend-text")
+            .text("그랜저 하이브리드");
+        
+        // Set up the total costs chart
+        const margin2 = {top: 20, right: 30, bottom: 30, left: 100};
+        const width2 = document.getElementById('total-cost-chart').offsetWidth - margin2.left - margin2.right;
+        const height2 = document.getElementById('total-cost-chart').offsetHeight - margin2.top - margin2.bottom;
+        
+        // Create SVG for total costs
+        const svg2 = d3.select("#total-cost-chart")
+            .append("svg")
+            .attr("width", width2 + margin2.left + margin2.right)
+            .attr("height", height2 + margin2.top + margin2.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin2.left},${margin2.top})`);
+        
+        // X scale for total costs
+        const x2 = d3.scaleLinear()
+            .domain([0, 4000])
+            .range([0, width2]);
+        
+        // Y scale for total costs
+        const y2 = d3.scaleBand()
+            .domain(totalCostData.map(d => d.name))
+            .range([0, height2])
+            .padding(0.3);
+        
+        // Draw bars for total costs
+        svg2.selectAll("rect")
+            .data(totalCostData)
+            .join("rect")
+            .attr("x", 0)
+            .attr("y", d => y2(d.name))
+            .attr("width", d => x2(d.value))
+            .attr("height", y2.bandwidth())
+            .attr("fill", d => d.color)
+            .attr("rx", 4)
+            .attr("ry", 4);
+        
+        // Add value labels for total costs
+        svg2.selectAll(".value-label")
+            .data(totalCostData)
+            .join("text")
+            .attr("class", "value-label")
+            .attr("x", d => x2(d.value) - 5)
+            .attr("y", d => y2(d.name) + y2.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("fill", "white")
+            .attr("font-weight", "bold")
+            .text(d => d.value + "만원");
+        
+        // Add Y axis labels for total costs
+        svg2.selectAll(".bar-label")
+            .data(totalCostData)
+            .join("text")
+            .attr("class", "bar-label")
+            .attr("x", -10)
+            .attr("y", d => y2(d.name) + y2.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("fill", d => d.color)
+            .attr("font-weight", "bold")
+            .text(d => d.name);
+        
+        // Add X axis for total costs
+        svg2.append("g")
+            .attr("transform", `translate(0,${height2})`)
+            .call(d3.axisBottom(x2)
+                .tickFormat(d => d + "만원")
+                .ticks(4))
+            .call(g => g.select(".domain").remove())
+            .selectAll("text")
+            .attr("class", "axis-label");
+    </script>
+
+</body></html>

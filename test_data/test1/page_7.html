@@ -1,0 +1,326 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>내구성 및 신뢰성 비교</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        body {width: 1280px; min-height: 1076px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 1076px;
+            
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,245,1) 100%);
+        }
+        .kia-red {
+            color: #BB162B;
+        }
+        .hyundai-blue {
+            color: #002C5F;
+        }
+        .kia-bg {
+            background-color: #BB162B;
+        }
+        .hyundai-bg {
+            background-color: #002C5F;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-axis {
+            stroke: #ccc;
+            stroke-width: 1;
+        }
+        .timeline-tick {
+            stroke: #ccc;
+            stroke-width: 1;
+        }
+        .warranty-bar {
+            stroke-width: 1;
+            stroke: #fff;
+        }
+        .timeline-label {
+            font-size: 12px;
+            fill: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-12 flex flex-col">
+<!-- Title Section -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-3">내구성 및 신뢰성 비교</h1>
+<p class="text-gray-600 text-lg">중고차 K9의 보증기간 잔여여부와 신차 그랜저 하이브리드의 보증혜택 비교</p>
+</div>
+<!-- Main Content Section -->
+<div class="flex-grow flex flex-col">
+<!-- Warranty Timeline Visualization -->
+<div class="card p-6 mb-6">
+<h2 class="text-xl font-bold mb-4">보증 기간 비교</h2>
+<div class="h-48" id="warranty-timeline" data-sk-source-container="chart" data-sk-source-id="GTR56S" data-sk-source-type="web_search"></div>
+</div>
+<!-- Comparison Cards -->
+<div class="flex gap-6 mb-6">
+<!-- K9 Card -->
+<div class="card p-6 flex-1">
+<div class="flex items-center mb-4">
+<div class="kia-bg text-white p-3 rounded-full mr-4">
+<i class="fas fa-car-alt text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold kia-red">2022년식 K9 (4만km)</h3>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start">
+<i class="fas fa-shield-alt mt-1 mr-3 text-gray-500"></i>
+<div>
+<p class="font-medium">일반 부품 보증 (3년/6만km)</p>
+<p class="text-sm text-gray-600">구매 시점에 따라 만료되었을 가능성 있음</p>
+</div>
+</li>
+<li class="flex items-start">
+<i class="fas fa-cog mt-1 mr-3 text-gray-500"></i>
+<div>
+<p class="font-medium">엔진/동력계통 보증 (5년/10만km)</p>
+<p class="text-sm text-gray-600">아직 유효하나 주행거리 증가에 따라 만료 예정</p>
+</div>
+</li>
+<li class="flex items-start">
+<i class="fas fa-tools mt-1 mr-3 text-red-500"></i>
+<div>
+<p class="font-medium">예상 수리비용</p>
+<p class="text-sm text-gray-600">타이어 교체 (약 100만원), 브레이크 패드 (약 15~20만원) 등 소모품 교체 시기 도래</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Grandeur Card -->
+<div class="card p-6 flex-1">
+<div class="flex items-center mb-4">
+<div class="hyundai-bg text-white p-3 rounded-full mr-4">
+<i class="fas fa-car text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold hyundai-blue">그랜저 하이브리드 (신차)</h3>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start">
+<i class="fas fa-shield-alt mt-1 mr-3 text-gray-500"></i>
+<div>
+<p class="font-medium">차체/일반 부품 보증 (3년/6만km)</p>
+<p class="text-sm text-gray-600">신차 구매로 전체 보증기간 적용</p>
+</div>
+</li>
+<li class="flex items-start">
+<i class="fas fa-cog mt-1 mr-3 text-gray-500"></i>
+<div>
+<p class="font-medium">엔진/동력계통 보증 (5년/10만km)</p>
+<p class="text-sm text-gray-600">신차 구매로 전체 보증기간 적용</p>
+</div>
+</li>
+<li class="flex items-start">
+<i class="fas fa-battery-full mt-1 mr-3 text-green-500"></i>
+<div>
+<p class="font-medium">하이브리드 전용 부품 (10년/20만km)</p>
+<p class="text-sm text-gray-600">배터리, 모터 등 고가 부품에 대한 장기 보증</p>
+</div>
+</li>
+<li class="flex items-start">
+<i class="fas fa-tools mt-1 mr-3 text-green-500"></i>
+<div>
+<p class="font-medium">예상 수리비용</p>
+<p class="text-sm text-gray-600">기본 소모품 교체 외 예상치 못한 수리비 발생 가능성 낮음 (연간 약 20만원)</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Key Considerations -->
+<div class="card p-6">
+<h2 class="text-xl font-bold mb-4">신뢰성 주요 고려사항</h2>
+<div class="grid grid-cols-2 gap-6">
+<div>
+<h4 class="text-lg font-bold mb-2 kia-red">K9 중고차</h4>
+<ul class="space-y-2">
+<li class="flex items-start">
+<i class="fas fa-exclamation-triangle mt-1 mr-2 text-yellow-500"></i>
+<p>이전 소유자의 운전/관리 습관에 따른 잠재적 문제 가능성</p>
+</li>
+<li class="flex items-start">
+<i class="fas fa-money-bill-wave mt-1 mr-2 text-yellow-500"></i>
+<p>4만km 시점은 주요 소모품 교체 주기가 다가오는 시기</p>
+</li>
+<li class="flex items-start">
+<i class="fas fa-car-crash mt-1 mr-2 text-yellow-500"></i>
+<p>보증 기간 이후 고장 발생 시 비용 부담 증가</p>
+</li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-bold mb-2 hyundai-blue">그랜저 하이브리드 신차</h4>
+<ul class="space-y-2">
+<li class="flex items-start">
+<i class="fas fa-check-circle mt-1 mr-2 text-green-500"></i>
+<p>모든 부품이 신품으로 초기 몇 년간 고장 확률 매우 낮음</p>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle mt-1 mr-2 text-green-500"></i>
+<p>하이브리드 시스템 핵심 부품 10년/20만km 장기 보증</p>
+</li>
+<li class="flex items-start">
+<i class="fas fa-check-circle mt-1 mr-2 text-green-500"></i>
+<p>정기적인 소모품 교체 외 예상치 못한 수리비 발생 가능성 낮음</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Warranty timeline visualization
+        const timelineData = [
+            {
+                car: "K9 중고차",
+                warranties: [
+                    {name: "일반 부품", start: 0, end: 3, current: 3, color: "#BB162B", opacity: 0.4},
+                    {name: "엔진/동력계통", start: 0, end: 5, current: 3, color: "#BB162B", opacity: 0.8}
+                ]
+            },
+            {
+                car: "그랜저 하이브리드",
+                warranties: [
+                    {name: "일반 부품", start: 0, end: 3, current: 0, color: "#002C5F", opacity: 0.4},
+                    {name: "엔진/동력계통", start: 0, end: 5, current: 0, color: "#002C5F", opacity: 0.7},
+                    {name: "하이브리드 부품", start: 0, end: 10, current: 0, color: "#002C5F", opacity: 1}
+                ]
+            }
+        ];
+
+        // Set up the chart dimensions
+        const margin = {top: 40, right: 30, bottom: 20, left: 150};
+        const width = document.getElementById('warranty-timeline').offsetWidth - margin.left - margin.right;
+        const height = document.getElementById('warranty-timeline').offsetHeight - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select("#warranty-timeline")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // X scale for years
+        const x = d3.scaleLinear()
+            .domain([0, 10])
+            .range([0, width]);
+
+        // Y scale for cars and their warranties
+        const carHeight = height / timelineData.length;
+        const warrantyHeight = carHeight / 3;
+
+        // Draw axis
+        svg.append("line")
+            .attr("class", "timeline-axis")
+            .attr("x1", 0)
+            .attr("y1", height)
+            .attr("x2", width)
+            .attr("y2", height);
+
+        // Draw ticks and labels
+        for (let i = 0; i <= 10; i += 1) {
+            svg.append("line")
+                .attr("class", "timeline-tick")
+                .attr("x1", x(i))
+                .attr("y1", height)
+                .attr("x2", x(i))
+                .attr("y2", height + 5);
+
+            svg.append("text")
+                .attr("class", "timeline-label")
+                .attr("x", x(i))
+                .attr("y", height + 15)
+                .attr("text-anchor", "middle")
+                .text(`${i}년`);
+        }
+
+        // Draw car labels
+        timelineData.forEach((car, i) => {
+            svg.append("text")
+                .attr("x", -10)
+                .attr("y", i * carHeight + carHeight / 2)
+                .attr("text-anchor", "end")
+                .attr("alignment-baseline", "middle")
+                .attr("font-weight", "bold")
+                .attr("font-size", "14px")
+                .text(car.car);
+
+            // Draw warranty bars
+            car.warranties.forEach((warranty, j) => {
+                // Full warranty bar
+                svg.append("rect")
+                    .attr("x", x(warranty.start))
+                    .attr("y", i * carHeight + j * warrantyHeight)
+                    .attr("width", x(warranty.end) - x(warranty.start))
+                    .attr("height", warrantyHeight - 5)
+                    .attr("rx", 4)
+                    .attr("fill", warranty.color)
+                    .attr("opacity", warranty.opacity)
+                    .attr("class", "warranty-bar");
+
+                // Current position marker for K9
+                if (car.car === "K9 중고차") {
+                    svg.append("line")
+                        .attr("x1", x(warranty.current))
+                        .attr("y1", i * carHeight + j * warrantyHeight)
+                        .attr("x2", x(warranty.current))
+                        .attr("y2", i * carHeight + j * warrantyHeight + warrantyHeight - 5)
+                        .attr("stroke", "#000")
+                        .attr("stroke-width", 2)
+                        .attr("stroke-dasharray", "3,3");
+                }
+
+                // Warranty name
+                svg.append("text")
+                    .attr("x", x(warranty.start) + 5)
+                    .attr("y", i * carHeight + j * warrantyHeight + (warrantyHeight - 5) / 2)
+                    .attr("alignment-baseline", "middle")
+                    .attr("fill", "white")
+                    .attr("font-size", "12px")
+                    .attr("font-weight", "bold")
+                    .text(warranty.name);
+            });
+        });
+
+        // Add legend
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -15)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold")
+            .text("보증 기간 (년)");
+
+        svg.append("line")
+            .attr("x1", width / 2 + 80)
+            .attr("y1", -15)
+            .attr("x2", width / 2 + 95)
+            .attr("y2", -15)
+            .attr("stroke", "#000")
+            .attr("stroke-width", 2)
+            .attr("stroke-dasharray", "3,3");
+
+        svg.append("text")
+            .attr("x", width / 2 + 100)
+            .attr("y", -15)
+            .attr("alignment-baseline", "middle")
+            .attr("font-size", "12px")
+            .text("현재 시점 (K9 3년차)");
+    </script>
+
+</body></html>
