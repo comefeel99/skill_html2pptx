@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>다이마루 (大丸) - 다양한 크기의 크리스마스 케이크</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .store-badge {
+            background-color: #FFD700;
+            color: #8B0000;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .cake-icon {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #FFF5E1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .cake-icon::after {
+            content: "";
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">다이마루 (大丸)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">다양한 크기의 크리스마스 케이크</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6">
+<p class="text-lg">
+                다이마루 백화점은 온라인 스토어를 통한 편리한 예약 시스템과 함께, 1인 가구를 위한 작은 사이즈의 케이크부터 파티용 오르되브르까지 폭넓은 크리스마스 메뉴를 제안합니다. 특히 각 지점의 특색을 살린 한정 메뉴가 돋보입니다.
+            </p>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-2 gap-6 flex-grow">
+<!-- Product 1 -->
+<div class="product-card p-5 flex">
+<div class="mr-4">
+<div class="cake-icon">
+<i class="fas fa-birthday-cake text-2xl" style="color: #8B0000;"></i>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">1인용 케이크</h3>
+<span class="store-badge">온라인 스토어</span>
+</div>
+<p class="text-sm mb-3">다이마루 마츠자카야 온라인 스토어에서 57종의 다양한 1인용 케이크를 선보여 혼자서도 크리스마스 분위기를 즐길 수 있도록 함.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">3,000 ~ 5,000엔대</span>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-5 flex">
+<div class="mr-4">
+<div class="cake-icon">
+<i class="fas fa-utensils text-2xl" style="color: #8B0000;"></i>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">다이마루 도쿄점 &#39;홋페타운&#39;</h3>
+</div>
+<p class="text-sm mb-3">지하 식품 코너 &#39;홋페타운&#39;에서 약 70종의 크리스마스 푸드 특선전 진행. 독특한 맛의 치킨과 다양한 종류의 슈톨렌이 인기.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">가격대</span>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="product-card p-5 flex">
+<div class="mr-4">
+<div class="cake-icon">
+<i class="fas fa-map-marker-alt text-2xl" style="color: #8B0000;"></i>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">다이마루 교토점 한정 케이크</h3>
+</div>
+<p class="text-sm mb-3">교토 지역의 유명 파티스리 및 인기 브랜드와 협업하여 만든 한정판 케이크. 지역색을 살린 특별한 디자인과 맛이 특징.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">4,320엔 ~ 7,200엔</span>
+</div>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="product-card p-5 flex">
+<div class="mr-4">
+<div class="cake-icon">
+<i class="fas fa-cookie text-2xl" style="color: #8B0000;"></i>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">모로조프 크리스마스 케이크</h3>
+</div>
+<p class="text-sm mb-3">다이마루에 입점한 모로조프에서 선보이는 크리스마스 한정 케이크. 클래식한 디자인과 안정적인 맛으로 꾸준한 사랑을 받음.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">가격대</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Features -->
+<div class="mt-6 bg-white p-5 rounded-lg shadow">
+<h3 class="text-lg font-bold mb-3" style="color: #8B0000;">다이마루의 특별한 서비스</h3>
+<div class="grid grid-cols-3 gap-4">
+<div class="flex items-center">
+<i class="fas fa-shopping-cart text-xl mr-3" style="color: #8B0000;"></i>
+<span>편리한 온라인 예약 시스템</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-box-open text-xl mr-3" style="color: #8B0000;"></i>
+<span>다양한 크기와 디자인의 케이크</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-map-marked-alt text-xl mr-3" style="color: #8B0000;"></i>
+<span>지점별 특색 메뉴</span>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">온라인 주문 가능: 다이마루 마츠자카야</span>
+</div>
+<div class="text-sm" style="color: #666;">11/21</div>
+</div>
+</div>
+
+</body></html>

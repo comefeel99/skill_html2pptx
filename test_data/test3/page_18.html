@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>애로우트리 (ARROWTREE) - 과일을 활용한 크리스마스 디저트</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .strawberry-icon {
+            color: #FF6B6B;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">애로우트리 (ARROWTREE)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">과일을 활용한 크리스마스 디저트</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6">
+<p class="text-lg">
+                신선한 과일을 활용한 디저트로 유명한 ARROWTREE는 크리스마스 시즌을 맞아 아기자기한 패키지의 구움 과자 선물 세트를 출시했습니다.
+                특별한 디자인과 맛으로 고객들을 매료시키며, 크리스마스 증거로 인기가 높습니다.
+            </p>
+</div>
+<!-- Products -->
+<div class="grid grid-cols-2 gap-8 flex-grow">
+<!-- Left Column - Gift Sets -->
+<div class="flex flex-col space-y-6">
+<h3 class="text-2xl font-bold mb-2" style="color: #8B0000;">
+<i class="fas fa-gift mr-2"></i>크리스마스 선물 세트
+                </h3>
+<!-- Product 1 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h4 class="text-xl font-bold" style="color: #8B0000;">X&#39;mas 홀리데이 리본 스위츠 컬렉션</h4>
+<i class="fas fa-ribbon text-red-500"></i>
+</div>
+<p class="text-sm mb-4">딸기, 쇼콜라 프랑부아즈 피낭시에, 딸기 사블레, 플로랑탱 등 다양한 구움 과자를 화려한 리본 패키지에 담은 한정 컬렉션.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">1,080엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h4 class="text-xl font-bold" style="color: #8B0000;">X&#39;mas 윈터 하우스 기프트 박스</h4>
+<i class="fas fa-home text-blue-500"></i>
+</div>
+<p class="text-sm mb-4">크리스마스 집 모양의 패키지에 피낭시에, 사블레, 부세 등 다양한 구움 과자를 담은 선물 세트.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">1,581엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+<i class="fas fa-star text-yellow-500 mx-1"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column - Signature Product -->
+<div class="bg-white rounded-lg p-6 shadow-lg flex flex-col">
+<h3 class="text-2xl font-bold mb-4" style="color: #8B0000;">
+<i class="fas fa-crown mr-2"></i>시그니처 메뉴
+                </h3>
+<!-- Product 3 -->
+<div class="flex-grow product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h4 class="text-2xl font-bold" style="color: #8B0000;">X&#39;mas 딸기 피낭시에</h4>
+<i class="fas fa-cookie text-red-500"></i>
+</div>
+<p class="text-sm mb-4">ARROWTREE의 시그니처 메뉴인 딸기 피낭시에의 크리스마스 버전. 풍부한 딸기 향과 촉촉한 식감이 특징입니다.</p>
+<div class="flex-grow flex flex-col justify-center">
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-red-50 p-3 rounded-lg flex items-center">
+<i class="fas fa-box-open text-xl strawberry-icon mr-3"></i>
+<span>5개입: 741엔</span>
+</div>
+<div class="bg-red-50 p-3 rounded-lg flex items-center">
+<i class="fas fa-box-open text-xl strawberry-icon mr-3"></i>
+<span>8개입: 1,181엔</span>
+</div>
+</div>
+<div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+<p class="text-sm"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i>ARROWTREE의 가장 인기 있는 메뉴로, 신선한 딸기를 직접 사용하여 만든 부드러운 피낭시에.</p>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<div class="flex items-center">
+<i class="fas fa-heart text-red-500 mr-2"></i>
+<span class="text-sm italic">&#34;딸기의 향기를 느끼세요&#34;</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">선물용으로도 적합한 인기 메뉴입니다.</span>
+</div>
+<div class="text-sm" style="color: #666;">6/21</div>
+</div>
+</div>
+
+</body></html>

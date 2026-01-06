@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ツ오ップ (Zopf) - 빵의 성지의 크리스마스 베이커리</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .bread-icon {
+            position: absolute;
+            opacity: 0.1;
+            color: #8B0000;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6 z-10">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">ツ오ップ (Zopf)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">빵의 성지의 크리스마스 베이커리</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-8 z-10">
+<p class="text-lg">
+                치바현에 위치하며 &#39;빵의 성지&#39;로 불리는 Zopf는 매일 300여 종의 다양한 빵을 선보이는 것으로 유명합니다. 
+                크리스마스 시즌에는 전통적인 빵과 함께 특별한 메뉴를 기대할 수 있습니다.
+            </p>
+</div>
+<!-- Decorative elements -->
+<div class="bread-icon" style="top: 100px; left: 50px; transform: rotate(-15deg);">
+<i class="fas fa-bread-slice text-9xl"></i>
+</div>
+<div class="bread-icon" style="bottom: 80px; right: 70px; transform: rotate(10deg);">
+<i class="fas fa-bread-slice text-9xl"></i>
+</div>
+<div class="bread-icon" style="top: 200px; right: 150px; transform: rotate(45deg);">
+<i class="fas fa-bread-slice text-8xl"></i>
+</div>
+<!-- Products -->
+<div class="flex flex-1 gap-8 z-10">
+<!-- Product 1 -->
+<div class="w-1/3">
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-2xl font-bold" style="color: #8B0000;">크리스마스 슈톨렌</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-base mb-4">
+                                Zopf 스타일로 재해석한 슈톨렌. 풍부한 버터와 럼에 절인 과일, 겨과류가 드문뿍 들어가 깊은 맛을 냅니다.
+                            </p>
+<div class="mt-4 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">전통적인 독일 크리스마스 빵</span>
+</div>
+<div class="mt-2 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">Zopf의 독특한 재해석</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">가격: 정보 없음</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="w-1/3">
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-2xl font-bold" style="color: #8B0000;">카레빵</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-base mb-4">
+                                Zopf의 최고 인기 메뉴. 크리스마스 파티의 핑거푸드로도 손색이 없는, 속이 꽉 찬 진한 맛의 카레빵.
+                            </p>
+<div class="mt-4 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">크리스마스 파티 필수품</span>
+</div>
+<div class="mt-2 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">손쉽게 즐길 수 있는 디저트</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">가격: 정보 없음</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="w-1/3">
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-2xl font-bold" style="color: #8B0000;">다양한 하드 계열 빵</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-base mb-4">
+                                크리스마스 디너에 곁들일 식사빵으로 최적인 다양한 종류의 하드 계열 빵.
+                            </p>
+<div class="mt-4 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">크리스마스 아침에 즐기기 좋음</span>
+</div>
+<div class="mt-2 flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">다양한 식감과 맛 제공</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">가격: 정보 없음</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Store Info -->
+<div class="mt-8 bg-red-800 text-white p-4 rounded-lg flex justify-between items-center z-10">
+<div class="flex items-center">
+<i class="fas fa-map-marker-alt text-2xl mr-3"></i>
+<span>위치: 치바현</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-utensils text-2xl mr-3"></i>
+<span>특점: 매일 300여 종의 다양한 빵</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-calendar-alt text-2xl mr-3"></i>
+<span>크리스마스 시즌: 12월 초부터 특별 메뉴 제공</span>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center z-10">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">더 많은 정보: Zopf 공식 웹사이트 참조</span>
+</div>
+<div class="text-sm" style="color: #666;">7/21</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>패밀리마트 - 트와이스 콜라보 &amp; 초콜릿 디저트</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .twice-banner {
+            background: linear-gradient(45deg, #8B0000, #FF6B6B);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">패밀리마트 (FamilyMart)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">트와이스 콜라보 &amp; 초콜릿 디저트</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6">
+<div class="twice-banner p-4 mb-4 text-white flex items-center">
+<i class="fas fa-star text-yellow-300 text-2xl mr-3"></i>
+<p class="text-lg font-bold">2024년 크리스마스 앰버서더로 인기 K-POP 그룹 &#39;트와이스(TWICE)&#39;를 발탁하여 특별 한정판 케이크을 출시했습니다.</p>
+</div>
+<p class="text-lg">
+                또한, &#39;패밀리마트가 초콜릿으로 가득하다!&#39;라는 콘셉트 아래 다양한 식감과 맛을 강조한 13종의 초콜릿 디저트 시리즈를 선보이며 초콜릿 애호가들을 공략합니다.
+            </p>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-2 gap-6 flex-grow">
+<!-- TWICE Happiness Cake -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">
+<i class="fas fa-heart text-red-500 mr-2"></i>트와이스 해피니스 케이크
+                    </h3>
+<i class="fas fa-crown text-yellow-500"></i>
+</div>
+<p class="text-sm mb-3">딸기잼, 딸기 젤리, 베리 무스가 들어간 12cm 타르트 케이크. 트와이스 멤버 사진이 담긴 특별 상자와 키링 굿즈가 포함된 한정판.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">4,700엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+</div>
+<!-- Rich Chocolate Roll -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">
+<i class="fas fa-ribbon text-brown-500 mr-2"></i>농후 쇼콜라 롤
+                    </h3>
+<i class="fas fa-cookie text-yellow-600"></i>
+</div>
+<p class="text-sm mb-3">브랜디 시럽을 적신 코코아 스펀지에 가나슈 휘핑을 감싸고 초콜릿으로 코팅하여 바삭함과 부드러움을 동시에 즐길 수 있는 롤케이크.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">298엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500"></i>
+<i class="fas fa-star-half-alt text-yellow-500"></i>
+</div>
+</div>
+</div>
+<!-- Rich Fondant Chocolate -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">
+<i class="fas fa-square text-brown-600 mr-2"></i>농후 퐁당 쇼콜라
+                    </h3>
+<i class="fas fa-gift text-yellow-600"></i>
+</div>
+<p class="text-sm mb-3">따뜻하게 데우면 속의 초콜릿이 녹아내려 더욱 진한 맛을 느낄 수 있는 퐁당 쇼콜라.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">268엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500"></i>
+<i class="fas fa-star-half-alt text-yellow-500"></i>
+</div>
+</div>
+</div>
+<!-- Raspberry-scented Rich Chocolate Eclairs -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">
+<i class="fas fa-seedling text-pink-500 mr-2"></i>라즈베리 향 진한 쇼콜라 에클레어
+                    </h3>
+<i class="fas fa-spa text-pink-400"></i>
+</div>
+<p class="text-sm mb-3">진하고 부드러운 초코 크림에 라즈베리를 토핑하여 상큼함을 더한 에클레어.</p>
+<div class="flex justify-between items-center">
+<span class="price-tag">258엔</span>
+<div class="flex">
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500 mr-1"></i>
+<i class="fas fa-star text-yellow-500"></i>
+<i class="fas fa-star-half-alt text-yellow-500"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Info -->
+<div class="mt-6 bg-white p-4 rounded-lg shadow">
+<div class="flex items-start">
+<i class="fas fa-info-circle text-red-800 text-xl mt-1 mr-3"></i>
+<div>
+<p class="text-sm mb-2">
+<span class="font-bold">추가 정보:</span>
+                        패밀리마트는 2024년 크리스마스 시즌에 총 13종의 초콜릿 디저트를 출시했습니다. 이외에도 다양한 편의점 제품들과 콜라보 상품들을 통해 고객들을 즐겁게 만들어줍니다.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-4 flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-map-marker-alt mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">일반 편의점에서 판매</span>
+</div>
+<div class="text-sm" style="color: #666;">20/21</div>
+</div>
+</div>
+
+</body></html>

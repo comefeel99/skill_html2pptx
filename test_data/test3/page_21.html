@@ -1,0 +1,158 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>빵집 돈스케 (パン家のどん助) - 동네 빵집의 크리스마스 베이커리</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .bakery-icon {
+            color: #8B0000;
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">빵집 돈스케 (パン家のどん助)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">동네 빵집의 크리스마스 베이커리</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6">
+<p class="text-lg">
+                도쿄 신주쿠에 위치한 인기 동네 빵집으로, 특히 다양한 종류의 베이글이 유명합니다.
+                친근하고 따뜻한 분위기의 크리스마스 시즌 메뉴를 기대할 수 있습니다.
+            </p>
+</div>
+<!-- Store Info -->
+<div class="flex mb-6">
+<div class="bg-red-800 text-white p-4 rounded-lg flex items-center">
+<i class="fas fa-map-marker-alt text-2xl mr-3"></i>
+<div>
+<h3 class="font-bold">위치: 도쿄 신주쿠</h3>
+<p class="text-sm">뉴욕의 동네 빵집 스타일</p>
+</div>
+</div>
+<div class="ml-auto bg-yellow-100 p-4 rounded-lg flex items-center">
+<i class="fas fa-cookie text-yellow-600 text-2xl mr-3"></i>
+<div>
+<h3 class="font-bold text-yellow-800">특점</h3>
+<p class="text-sm text-yellow-800">친근한 분위기, 따뜻한 느낌</p>
+</div>
+</div>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-3 gap-6 flex-grow">
+<!-- Product 1 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<i class="fas fa-bread-slice bakery-icon"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">크리스마스 장식 베이글</h3>
+</div>
+<p class="text-sm mb-4">시그니처 메뉴인 치즈 베이글이나 다른 인기 베이글에 크리스마스 테마의 아이싱이나 토핑을 더한 한정판 베이글.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-gray-600">신주쿠점 특제</span>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<i class="fas fa-gift bakery-icon"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">산타 모양 크림빵</h3>
+</div>
+<p class="text-sm mb-4">아이들에게 인기 있는 산타클로스나 눈사람 모양으로 만든 귀여운 캐릭터 빵. 속에는 커스터드 크림이나 초콜릿 크림이 들어있습니다.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-gray-600">크리스마스 특제</span>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<i class="fas fa-cookie-bite bakery-icon"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">미니 슈톨렌</h3>
+</div>
+<p class="text-sm mb-4">부담 없이 즐길 수 있는 1인용 또는 소형 사이즈의 슈톨렌. 크리스마스 시즌에 한정된 특별한 크리스마스 버전.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-gray-600">소형 패키지</span>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+<!-- Product 4 - New Addition -->
+<div class="product-card p-5 flex flex-col bg-gradient-to-br from-yellow-50 to-red-50">
+<div class="flex items-center mb-4">
+<i class="fas fa-snowflake bakery-icon"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">크리스마스 특별 케이크</h3>
+</div>
+<p class="text-sm mb-4">로손의 인기를 이어받아 크리스마스 테마로 재해석된 특별 케이크. 따뜻한 색감과 크리스마스 요소가 특징입니다.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-gray-600">2024년 신제품</span>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+<!-- Product 5 - New Addition -->
+<div class="product-card p-5 flex flex-col bg-gradient-to-br from-yellow-50 to-red-50">
+<div class="flex items-center mb-4">
+<i class="fas fa-mug-hot bakery-icon"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">크리스마스 모카코</h3>
+</div>
+<p class="text-sm mb-4">크리스마스 테마로 재해석된 모카코. 따뜻한 초콜릿의 풍미와 크리스마스의 기분을 동시에 즐길 수 있는 디저트.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-gray-600">2024년 신제품</span>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+</div>
+<!-- Store Promotion -->
+<div class="bg-red-800 text-white p-5 rounded-lg flex flex-col justify-center">
+<div class="text-center">
+<i class="fas fa-calendar-alt text-3xl mb-3"></i>
+<h3 class="text-xl font-bold mb-2">크리스마스 이벤트</h3>
+<p class="text-sm">빵집 돈스케는 매년 크리스마스 시즌에 특별한 이벤트를 개최합니다.</p>
+<p class="text-sm mt-2">동네 주민들과 함께 즐기는 따뜻한 크리스마스 분위기를 만들어냅니다.</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">빵집 돈스케의 따뜻한 크리스마스 메뉴를 즐겨보세요!</span>
+</div>
+<div class="text-sm" style="color: #666;">9/21</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>마루이 (マル이) - 합리적인 가격의 크리스마스 케이크</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .feature-badge {
+            background-color: #FFD700;
+            color: #8B0000;
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">마루이 (マル이)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">합리적인 가격의 크리스마스 케이크</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6">
+<p class="text-lg">
+                마루이는 백화점 오리지널 브랜드의 합리적인 가격대 케이크부터, 전국의 개성 넘치는 소규모 스위츠 브랜드를 발굴하여 소개하는 특별 기획전까지 다채로운 크리스마스 프로모션을 진행합니다.
+            </p>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-3 gap-6 flex-grow">
+<!-- Product 1 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">마루이 오리지널 케이크</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<p class="text-sm mb-4">마루이에서 직접 기획하고 판매하는 오리지널 크리스마스 케이크. 좋은 품질과 합리적인 가격으로 인기가 높음.</p>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="feature-badge">오리지널</span>
+<span class="feature-badge">합리적 가격</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">4,536엔 (5호)</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">신주쿠 마루이 &#39;amajuku展&#39;</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<p class="text-sm mb-4">전국 15개의 작은 스위츠 브랜드가 참여하는 팝업 스토어. 크리스마스 선물로 좋은 독특하고 아기자기한 디저트를 제안.</p>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="feature-badge">전국 브랜드</span>
+<span class="feature-badge">소규모 스위츠</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag"> 다양</span>
+<i class="fas fa-gift text-red-800"></i>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">마루이 이마이 케이크</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<p class="text-sm mb-4">유명 호텔 및 지역 인기점의 크리스마스 케이크를 예약 판매. 검증된 맛과 품질의 케이크를 다양하게 선보임.</p>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="feature-badge">검증된 품질</span>
+<span class="feature-badge">예약 가능</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag"> 다양</span>
+<i class="fas fa-hotel text-red-800"></i>
+</div>
+</div>
+<!-- Product 4 - Featured -->
+<div class="product-card p-5 flex flex-col col-span-3 bg-gradient-to-r from-red-50 to-yellow-50">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold" style="color: #8B0000;">마루이 크리스마스 특별 기획</h3>
+<i class="fas fa-crown text-yellow-500"></i>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-4">
+<div class="bg-white p-3 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="fas fa-check-circle text-green-600 mr-2"></i>
+<span class="font-semibold">오리지널 케이크</span>
+</div>
+<p class="text-xs">마루이 팀이 직접 개발한 독창적인 크리스마스 케이크</p>
+</div>
+<div class="bg-white p-3 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="fas fa-check-circle text-green-600 mr-2"></i>
+<span class="font-semibold">브랜드 팝업</span>
+</div>
+<p class="text-xs">전국 소규모 스위츠 브랜드의 개성 있는 디저트</p>
+</div>
+<div class="bg-white p-3 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="fas fa-check-circle text-green-600 mr-2"></i>
+<span class="font-semibold">검증된 맛</span>
+</div>
+<p class="text-xs">호텔 및 지역 인기점의 크리스마스 케이크</p>
+</div>
+</div>
+<div class="flex justify-center items-center mt-auto">
+<div class="flex items-center mr-8">
+<i class="fas fa-tag text-red-800 mr-2"></i>
+<span class="font-bold">합리적인 가격대</span>
+</div>
+<div class="flex items-center mr-8">
+<i class="fas fa-heart text-red-800 mr-2"></i>
+<span class="font-bold">좋은 품질</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-gift text-red-800 mr-2"></i>
+<span class="font-bold">크리스마스 선물</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">마루이는 백화점 오리지널 브랜드로, 가격대와 품질의 균형을 자랑합니다.</span>
+</div>
+<div class="text-sm" style="color: #666;">14/21</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>한큐 (阪急) - 트렌디한 크리스마스 케이크 컬렉션</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .trendy-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.05;
+            background-image: radial-gradient(circle, #8B0000 10%, transparent 10%),
+                              radial-gradient(circle, #8B0000 10%, transparent 10%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .star {
+            position: absolute;
+            color: #FFD700;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% {opacity: 0.5;}
+            100% {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Trendy background pattern -->
+<div class="trendy-bg"></div>
+<!-- Stars decoration -->
+<div class="star text-xl" style="top: 15%; left: 5%;"><i class="fas fa-star"></i></div>
+<div class="star text-2xl" style="top: 25%; left: 90%; animation-delay: 0.5s;"><i class="fas fa-star"></i></div>
+<div class="star text-lg" style="top: 70%; left: 8%; animation-delay: 1s;"><i class="fas fa-star"></i></div>
+<div class="star text-xl" style="top: 65%; left: 95%; animation-delay: 1.5s;"><i class="fas fa-star"></i></div>
+<!-- Header -->
+<div class="mb-6 z-10">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">한큐 (阪急)</h1>
+<h2 class="text-2xl font-semibold" style="color: #228B22;">트렌디한 크리스마스 케이크 컬렉션</h2>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6 z-10">
+<p class="text-lg">
+                한큐 백화점은 매년 트렌드를 선도하는 화려하고 독창적인 크리스마스 케이크 라인업으로 유명합니다. 
+                특히 우메다 본점은 일본 전역의 유명 파티시에들이 참여하는 것으로 알려져 경쟁이 치열합니다.
+            </p>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-3 gap-8 flex-grow z-10">
+<!-- Product 1 -->
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-bold" style="color: #8B0000;">파티스리 몽쉐르 케이크</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-sm mb-4">인기 캐릭터 &#39;헬로키티&#39;를 모티브로 한 사랑스러운 디자인의 케이크. 아이들이 있는 가족 단위 고객에게 특히 인기.</p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">캐릭터 케이크</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">가족 즐기기</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">트렌디 디자인</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">선품</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-bold" style="color: #8B0000;">HIBIKA &#39;눈딸기-노엘&#39;</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-sm mb-4">&#39;겨울의 과자&#39;를 콘셉트로 하는 HIBIKA의 크리스마스 한정 케이크. 섬세하고 서정적인 디자인이 특징.</p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">겨울 테마</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">섬세한 디자인</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">특별한 감각</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">선품</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="product-card p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-bold" style="color: #8B0000;">한큐 한정판 케이크</h3>
+<i class="fas fa-star text-yellow-500"></i>
+</div>
+<div class="flex-grow">
+<p class="text-sm mb-4">한큐 백화점에서만 만날 수 있는 유명 파티시에들의 한정판 케이크. 매년 새로운 디자인과 맛으로 기대를 모음.</p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">한정판</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">신선한 맛</span>
+<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">독특한 디자인</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="price-tag">선품</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+</div>
+<!-- Features Section -->
+<div class="mt-8 grid grid-cols-3 gap-6 z-10">
+<div class="bg-white bg-opacity-80 rounded-lg p-4 flex items-center">
+<div class="rounded-full bg-red-800 p-3 mr-4">
+<i class="fas fa-paint-brush text-white"></i>
+</div>
+<div>
+<h4 class="font-bold text-red-800">독창적인 디자인</h4>
+<p class="text-sm">매년 새로운 테마와 디자인으로 고객들의 관심을 끌입니다.</p>
+</div>
+</div>
+<div class="bg-white bg-opacity-80 rounded-lg p-4 flex items-center">
+<div class="rounded-full bg-red-800 p-3 mr-4">
+<i class="fas fa-users text-white"></i>
+</div>
+<div>
+<h4 class="font-bold text-red-800">우메다 본점 특별</h4>
+<p class="text-sm">일본 전역의 유명 파티시에들이 참여하는 것으로 알려져 있습니다.</p>
+</div>
+</div>
+<div class="bg-white bg-opacity-80 rounded-lg p-4 flex items-center">
+<div class="rounded-full bg-red-800 p-3 mr-4">
+<i class="fas fa-calendar-alt text-white"></i>
+</div>
+<div>
+<h4 class="font-bold text-red-800">선품 및 예약</h4>
+<p class="text-sm">선품부터 예약 판매까지 다양한 구매渠道로 고객을 대상으로 합니다.</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 flex justify-between items-center z-10">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">2024년 온라인 판매는 종료되었습니다.</span>
+</div>
+<div class="text-sm" style="color: #666;">15/21</div>
+</div>
+</div>
+
+</body></html>

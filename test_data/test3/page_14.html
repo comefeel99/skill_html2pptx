@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>로손 - 예약 중심의 크리스마스 디저트</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body {width: 1280px; min-height: 720px; font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(to bottom, #FFF5E1, #FFF8E8);
+            
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            background-color: #8B0000;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #8B0000;
+            color: white;
+            font-size: 1.8rem;
+        }
+        .strategy-box {
+            background-color: rgba(139, 0, 0, 0.1);
+            border-left: 4px solid #8B0000;
+        }
+    </style>
+</head>
+<body>
+<div class="slide p-10 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-4xl font-bold mb-2" style="color: #8B0000;">로손 - 예약 중심의 크리스마스 디저트</h1>
+<div class="w-24 h-1 bg-red-800 mt-2"></div>
+</div>
+<!-- Introduction -->
+<div class="mb-6 strategy-box p-4">
+<p class="text-lg">
+                로손은 음식물 쓰레기 감축을 위해 크리스마스 케이크를 포함한 시즌 상품을 &#39;예약 판매&#39; 중심으로 운영하는 전략을 강화하고 있습니다.
+                이로 인해 매장 진열 판매보다는 앱을 통한 사전 예약과 픽업 서비스에 집중하는 모습을 보입니다.
+                스테디셀러인 &#39;프리미엄 롤케이크&#39;와 유명 베이커리 카페와의 협업 상품이 주를 이룹니다.
+            </p>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-3 gap-6 mb-6">
+<!-- Product 1 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<div class="icon-circle mr-4">
+<i class="fas fa-ice-cream"></i>
+</div>
+<h3 class="text-xl font-bold" style="color: #8B0000;">프리미엄 롤케이크</h3>
+</div>
+<p class="text-sm mb-4">로손의 시그니처 디저트. 홋카이도산 생크림을 사용하여 진하고 깔끔한 맛이 특징.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">343엔</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<div class="icon-circle mr-4">
+<i class="fas fa-sandwich"></i>
+</div>
+<h3 class="text-xl font-bold" style="color: #8B0000;">빵과 에스프레소와 콜라보 샌드</h3>
+</div>
+<p class="text-sm mb-4">오모테산도의 유명 베이커리 카페 &#39;빵과 에스프레소와&#39;와 협업한 상품. 
+                    과일, 팟, 생크림을 넣은 &#39;과일 다이후쿠&#39; 샌드위치와 &#39;새우와 참치&#39; 샌드위치 등을 출시.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">430엔 ~ 441엔</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="product-card p-5 flex flex-col">
+<div class="flex items-center mb-4">
+<div class="icon-circle mr-4">
+<i class="fas fa-bread-slice"></i>
+</div>
+<h3 class="text-xl font-bold" style="color: #8B0000;">빵과 에스프레소와 콜라보 베이커리</h3>
+</div>
+<p class="text-sm mb-4">카페의 인기 메뉴를 재해석한 &#39;촉촉한 프렌치토스트&#39;와 &#39;커피 크림빵&#39; 등.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="price-tag">160엔 ~ 192엔</span>
+<i class="fas fa-cookie text-red-800"></i>
+</div>
+</div>
+</div>
+<!-- Christmas Reservation Cake -->
+<div class="bg-white p-5 rounded-lg shadow-md mb-6">
+<div class="flex items-center mb-3">
+<i class="fas fa-calendar-check text-2xl mr-3" style="color: #8B0000;"></i>
+<h3 class="text-xl font-bold" style="color: #8B0000;">크리스마스 예약 판매 케이크</h3>
+</div>
+<p class="text-sm mb-3">
+                로손은 다양한 종류의 크리스마스 케이크를 앱과 카탈로그를 통해 예약 판매합니다.
+                매장 판매는 1인용 사이즈의 쇼트케이크 위주로 한정적으로 운영될 가능성이 높습니다.
+            </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">앱을 통한 사전 예약</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">매장 픽업 서비스</span>
+</div>
+<div class="flex items-center">
+<i class="fas fa-check-circle mr-2" style="color: #228B22;"></i>
+<span class="text-sm">소수정예의 엄선된 라인업</span>
+</div>
+</div>
+</div>
+<!-- Reservation Process -->
+<div class="bg-red-800 text-white p-5 rounded-lg mb-6">
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center">
+<i class="fas fa-mobile-alt text-3xl mb-2"></i>
+<p class="text-center">앱 예약</p>
+</div>
+<i class="fas fa-arrow-right text-2xl"></i>
+<div class="flex flex-col items-center">
+<i class="fas fa-store text-3xl mb-2"></i>
+<p class="text-center">매장 방문</p>
+</div>
+<i class="fas fa-arrow-right text-2xl"></i>
+<div class="flex flex-col items-center">
+<i class="fas fa-box-open text-3xl mb-2"></i>
+<p class="text-center">상품 준비</p>
+</div>
+<i class="fas fa-arrow-right text-2xl"></i>
+<div class="flex flex-col items-center">
+<i class="fas fa-hand-holding-heart text-3xl mb-2"></i>
+<p class="text-center">픽업 서비스</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-info-circle mr-2" style="color: #8B0000;"></i>
+<span class="text-sm" style="color: #666;">로손의 크리스마스 시즌은 2024년 11월부터 시작됩니다.</span>
+</div>
+<div class="text-sm" style="color: #666;">21/21</div>
+</div>
+</div>
+
+</body></html>
