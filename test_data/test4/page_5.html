@@ -1,0 +1,204 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Additional App Improvements</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script><style>
+        body {width: 1280px; height: 720px; margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .apple-blue {
+            color: #007AFF;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        .app-card {
+            transition: transform 0.2s;
+        }
+        .app-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+<div class="slide gradient-bg p-12 flex flex-col">
+<!-- Header -->
+<div class="mb-8">
+<h1 class="text-5xl font-bold tracking-tight text-gray-800">Additional App <span class="apple-blue">Improvements</span></h1>
+<p class="text-xl text-gray-600 mt-2">Enhanced functionality across core iOS applications</p>
+</div>
+<!-- App Grid - Top Row -->
+<div class="flex space-x-6 mb-6">
+<!-- Notes -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-sticky-note apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Notes</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Record and transcribe calls directly into notes</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Markdown now available as export option</span>
+</li>
+</ul>
+</div>
+<!-- Reminders -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-check-square apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Reminders</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Add Reminders control to Control Center</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Quick creation of reminders from anywhere</span>
+</li>
+</ul>
+</div>
+<!-- Files -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-folder apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Files</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Folder customization with colors and icons</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Set default apps for specific file types</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Use audio files directly as ringtones</span>
+</li>
+</ul>
+</div>
+<!-- Clock -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-clock apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Clock</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Customizable alarm snooze (1-15 minutes)</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Larger alarm stop/snooze buttons</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- App Grid - Bottom Row -->
+<div class="flex space-x-6">
+<!-- Calculator -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-calculator apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Calculator</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Math Notes support for equations in 3 variables</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>3D graph visualization capabilities</span>
+</li>
+</ul>
+</div>
+<!-- Passwords -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-key apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Passwords</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Password history with change dates</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Secure export to other password managers</span>
+</li>
+</ul>
+</div>
+<!-- Journal -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-book apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Journal</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Create multiple distinct journals</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Organize entries across different journals</span>
+</li>
+</ul>
+</div>
+<!-- Preview App -->
+<div class="app-card liquid-glass rounded-2xl p-5 flex-1">
+<div class="flex items-center mb-3">
+<i class="fas fa-file-pdf apple-blue text-3xl mr-3"></i>
+<h3 class="text-2xl font-semibold text-gray-700">Preview App</h3>
+</div>
+<ul class="text-gray-600 space-y-1 ml-2">
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Mac Preview now on iPhone and iPad</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>PDF viewing, creation and annotation</span>
+</li>
+<li class="flex items-start">
+<i class="fas fa-circle text-xs mt-1.5 mr-2 apple-blue"></i>
+<span>Image editing tools (crop, flip, rotate)</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="slide-number">13 / 15</div>
+</div>
+
+</body></html>

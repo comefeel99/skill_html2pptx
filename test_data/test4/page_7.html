@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Device Compatibility</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script><style>
+        body {width: 1280px; height: 720px; margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .apple-blue {
+            color: #007AFF;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        .compatibility-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .compatibility-table th {
+            text-align: left;
+            padding: 10px 16px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+        .compatibility-table td {
+            padding: 12px 16px;
+        }
+        .compatibility-table tr.device-row {
+            background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.05);
+            border-radius: 12px;
+        }
+        .chip-label {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            background-color: rgba(0, 122, 255, 0.1);
+            color: #007AFF;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="slide gradient-bg p-12 flex flex-col">
+<!-- Header -->
+<div class="mb-8">
+<h1 class="text-5xl font-bold tracking-tight text-gray-800">Device <span class="apple-blue">Compatibility</span></h1>
+<p class="mt-4 text-xl text-gray-600">iOS 26 requires A13 Bionic chip or newer, with Apple Intelligence features limited to devices with A17 Pro chip or newer.</p>
+</div>
+<!-- Main Content -->
+<div class="flex-1 liquid-glass rounded-2xl p-6 overflow-hidden">
+<div class="h-full overflow-y-auto pr-2">
+<table class="compatibility-table">
+<thead>
+<tr>
+<th width="40%">iPhone Model</th>
+<th width="30%">Chip</th>
+<th width="15%">iOS 26</th>
+<th width="15%">Apple Intelligence</th>
+</tr>
+</thead>
+<tbody>
+<!-- A17 Pro and newer devices -->
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 16e</td>
+<td><span class="chip-label">A17 Pro or newer</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 16 &amp; 16 Plus</td>
+<td><span class="chip-label">A17 Pro or newer</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 16 Pro &amp; 16 Pro Max</td>
+<td><span class="chip-label">A17 Pro or newer</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 15 Pro &amp; 15 Pro Max</td>
+<td><span class="chip-label">A17 Pro</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+</tr>
+<!-- A14-A16 devices -->
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 15 &amp; 15 Plus</td>
+<td><span class="chip-label">A16 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 14 &amp; 14 Plus</td>
+<td><span class="chip-label">A15 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 14 Pro &amp; 14 Pro Max</td>
+<td><span class="chip-label">A16 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 13 &amp; 13 mini</td>
+<td><span class="chip-label">A15 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 13 Pro &amp; 13 Pro Max</td>
+<td><span class="chip-label">A15 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 12 &amp; 12 mini</td>
+<td><span class="chip-label">A14 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 12 Pro &amp; 12 Pro Max</td>
+<td><span class="chip-label">A14 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<!-- A13 devices -->
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone 11, 11 Pro, &amp; 11 Pro Max</td>
+<td><span class="chip-label">A13 Bionic</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+<tr class="device-row">
+<td class="font-medium text-gray-800">iPhone SE (2nd generation and later)</td>
+<td><span class="chip-label">A13 Bionic or newer</span></td>
+<td class="text-center"><i class="fas fa-check-circle text-green-500 text-xl"></i></td>
+<td class="text-center"><i class="fas fa-times-circle text-red-400 text-xl"></i></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bottom notes -->
+<div class="mt-6 flex">
+<div class="w-1/2 pr-3">
+<div class="liquid-glass rounded-2xl p-4">
+<div class="flex items-center">
+<i class="fas fa-exclamation-circle apple-blue text-xl mr-3"></i>
+<p class="text-gray-600">iPhone XS, XS Max, and XR (A12 Bionic) are not supported</p>
+</div>
+</div>
+</div>
+<div class="w-1/2 pl-3">
+<div class="liquid-glass rounded-2xl p-4">
+<div class="flex items-center">
+<i class="fas fa-info-circle apple-blue text-xl mr-3"></i>
+<p class="text-gray-600">iOS 26 will be available as a free software update</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="slide-number">15 / 15</div>
+</div>
+
+</body></html>

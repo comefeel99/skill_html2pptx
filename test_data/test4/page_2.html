@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CarPlay &amp; Apple Music Updates</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script><style>
+        body {width: 1280px; height: 720px; margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .apple-blue {
+            color: #007AFF;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .feature-icon {
+            flex-shrink: 0;
+            margin-right: 12px;
+            margin-top: 3px;
+        }
+        .car-music-divider {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .car-music-divider::before {
+            content: "";
+            position: absolute;
+            height: 70%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 122, 255, 0.5), transparent);
+        }
+        .car-music-divider .icon-circle {
+            z-index: 1;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="slide gradient-bg p-12">
+<!-- Header -->
+<div class="mb-8">
+<h1 class="text-5xl font-bold tracking-tight text-gray-800">CarPlay &amp; Apple Music <span class="apple-blue">Updates</span></h1>
+</div>
+<!-- Main Content -->
+<div class="flex h-full max-h-[550px]">
+<!-- CarPlay Section -->
+<div class="w-1/2 pr-4 flex flex-col">
+<div class="liquid-glass rounded-2xl p-6 mb-6">
+<div class="flex items-center mb-4">
+<i class="fas fa-car-side apple-blue text-3xl mr-3"></i>
+<h2 class="text-3xl font-semibold text-gray-700">CarPlay</h2>
+</div>
+<div class="text-lg text-gray-600 mb-2">
+                        Used over <span class="font-semibold">600 million times</span> per day
+                    </div>
+<div class="space-y-3 mt-4">
+<div class="feature-item">
+<div class="feature-icon"><i class="fas fa-palette apple-blue"></i></div>
+<div>Refreshed with Liquid Glass design language</div>
+</div>
+<div class="feature-item">
+<div class="feature-icon"><i class="fas fa-phone-alt apple-blue"></i></div>
+<div>Compact call view preserves navigation visibility</div>
+</div>
+<div class="feature-item">
+<div class="feature-icon"><i class="fas fa-comment apple-blue"></i></div>
+<div>Enhanced Messages with Tapbacks &amp; pinned conversations</div>
+</div>
+<div class="feature-item">
+<div class="feature-icon"><i class="fas fa-th apple-blue"></i></div>
+<div>New widget support and Live Activities integration</div>
+</div>
+</div>
+</div>
+<!-- CarPlay Image -->
+<div class="flex-1 flex justify-center items-center">
+<div class="liquid-glass rounded-2xl p-2 shadow-lg">
+<img alt="CarPlay Interface" class="rounded-xl w-full h-auto max-h-[240px] object-cover" src="https://picture-search.skywork.ai/aippt/image/sheet/7e659aea7fc8c1ba0e685f627ab8e305.jpg"/>
+</div>
+</div>
+</div>
+<!-- Divider -->
+<div class="car-music-divider px-6">
+<div class="icon-circle">
+<i class="fas fa-exchange-alt apple-blue text-xl"></i>
+</div>
+</div>
+<!-- Apple Music Section -->
+<div class="w-1/2 pl-4">
+<div class="liquid-glass rounded-2xl p-6 h-full">
+<div class="flex items-center mb-4">
+<i class="fas fa-music apple-blue text-3xl mr-3"></i>
+<h2 class="text-3xl font-semibold text-gray-700">Apple Music</h2>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div class="liquid-glass rounded-xl p-4">
+<div class="flex items-center mb-2">
+<i class="fas fa-language apple-blue text-xl mr-2"></i>
+<h3 class="text-xl font-medium text-gray-700">Lyrics Enhancement</h3>
+</div>
+<p class="text-gray-600">Translation and pronunciation features for lyrics in different languages</p>
+</div>
+<div class="liquid-glass rounded-xl p-4">
+<div class="flex items-center mb-2">
+<i class="fas fa-sliders-h apple-blue text-xl mr-2"></i>
+<h3 class="text-xl font-medium text-gray-700">AutoMix</h3>
+</div>
+<p class="text-gray-600">DJ-like experience with seamless transitions between songs</p>
+</div>
+<div class="liquid-glass rounded-xl p-4">
+<div class="flex items-center mb-2">
+<i class="fas fa-microphone apple-blue text-xl mr-2"></i>
+<h3 class="text-xl font-medium text-gray-700">Karaoke Mode</h3>
+</div>
+<p class="text-gray-600">Use iPhone as microphone for karaoke with Apple TV</p>
+</div>
+<div class="liquid-glass rounded-xl p-4">
+<div class="flex items-center mb-2">
+<i class="fas fa-layer-group apple-blue text-xl mr-2"></i>
+<h3 class="text-xl font-medium text-gray-700">Library Organization</h3>
+</div>
+<p class="text-gray-600">Pin favorites and create playlist folders for better organization</p>
+</div>
+<div class="liquid-glass rounded-xl p-4 col-span-2">
+<div class="flex items-center mb-2">
+<i class="fas fa-border-style apple-blue text-xl mr-2"></i>
+<h3 class="text-xl font-medium text-gray-700">Dynamic Tab Bar</h3>
+</div>
+<p class="text-gray-600">Floating tab bar that shrinks while browsing to maximize content visibility</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="slide-number">10 / 15</div>
+</div>
+
+</body></html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lock Screen &amp; Home Screen Enhancements</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script><style>
+        body {width: 1280px; height: 720px; margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .apple-blue {
+            color: #007AFF;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        .icon-bubble {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0,122,255,0.2) 0%, rgba(0,122,255,0.1) 100%);
+            box-shadow: 0 4px 12px rgba(0,122,255,0.15);
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .lock-screen-mockup {
+            width: 220px;
+            height: 400px;
+            border-radius: 36px;
+            background: linear-gradient(160deg, #4B6CB7 0%, #182848 100%);
+            border: 8px solid #222;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .home-screen-mockup {
+            width: 220px;
+            height: 400px;
+            border-radius: 36px;
+            background: linear-gradient(160deg, #89f7fe 0%, #66a6ff 100%);
+            border: 8px solid #222;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .notch {
+            width: 80px;
+            height: 22px;
+            background: #222;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            margin: 8px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .time-text {
+            font-size: 52px;
+            font-weight: 200;
+            color: white;
+            text-align: center;
+            margin-top: 60px;
+        }
+        .date-text {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 20px 10px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="slide gradient-bg p-12 flex flex-col">
+<!-- Header -->
+<div class="mb-8">
+<h1 class="text-5xl font-bold tracking-tight text-gray-800">Lock Screen &amp; Home Screen <span class="apple-blue">Enhancements</span></h1>
+</div>
+<!-- Main Content -->
+<div class="flex flex-1 space-x-10">
+<!-- Left Column - Lock Screen -->
+<div class="w-1/2 flex">
+<!-- Mockup -->
+<div class="lock-screen-mockup mr-6">
+<div class="notch"></div>
+<div class="time-text">10:09</div>
+<div class="date-text">Tuesday, June 9</div>
+</div>
+<!-- Features -->
+<div class="flex-1">
+<h2 class="text-3xl font-semibold mb-4 text-gray-800 flex items-center">
+<i class="fas fa-lock apple-blue mr-3"></i>Lock Screen
+                    </h2>
+<div class="space-y-4">
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-clock text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">Dynamic Time Adaptation</h3>
+<p class="text-gray-600">Time display intelligently adjusts to available space in wallpaper images</p>
+</div>
+</div>
+</div>
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-cube text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">Spatial Scenes</h3>
+<p class="text-gray-600">Wallpapers come alive with 3D effects that respond to iPhone movement</p>
+</div>
+</div>
+</div>
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-th text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">Bottom Widgets</h3>
+<p class="text-gray-600">Place widgets at the bottom of the Lock Screen for easier access</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column - Home Screen -->
+<div class="w-1/2 flex">
+<!-- Features -->
+<div class="flex-1">
+<h2 class="text-3xl font-semibold mb-4 text-gray-800 flex items-center">
+<i class="fas fa-home apple-blue mr-3"></i>Home Screen
+                    </h2>
+<div class="space-y-4">
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-palette text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">App Icon Customization</h3>
+<p class="text-gray-600">Updated light and dark appearances with color-tinting options</p>
+</div>
+</div>
+</div>
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-layer-group text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">Layered Liquid Glass</h3>
+<p class="text-gray-600">App icons and widgets feature multiple layers of Liquid Glass for enhanced depth</p>
+</div>
+</div>
+</div>
+<div class="liquid-glass rounded-xl p-4 feature-card">
+<div class="flex items-start">
+<div class="icon-bubble mr-4 flex-shrink-0">
+<i class="fas fa-tint text-xl apple-blue"></i>
+</div>
+<div>
+<h3 class="text-xl font-medium text-gray-700">Clear Look</h3>
+<p class="text-gray-600">Stunning transparent icon style crafted from Liquid Glass material</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mockup -->
+<div class="home-screen-mockup ml-6">
+<div class="notch"></div>
+<div class="app-grid">
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+<div class="app-icon"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="slide-number">4 / 15</div>
+</div>
+
+</body></html>

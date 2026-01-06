@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Release Timeline</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script><style>
+        body {width: 1280px; height: 720px; margin: 0;
+            padding: 0;}
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .apple-blue {
+            color: #007AFF;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        .timeline-point {
+            transition: transform 0.3s ease;
+        }
+        .timeline-point:hover {
+            transform: scale(1.1);
+        }
+        .timeline-line {
+            stroke: #007AFF;
+            stroke-width: 4;
+        }
+        .timeline-circle {
+            fill: #007AFF;
+        }
+    </style>
+</head>
+<body>
+<div class="slide gradient-bg p-12 flex flex-col">
+<!-- Header -->
+<div class="mb-6">
+<h1 class="text-5xl font-bold tracking-tight text-gray-800">Release <span class="apple-blue">Timeline</span></h1>
+</div>
+<!-- Timeline Visualization -->
+<div class="flex-1 flex flex-col">
+<div class="w-full h-64" id="timeline"></div>
+<!-- Timeline Details -->
+<div class="grid grid-cols-3 gap-8 mt-8">
+<!-- WWDC Announcement -->
+<div class="liquid-glass rounded-2xl p-6">
+<div class="flex items-center mb-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+<i class="fas fa-bullhorn apple-blue text-2xl"></i>
+</div>
+<h3 class="text-2xl font-semibold text-gray-700">Announcement</h3>
+</div>
+<p class="text-lg text-gray-600 mb-2"><span class="font-semibold">June 9, 2025</span></p>
+<p class="text-gray-600">Officially unveiled at Apple&#39;s Worldwide Developers Conference (WWDC)</p>
+<p class="text-gray-600 mt-2">Developer beta immediately available</p>
+</div>
+<!-- Public Beta -->
+<div class="liquid-glass rounded-2xl p-6">
+<div class="flex items-center mb-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+<i class="fas fa-flask apple-blue text-2xl"></i>
+</div>
+<h3 class="text-2xl font-semibold text-gray-700">Public Beta</h3>
+</div>
+<p class="text-lg text-gray-600 mb-2"><span class="font-semibold">July 2025</span></p>
+<p class="text-gray-600">Available to members of Apple&#39;s Beta Software Program</p>
+<p class="text-gray-600 mt-2">Opportunity for early testing and feedback</p>
+</div>
+<!-- Official Release -->
+<div class="liquid-glass rounded-2xl p-6">
+<div class="flex items-center mb-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+<i class="fas fa-rocket apple-blue text-2xl"></i>
+</div>
+<h3 class="text-2xl font-semibold text-gray-700">Public Release</h3>
+</div>
+<p class="text-lg text-gray-600 mb-2"><span class="font-semibold">Mid-September 2025</span></p>
+<p class="text-gray-600">Final stable version available to all users</p>
+<p class="text-gray-600 mt-2">Free software update for compatible devices</p>
+</div>
+</div>
+<!-- Additional Notes -->
+<div class="mt-10">
+<div class="liquid-glass rounded-2xl p-6">
+<div class="flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-info-circle apple-blue text-2xl"></i>
+</div>
+<div>
+<p class="text-lg text-gray-600">iOS 26 marks the beginning of Apple&#39;s new year-based naming convention, with &#34;26&#34; representing the 2025-2026 release season.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide Number -->
+<div class="slide-number">14 / 15</div>
+</div>
+<script>
+        // D3.js Timeline Visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            const width = 1100;
+            const height = 180;
+            const margin = {top: 50, right: 50, bottom: 50, left: 50};
+            
+            // Timeline data
+            const timelineData = [
+                {date: "June 9, 2025", event: "WWDC Announcement & Developer Beta", x: 100},
+                {date: "July 2025", event: "Public Beta Release", x: width/2},
+                {date: "Mid-September 2025", event: "Official Public Release", x: width - 100}
+            ];
+            
+            // Create SVG
+            const svg = d3.select("#timeline")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("style", "max-width: 100%; height: auto;");
+            
+            // Draw timeline line
+            svg.append("line")
+                .attr("x1", margin.left)
+                .attr("y1", height/2)
+                .attr("x2", width - margin.right)
+                .attr("y2", height/2)
+                .attr("class", "timeline-line");
+            
+            // Create timeline points
+            const timelinePoints = svg.selectAll(".timeline-point")
+                .data(timelineData)
+                .enter()
+                .append("g")
+                .attr("class", "timeline-point")
+                .attr("transform", d => `translate(${d.x}, ${height/2})`);
+            
+            // Add circles for each point
+            timelinePoints.append("circle")
+                .attr("r", 15)
+                .attr("class", "timeline-circle");
+            
+            // Add icons inside circles
+            timelinePoints.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "0.35em")
+                .attr("fill", "white")
+                .attr("font-family", "FontAwesome")
+                .text((d, i) => {
+                    const icons = ['\uf3c5', '\uf0c3', '\uf135']; // Map marker, flask, rocket
+                    return icons[i];
+                });
+            
+            // Add date labels
+            timelinePoints.append("text")
+                .attr("y", -30)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#007AFF")
+                .attr("font-weight", "bold")
+                .attr("font-size", "16px")
+                .text(d => d.date);
+            
+            // Add event labels
+            timelinePoints.append("text")
+                .attr("y", 40)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#4B5563")
+                .attr("font-size", "14px")
+                .text(d => d.event);
+        });
+    </script>
+
+</body></html>

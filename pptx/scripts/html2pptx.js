@@ -162,8 +162,12 @@ function addElements(slideData, targetSlide, pres) {
       };
 
       if (el.shape.fill) {
-        shapeOptions.fill = { color: el.shape.fill };
-        if (el.shape.transparency != null) shapeOptions.fill.transparency = el.shape.transparency;
+        if (typeof el.shape.fill === 'object') {
+          shapeOptions.fill = el.shape.fill;
+        } else {
+          shapeOptions.fill = { color: el.shape.fill };
+          if (el.shape.transparency != null) shapeOptions.fill.transparency = el.shape.transparency;
+        }
       }
       if (el.shape.line) shapeOptions.line = el.shape.line;
       if (el.shape.rectRadius > 0) shapeOptions.rectRadius = el.shape.rectRadius;
@@ -696,6 +700,18 @@ async function extractSlideData(page) {
               h: pxToInch(rect.height)
             }
           });
+
+          // Bug Fix: We must ALSO add it to 'elements' so it gets added to the PPTX slide
+          elements.push({
+            type: 'image-placeholder',
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
           processed.add(el);
           // Prevent processing children (usually SVG paths or empty text)
           el.querySelectorAll('*').forEach(child => processed.add(child));
@@ -710,6 +726,7 @@ async function extractSlideData(page) {
         const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
 
         // Validate: Check for unwrapped text content in DIV
+        /*
         for (const node of el.childNodes) {
           if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent.trim();
@@ -723,22 +740,16 @@ async function extractSlideData(page) {
 
           }
         }
+        */
 
-        // Detect background images/gradients and rasterize
+
         const hasBackgroundImage = computed.backgroundImage && computed.backgroundImage !== 'none';
         const rect = el.getBoundingClientRect(); // Get rect here for use in both image and shape logic
 
         if (hasBackgroundImage) {
-          // If it has a background image/gradient, we treat the background as an image.
-          // To do this properly, we should screenshot the element.
-          // However, if we just screenshot it, we might duplicate text if we also process text children.
-          // Strategy: Add to icons list for screenshotting (which captures everything). 
-          // IF it is a "card" or complex container, maybe we stop processing children? 
-          // For now, let's just capture the background visual. 
-          // CAUTION: If we capture it as an image, we should probably NOT render the shape background/border again.
-
           if (!el.id) el.id = `bg-${Math.random().toString(36).substr(2, 9)}`;
 
+          // Add to icons list for screenshotting
           icons.push({
             id: el.id,
             position: {
@@ -749,19 +760,78 @@ async function extractSlideData(page) {
             }
           });
 
-          // If it's a "card" (common in test data), it usually wraps text. 
-          // If we screenshot the whole card, the text becomes image. That's "Full Rasterization" strategy.
-          // Let's assume for high fidelity, we prefer the image. 
-          // So, we should mark descendants as processed to avoid double text.
+          // PUSH PLACEHOLDER to elements list to preserve Z-order!
+          elements.push({
+            type: 'image-placeholder',
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
+
+
           const isCard = className.includes('card') || className.includes('shadow') || computed.boxShadow !== 'none';
-          if (isCard || rect.height < 100) { // arbitrary heuristic: small buttons or cards
+
+          // Important: If it's the ROOT SLIDE, do NOT treat as card (do not skip children)
+          // Otherwise text inside the slide will be skipped and we only get the screenshot.
+          const isSlideRoot = el.classList.contains('slide');
+
+          // We want to capture ONLY the background (gradient) for ALL cards/backgrounds
+          // to avoid Ghosting (duplicate text). 
+          // We apply 'hideChildren' to the screenshot.
+          if (icons.length > 0) {
+            icons[icons.length - 1].hideChildren = true;
+          }
+
+          // DISABLED: We now decompose EVERYTHING to ensure text is editable.
+          /*
+          if (!isSlideRoot && (isCard || rect.height < 100)) {
             processed.add(el);
             el.querySelectorAll('*').forEach(child => processed.add(child));
             return;
           }
-          // If not a card, maybe just a background section? Let's proceed with shape logic but remove bg color
-          // so we don't double draw background? 
-          // Actually, if we screenshot, we get the background.
+          */
+        }
+
+        // Extract Icons (<i> tags) as images
+        if (el.className.includes && el.className.includes('fa-apple')) {
+          console.warn('[DEBUG] Found fa-apple target. Tag:', el.tagName, 'Processed:', processed.has(el), 'Classes:', el.className);
+        }
+
+        if (el.tagName === 'I' || el.classList.contains('fa') || el.classList.contains('fas') || el.classList.contains('fab') || el.classList.contains('far')) {
+          if (processed.has(el)) return; // Already processed
+
+          if (!el.id) el.id = `icon-${Math.random().toString(36).substr(2, 9)}`;
+          console.warn(`[DEBUG] Found Icon: Tag=${el.tagName} ID=${el.id} Class="${el.className}" Size=${rect.width}x${rect.height}`);
+
+          icons.push({
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            },
+            // Don't hide children of the icon itself (it might use pseudo-elements)
+          });
+
+          elements.push({
+            type: 'image-placeholder',
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
+
+          processed.add(el);
+          // Icons are self-contained usually?
+          return;
         }
 
 
@@ -776,7 +846,6 @@ async function extractSlideData(page) {
         const borderLines = [];
 
         if (hasBorder && !hasUniformBorder) {
-          // ... (existing border logic) ...
           // const rect = el.getBoundingClientRect(); // Already defined above
           const x = pxToInch(rect.left);
           const y = pxToInch(rect.top);
@@ -944,10 +1013,24 @@ async function extractSlideData(page) {
       }
 
       // Extract text elements (P, H1, H2, etc.)
-      if (!textTags.includes(el.tagName)) return;
+      const isTextTag = textTags.includes(el.tagName);
+      let isLeafDiv = false;
+
+      if (el.tagName === 'DIV') {
+        // Check if explicit text leaf (contains text content and NO block children)
+        const hasBlockChildren = Array.from(el.children).some(c =>
+          ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE'].includes(c.tagName)
+        );
+        if (!hasBlockChildren && el.textContent.trim().length > 0) {
+          isLeafDiv = true;
+        }
+      }
+
+      if (!isTextTag && !isLeafDiv) return;
 
       const rect = el.getBoundingClientRect();
       let text = el.textContent.trim();
+      // If Leaf Div has 0 size (e.g. float clear), skip
       if (rect.width === 0 || rect.height === 0 || !text) return;
 
       let isManualBullet = false;
@@ -990,6 +1073,14 @@ async function extractSlideData(page) {
         fontSize: pxToPoints(computed.fontSize),
         fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
         color: textColor,
+
+        // Fix: Propagate parent element styles to direct text nodes
+        bold: (computed.fontWeight === 'bold' || parseInt(computed.fontWeight) >= 600) && !shouldSkipBold(computed.fontFamily),
+        italic: computed.fontStyle === 'italic',
+        underline: computed.textDecoration && computed.textDecoration.includes('underline'),
+        // Transparency handled by extractAlpha?
+        transparency: extractAlpha(computed.color),
+
         align: computed.textAlign === 'start' ? 'left' : computed.textAlign,
         lineSpacing: pxToPoints(computed.lineHeight),
         paraSpaceBefore: pxToPoints(computed.marginTop),
@@ -1103,6 +1194,7 @@ async function html2pptx(htmlFile, pres, options = {}) {
         console.log(`Browser console: ${msg.text()}`);
       });
 
+      await page.setViewportSize({ width: 1280, height: 720 });
       await page.goto(`file://${filePath}`);
 
       bodyDimensions = await getBodyDimensions(page);
@@ -1119,6 +1211,8 @@ async function html2pptx(htmlFile, pres, options = {}) {
         // Hide scrollbars to prevent them from appearing in screenshots if any
         await page.addStyleTag({ content: 'body::-webkit-scrollbar { display: none; }' });
 
+        const iconMap = new Map();
+
         for (const icon of slideData.icons) {
           if (!icon.id) continue;
 
@@ -1127,19 +1221,52 @@ async function html2pptx(htmlFile, pres, options = {}) {
             const locator = page.locator(`#${icon.id}`);
             // Ensure element is visible/attached
             if (await locator.count() > 0) {
+              if (icon.hideChildren) {
+                await page.evaluate((id) => {
+                  const el = document.getElementById(id);
+                  if (el) {
+                    Array.from(el.children).forEach(child => child.style.opacity = '0');
+                  }
+                }, icon.id);
+              }
+
               await locator.screenshot({ path: iconPath, omitBackground: true, timeout: 1000 });
 
-              // Add to elements as image
-              slideData.elements.push({
-                type: 'image',
-                src: iconPath,
-                position: icon.position // {x, y, w, h} in inches
-              });
+              if (icon.hideChildren) {
+                await page.evaluate((id) => {
+                  const el = document.getElementById(id);
+                  if (el) {
+                    Array.from(el.children).forEach(child => child.style.opacity = '');
+                  }
+                }, icon.id);
+              }
+
+              iconMap.set(icon.id, iconPath);
             }
           } catch (err) {
             console.warn(`Failed to screenshot icon #${icon.id}:`, err.message);
           }
         }
+
+        // Resolve placeholders in elements
+        // Iterate and replace concurrently? No, elements is array
+        slideData.elements = slideData.elements.map(el => {
+          if (el.type === 'image-placeholder') {
+            if (iconMap.has(el.id)) {
+              return {
+                type: 'image',
+                src: iconMap.get(el.id),
+                position: el.position
+              };
+            } else {
+              // Screenshot failed or missing?
+              // Return null or keep as placeholder (will be ignored by addElements)?
+              // Better filter it out.
+              return null;
+            }
+          }
+          return el;
+        }).filter(el => el !== null);
       }
 
     } finally {
