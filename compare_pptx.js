@@ -2,10 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const file1 = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('test_data/test1/test1.pptx');
-const file2 = process.argv[3] ? path.resolve(process.argv[3]) : path.resolve('test_output_combined.pptx');
-const outDir = path.resolve('temp_compare');
-
 function unzip(file, dir) {
     if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
     fs.mkdirSync(dir, { recursive: true });
@@ -37,7 +33,6 @@ function getSlideContentFeatures(dir) {
         if (!f.endsWith('.xml')) return;
         const content = fs.readFileSync(path.join(slidesDir, f), 'utf8');
 
-        // Count occurrences using regex
         const spCount = (content.match(/<p:sp>/g) || []).length;
         const picCount = (content.match(/<p:pic>/g) || []).length;
         const grpSpCount = (content.match(/<p:grpSp>/g) || []).length;
@@ -64,7 +59,6 @@ function dumpSlideText(dir, slideName) {
         return;
     }
     const content = fs.readFileSync(slidePath, 'utf8');
-    // Simple regex to grab text inside <a:t>
     const texts = content.match(/<a:t>(.*?)<\/a:t>/g) || [];
     console.log(`--- Text Content for ${slideName} ---`);
     texts.forEach(t => {
@@ -74,60 +68,114 @@ function dumpSlideText(dir, slideName) {
     console.log('-----------------------------------');
 }
 
-try {
-    console.log(`Comparing:\n A: ${file1}\n B: ${file2}\n`);
-
+/**
+ * Compares two PPTX files and returns structured stats.
+ */
+function comparePptx(file1, file2) {
+    const outDir = path.resolve('temp_compare');
     const dir1 = path.join(outDir, 'A');
     const dir2 = path.join(outDir, 'B');
+
+    // Ensure files exist
+    if (!fs.existsSync(file1)) throw new Error(`File not found: ${file1}`);
+    if (!fs.existsSync(file2)) throw new Error(`File not found: ${file2}`);
 
     unzip(file1, dir1);
     unzip(file2, dir2);
 
-    // 1. Dimensions
-    console.log(`Dimensions (A): ${getSlideSizes(dir1)}`);
-    console.log(`Dimensions (B): ${getSlideSizes(dir2)}`);
+    const stats = {
+        dimensions: {
+            A: getSlideSizes(dir1),
+            B: getSlideSizes(dir2)
+        },
+        media: {
+            A: countFiles(path.join(dir1, 'ppt', 'media')),
+            B: countFiles(path.join(dir2, 'ppt', 'media'))
+        },
+        slides: {}
+    };
 
-    // 2. Media Count
-    const media1 = countFiles(path.join(dir1, 'ppt', 'media'));
-    const media2 = countFiles(path.join(dir2, 'ppt', 'media'));
-    console.log(`Media Files (A): ${media1}`);
-    console.log(`Media Files (B): ${media2} (Diff: ${media2 - media1})`);
-
-    // 3. Slide Analysis
     const slides1 = getSlideContentFeatures(dir1);
     const slides2 = getSlideContentFeatures(dir2);
 
-    console.log('\nSlide Content Analysis:');
     Object.keys(slides1).sort().forEach(key => {
         const s1 = slides1[key];
         const s2 = slides2[key];
 
         if (!s2) {
-            console.log(`Slide ${key}: Only in A`);
+            stats.slides[key] = { status: 'missing_in_B' };
             return;
         }
 
-        const diffSize = s2.size - s1.size;
-
-        console.log(`Slide ${key}:`);
-        console.log(`  Size:     A=${s1.size}, B=${s2.size} (Diff: ${diffSize})`);
-        console.log(`  Images:   A=${s1.images}, B=${s2.images}`);
-        console.log(`  Shapes:   A=${s1.shapes}, B=${s2.shapes}`);
-        console.log(`  Groups:   A=${s1.groups}, B=${s2.groups}`);
-        console.log(`  Texts:    A=${s1.textBlocks}, B=${s2.textBlocks}`);
-        console.log(`  Backgrnd: A=${s1.hasBackground}, B=${s2.hasBackground}`);
+        stats.slides[key] = {
+            status: 'present',
+            diffSize: s2.size - s1.size,
+            diffImages: s2.images - s1.images,
+            diffShapes: s2.shapes - s1.shapes,
+            diffTexts: s2.textBlocks - s1.textBlocks,
+            details: { A: s1, B: s2 }
+        };
     });
 
-    // 4. Detailed Text Dump (Optional)
-    const specificSlide = process.argv[4]; // e.g., 'slide9.xml'
-    if (specificSlide) {
-        console.log(`\nDetailed Text Dump for ${specificSlide}:`);
-        console.log('--- REFERENCE (A) ---');
-        dumpSlideText(dir1, specificSlide);
-        console.log('\n--- GENERATED (B) ---');
-        dumpSlideText(dir2, specificSlide);
-    }
+    // Check for slides only in B
+    Object.keys(slides2).forEach(key => {
+        if (!slides1[key]) {
+            stats.slides[key] = { status: 'missing_in_A', details: { B: slides2[key] } };
+        }
+    });
 
-} catch (err) {
-    console.error(err);
+    return stats;
 }
+
+// CLI Execution Support
+if (require.main === module) {
+    const file1 = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('test_data/test1/test1.pptx');
+    const file2 = process.argv[3] ? path.resolve(process.argv[3]) : path.resolve('test_output_combined.pptx');
+
+    try {
+        console.log(`Comparing:\n A: ${file1}\n B: ${file2}\n`);
+        const result = comparePptx(file1, file2);
+
+        console.log(`Dimensions (A): ${result.dimensions.A}`);
+        console.log(`Dimensions (B): ${result.dimensions.B}`);
+
+        console.log(`Media Files (A): ${result.media.A}`);
+        console.log(`Media Files (B): ${result.media.B} (Diff: ${result.media.B - result.media.A})`);
+
+        console.log('\nSlide Content Analysis:');
+        Object.keys(result.slides).sort().forEach(key => {
+            const data = result.slides[key];
+            if (data.status !== 'present') {
+                console.log(`Slide ${key}: ${data.status}`);
+            } else {
+                const s1 = data.details.A;
+                const s2 = data.details.B;
+                console.log(`Slide ${key}:`);
+                console.log(`  Size:     A=${s1.size}, B=${s2.size} (Diff: ${data.diffSize})`);
+                console.log(`  Images:   A=${s1.images}, B=${s2.images}`);
+                console.log(`  Shapes:   A=${s1.shapes}, B=${s2.shapes}`);
+                console.log(`  Groups:   A=${s1.groups}, B=${s2.groups}`);
+                console.log(`  Texts:    A=${s1.textBlocks}, B=${s2.textBlocks}`);
+                console.log(`  Backgrnd: A=${s1.hasBackground}, B=${s2.hasBackground}`);
+            }
+        });
+
+        // Detailed Text Dump logic kept for CLI specific request
+        const specificSlide = process.argv[4];
+        if (specificSlide) {
+            const outDir = path.resolve('temp_compare'); // These are still there after comparePptx runs
+            const dir1 = path.join(outDir, 'A');
+            const dir2 = path.join(outDir, 'B');
+            console.log(`\nDetailed Text Dump for ${specificSlide}:`);
+            console.log('--- REFERENCE (A) ---');
+            dumpSlideText(dir1, specificSlide);
+            console.log('\n--- GENERATED (B) ---');
+            dumpSlideText(dir2, specificSlide);
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+module.exports = { comparePptx };

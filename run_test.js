@@ -1,10 +1,12 @@
 const PptxGenJS = require('pptxgenjs');
 const path = require('path');
 const fs = require('fs');
-const { execSync } = require('child_process');
 const html2pptx = require('./pptx/scripts/html2pptx');
+const { comparePptx } = require('./compare_pptx'); // Import function
+const { generateReport } = require('./generate_report'); // Import function
 
 async function runTest() {
+    const startTime = Date.now();
     const testDirArg = process.argv[2];
     if (!testDirArg) {
         console.error('Usage: node run_test.js <test_directory_path>');
@@ -37,6 +39,7 @@ async function runTest() {
         });
 
     console.log(`Found ${files.length} HTML files.`);
+    let generatedCount = 0;
 
     for (const file of files) {
         const filePath = path.join(testDir, file);
@@ -57,29 +60,60 @@ async function runTest() {
                 slide: slide,
                 masterOptions: { margin: 0 }
             });
+            generatedCount++;
         } catch (err) {
             console.error(`Error converting ${file}:`, err);
         }
     }
 
     await pres.writeFile({ fileName: outputPath });
-    console.log(`Saved output to ${outputPath}`);
+    const outputSize = fs.statSync(outputPath).size;
+    console.log(`Saved output to ${outputPath} (${outputSize} bytes)`);
 
     // --- Comparison Step ---
+    let comparisonResult = null;
     if (fs.existsSync(referencePath)) {
         console.log(`\n=== Comparing with Reference: ${referencePath} ===`);
         try {
-            // Run compare_pptx.js
-            // Usage: node compare_pptx.js <file1> <file2>
-            const compareScript = path.join(__dirname, 'compare_pptx.js');
-            // Execute simply and inherit stdio to show output directly
-            execSync(`node "${compareScript}" "${referencePath}" "${outputPath}"`, { stdio: 'inherit' });
+            comparisonResult = comparePptx(referencePath, outputPath);
+
+            // Console output for user visibility
+            console.log(`Media Diff: ${comparisonResult.media.B - comparisonResult.media.A}`);
+            // Briefly show mismatched slides count
+            const mismatchCount = Object.values(comparisonResult.slides).filter(s => s.status !== 'present' || s.diffSize !== 0).length;
+            console.log(`Slides with differences: ${mismatchCount}`);
+
         } catch (err) {
             console.error('Comparison execution failed:', err);
+            comparisonResult = { error: err.message };
         }
     } else {
         console.log(`\nNo reference file found at ${referencePath}. Skipping comparison.`);
     }
+
+    const durationMs = Date.now() - startTime;
+
+    // --- Logging Step ---
+    const logDir = path.resolve(__dirname, 'test_result');
+    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        durationMs: durationMs,
+        testDir: dirName,
+        generatedFile: path.basename(outputPath),
+        generatedSize: outputSize,
+        generatedSlides: generatedCount,
+        inputFiles: files.length,
+        comparison: comparisonResult
+    };
+
+    const logPath = path.join(logDir, 'history.jsonl');
+    fs.appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
+    console.log(`\nTest result logged to ${logPath}`);
+
+    // --- Report Generation Step ---
+    generateReport();
 }
 
 runTest().catch(console.error);
