@@ -1,6 +1,11 @@
 # Skill HTML to PPTX 테스팅
 
-이 프로젝트는 HTML을 PPTX로 변환하는 과정의 안정성과 정확성을 검증하기 위한 테스트 환경을 제공합니다. HTML 소스 파일에서 PPTX를 생성하고, 이를 검증된 레퍼런스 PPTX와 비교하여 정합성을 확인합니다.
+이 프로젝트는 [Anthropic's skills/pptx](https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md)를 기반으로 구축되었습니다. Antigravity를 활용하여 HTML을 PPTX로 변환하는 기능을 지속적으로 개선하고 검증하는 것이 주 목적입니다.
+
+주요 워크플로우는 다음과 같습니다:
+1.  새로운 테스트 데이터 추가 (HTML 및 정답 PPTX)
+2.  **Antigravity**를 활용하여 변환 로직 개선 및 정합성 향상
+3.  자동화된 테스트 러너를 통해 안정성 및 정확도 검증
 
 ## 🚀 주요 기능
 - **범용 테스트 러너 (Generic Test Runner)**: 단일 스크립트(`run_test.js`)로 모든 테스트 케이스 디렉토리를 처리할 수 있습니다.
