@@ -124,6 +124,37 @@ function comparePptx(file1, file2) {
         }
     });
 
+    // Calculate Similarity Score (Heuristic)
+    let totalScore = 0;
+    let slideCount = 0;
+
+    Object.keys(stats.slides).forEach(key => {
+        const slide = stats.slides[key];
+        slideCount++;
+
+        if (slide.status !== 'present') {
+            slide.similarity = 0;
+            return;
+        }
+
+        const s1 = slide.details.A;
+        const s2 = slide.details.B;
+
+        // Weights: Texts(40%), Images(30%), Shapes(30%)
+        // Score = 1 - (|diff| / max(A, B, 1))
+
+        const scoreText = 1 - (Math.abs(s1.textBlocks - s2.textBlocks) / Math.max(s1.textBlocks, s2.textBlocks, 1));
+        const scoreImg = 1 - (Math.abs(s1.images - s2.images) / Math.max(s1.images, s2.images, 1));
+        const scoreShape = 1 - (Math.abs(s1.shapes - s2.shapes) / Math.max(s1.shapes, s2.shapes, 1));
+
+        // Ensure non-negative and weighted
+        const weightedScore = (Math.max(0, scoreText) * 0.4) + (Math.max(0, scoreImg) * 0.3) + (Math.max(0, scoreShape) * 0.3);
+        slide.similarity = parseFloat((weightedScore * 100).toFixed(1));
+        totalScore += slide.similarity;
+    });
+
+    stats.similarity = slideCount > 0 ? parseFloat((totalScore / slideCount).toFixed(1)) : 0;
+
     return stats;
 }
 
@@ -138,6 +169,7 @@ if (require.main === module) {
 
         console.log(`Dimensions (A): ${result.dimensions.A}`);
         console.log(`Dimensions (B): ${result.dimensions.B}`);
+        console.log(`Overall Similarity: ${result.similarity}%`);
 
         console.log(`Media Files (A): ${result.media.A}`);
         console.log(`Media Files (B): ${result.media.B} (Diff: ${result.media.B - result.media.A})`);
@@ -151,6 +183,7 @@ if (require.main === module) {
                 const s1 = data.details.A;
                 const s2 = data.details.B;
                 console.log(`Slide ${key}:`);
+                console.log(`  Similarity: ${data.similarity}%`);
                 console.log(`  Size:     A=${s1.size}, B=${s2.size} (Diff: ${data.diffSize})`);
                 console.log(`  Images:   A=${s1.images}, B=${s2.images}`);
                 console.log(`  Shapes:   A=${s1.shapes}, B=${s2.shapes}`);

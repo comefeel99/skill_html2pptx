@@ -36,7 +36,7 @@ function generateReport() {
     entries.reverse();
 
     let md = '# Test Execution History\n\n';
-    md += '| Timestamp | Test | Duration | Output | Slides | Diff Slides | Status |\n';
+    md += '| Timestamp | Test | Duration | Output | Slides | Similarity | Status |\n';
     md += '|---|---|---|---|---|---|---|\n';
 
     for (const entry of entries) {
@@ -46,17 +46,20 @@ function generateReport() {
         const size = formatSize(entry.generatedSize);
         const slides = entry.generatedSlides;
 
-        let diffSlides = '-';
+        let similarity = '-';
         let status = '❓ Unknown';
 
         if (entry.comparison) {
             if (entry.comparison.error) {
                 status = '❌ Error';
-                diffSlides = 'Err';
             } else {
                 const mismatched = Object.values(entry.comparison.slides).filter(s => s.status !== 'present' || s.diffSize !== 0);
-                diffSlides = mismatched.length;
-                if (diffSlides === 0) {
+
+                if (entry.comparison.similarity !== undefined) {
+                    similarity = `${entry.comparison.similarity}%`;
+                }
+
+                if (mismatched.length === 0) {
                     status = '✅ Pass';
                 } else {
                     status = '⚠️ Changed';
@@ -66,7 +69,7 @@ function generateReport() {
             status = '🆕 Generated';
         }
 
-        md += `| ${ts} | ${name} | ${dur} | ${size} | ${slides} | ${diffSlides} | ${status} |\n`;
+        md += `| ${ts} | ${name} | ${dur} | ${size} | ${slides} | ${similarity} | ${status} |\n`;
     }
 
     md += '\n## Latest Run Details\n';
@@ -75,6 +78,10 @@ function generateReport() {
         md += `**Test:** ${latest.testDir} (${latest.timestamp})\n`;
 
         if (latest.comparison && !latest.comparison.error) {
+            if (latest.comparison.similarity !== undefined) {
+                md += `**Overall Similarity:** ${latest.comparison.similarity}%\n\n`;
+            }
+
             md += '### Differences\n';
             const diffs = Object.entries(latest.comparison.slides)
                 .filter(([_, s]) => s.status !== 'present' || s.diffSize !== 0)
@@ -83,13 +90,14 @@ function generateReport() {
             if (diffs.length === 0) {
                 md += 'No discrepancies found.\n';
             } else {
-                md += '| Slide | Status | Diff Size | Images |\n';
-                md += '|---|---|---|---|\n';
+                md += '| Slide | Status | Similarity | Diff Size | Images |\n';
+                md += '|---|---|---|---|---|\n';
                 for (const [key, val] of diffs) {
                     const status = val.status === 'present' ? 'Modified' : val.status;
                     const diffSize = val.diffSize !== undefined ? (val.diffSize > 0 ? `+${val.diffSize}` : val.diffSize) : '-';
                     const diffImg = val.diffImages !== undefined ? val.diffImages : '-';
-                    md += `| ${key} | ${status} | ${diffSize} | ${diffImg} |\n`;
+                    const sim = val.similarity !== undefined ? `${val.similarity}%` : '-';
+                    md += `| ${key} | ${status} | ${sim} | ${diffSize} | ${diffImg} |\n`;
                 }
             }
         }
