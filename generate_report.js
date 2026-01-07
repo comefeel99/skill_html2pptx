@@ -73,25 +73,55 @@ function generateReport() {
     }
 
     md += '\n## Latest Run Details\n';
-    if (entries.length > 0) {
-        const latest = entries[0];
-        md += `**Test:** ${latest.testDir} (${latest.timestamp})\n`;
+
+    // Group by testDir, keep latest only
+    const uniqueTests = {};
+    for (const entry of entries) {
+        if (!uniqueTests[entry.testDir]) {
+            uniqueTests[entry.testDir] = entry;
+        }
+    }
+
+    // Sort logic: test1, test2, test3, test4
+    const sortedKeys = Object.keys(uniqueTests).sort((a, b) => {
+        const numA = parseInt(a.replace('test', '')) || 999;
+        const numB = parseInt(b.replace('test', '')) || 999;
+        return numA - numB;
+    });
+
+    for (const key of sortedKeys) {
+        const latest = uniqueTests[key];
+        md += `\n### ${key} (${formatDate(latest.timestamp)})\n`;
 
         if (latest.comparison && !latest.comparison.error) {
             if (latest.comparison.similarity !== undefined) {
-                md += `**Overall Similarity:** ${latest.comparison.similarity}%\n\n`;
+                md += `- **Overall Similarity:** ${latest.comparison.similarity}%\n`;
             }
 
-            md += '### Differences\n';
-            const diffs = Object.entries(latest.comparison.slides)
-                .filter(([_, s]) => s.status !== 'present' || s.diffSize !== 0)
-                .sort();
+            // Try to detect new format (with metrics) vs old format (diffSize)
+            const firstSlide = Object.values(latest.comparison.slides)[0];
+            const isNewFormat = firstSlide && firstSlide.metrics;
 
-            if (diffs.length === 0) {
-                md += 'No discrepancies found.\n';
-            } else {
-                md += '| Slide | Status | Similarity | Diff Size | Images |\n';
+            if (isNewFormat) {
+                md += '\n| Slide | Similarity | Count Match | Position | Size |\n';
                 md += '|---|---|---|---|---|\n';
+
+                const slideKeys = Object.keys(latest.comparison.slides).sort();
+                for (const slideKey of slideKeys) {
+                    const data = latest.comparison.slides[slideKey];
+                    const sim = data.similarity + '%';
+                    const count = data.metrics?.countScore ? `${data.metrics.countScore}%` : '-';
+                    const pos = data.metrics?.posScore ? `${data.metrics.posScore}%` : '-';
+                    const size = data.metrics?.sizeScore ? `${data.metrics.sizeScore}%` : '-';
+
+                    md += `| ${slideKey} | ${sim} | ${count} | ${pos} | ${size} |\n`;
+                }
+            } else {
+                // Fallback for old format logs
+                md += '\n| Slide | Status | Similarity | Diff Size | Images |\n';
+                md += '|---|---|---|---|---|\n';
+
+                const diffs = Object.entries(latest.comparison.slides).sort();
                 for (const [key, val] of diffs) {
                     const status = val.status === 'present' ? 'Modified' : val.status;
                     const diffSize = val.diffSize !== undefined ? (val.diffSize > 0 ? `+${val.diffSize}` : val.diffSize) : '-';

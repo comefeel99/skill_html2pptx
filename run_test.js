@@ -78,10 +78,14 @@ async function runTest() {
             comparisonResult = comparePptx(referencePath, outputPath);
 
             // Console output for user visibility
-            console.log(`Media Diff: ${comparisonResult.media.B - comparisonResult.media.A}`);
-            // Briefly show mismatched slides count
-            const mismatchCount = Object.values(comparisonResult.slides).filter(s => s.status !== 'present' || s.diffSize !== 0).length;
-            console.log(`Slides with differences: ${mismatchCount}`);
+            console.log(`Overall Similarity: ${comparisonResult.similarity}%`);
+
+            // Show slide details
+            const slideKeys = Object.keys(comparisonResult.slides).sort();
+            console.log(`Slides evaluated: ${slideKeys.length}`);
+            if (slideKeys.length > 0) {
+                console.log('Slide Scores:', slideKeys.map(k => `${k}: ${comparisonResult.slides[k].similarity}%`).join(', '));
+            }
 
         } catch (err) {
             console.error('Comparison execution failed:', err);

@@ -1,0 +1,246 @@
+Starting all tests...
+--- Running Test 1 ---
+
+=== Generating PPTX from /Users/1110846/Test/skill_html2pptx/test_data/test1 ===
+Found 9 HTML files.
+Processing page_1.html into slide 1...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_2.html into slide 2...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 9.4") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_3.html into slide 3...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.3") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_4.html into slide 4...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-left which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 9.8") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_5.html into slide 5...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 10.0") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_6.html into slide 6...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Failed to screenshot icon #icon-pjwaae8r4: locator.screenshot: Timeout 998.1569999999992ms exceeded.
+Call log:
+[2m  - taking element screenshot[22m
+[2m  - waiting for fonts to load...[22m
+[2m  - fonts loaded[22m
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 500ms[22m
+
+Processing page_7.html into slide 7...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 11.2") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_8.html into slide 8...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 9.1") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_9.html into slide 9...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 11.3") don't match layout (13.3" x 7.5"). Scaling may occur.
+Saved output to /Users/1110846/Test/skill_html2pptx/test1_output.pptx (7179369 bytes)
+
+=== Comparing with Reference: /Users/1110846/Test/skill_html2pptx/test_data/test1/test1.pptx ===
+Overall Similarity: 78.8%
+Slides evaluated: 9
+Slide Scores: slide1.xml: 70.7%, slide2.xml: 67.6%, slide3.xml: 84%, slide4.xml: 82%, slide5.xml: 88%, slide6.xml: 79.5%, slide7.xml: 89%, slide8.xml: 81.7%, slide9.xml: 66.6%
+
+Test result logged to /Users/1110846/Test/skill_html2pptx/test_result/history.jsonl
+Report generated at /Users/1110846/Test/skill_html2pptx/test_result/HISTORY.md
+--- Running Test 2 ---
+
+=== Generating PPTX from /Users/1110846/Test/skill_html2pptx/test_data/test2 ===
+Found 13 HTML files.
+Processing page_1.html into slide 1...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_2.html into slide 2...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_3.html into slide 3...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: shadow.opacity can only be 0-1
+Warning: shadow.opacity can only be 0-1
+Warning: shadow.opacity can only be 0-1
+Warning: shadow.opacity can only be 0-1
+Processing page_4.html into slide 4...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_5.html into slide 5...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.9") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_6.html into slide 6...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_7.html into slide 7...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_8.html into slide 8...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.8") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_9.html into slide 9...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_10.html into slide 10...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_11.html into slide 11...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-left which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 7.8") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_12.html into slide 12...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-left which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-left which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 8.1") don't match layout (13.3" x 7.5"). Scaling may occur.
+Skipping page_13.html (Size: 39 bytes - considered empty)...
+Saved output to /Users/1110846/Test/skill_html2pptx/test2_output.pptx (5531053 bytes)
+
+=== Comparing with Reference: /Users/1110846/Test/skill_html2pptx/test_data/test2/test2.pptx ===
+Overall Similarity: 78.1%
+Slides evaluated: 12
+Slide Scores: slide1.xml: 77.8%, slide10.xml: 81%, slide11.xml: 76.3%, slide12.xml: 80.5%, slide2.xml: 84.8%, slide3.xml: 79.6%, slide4.xml: 81.3%, slide5.xml: 80.4%, slide6.xml: 79.2%, slide7.xml: 66%, slide8.xml: 76.8%, slide9.xml: 73.4%
+
+Test result logged to /Users/1110846/Test/skill_html2pptx/test_result/history.jsonl
+Report generated at /Users/1110846/Test/skill_html2pptx/test_result/HISTORY.md
+--- Running Test 3 ---
+
+=== Generating PPTX from /Users/1110846/Test/skill_html2pptx/test_data/test3 ===
+Found 22 HTML files.
+Processing page_1.html into slide 1...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_2.html into slide 2...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.2") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_3.html into slide 3...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.3") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_4.html into slide 4...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.0") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_5.html into slide 5...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.5") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_6.html into slide 6...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 7.9") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_7.html into slide 7...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_8.html into slide 8...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_9.html into slide 9...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-bottom which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-bottom which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-bottom which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 8.0") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_10.html into slide 10...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 9.3") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_11.html into slide 11...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Browser console: Warning: Inline element <span> has margin-right which is not supported in PowerPoint.
+Warning: HTML dimensions (13.3" x 7.6") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_12.html into slide 12...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_13.html into slide 13...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.1") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_14.html into slide 14...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.9") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_15.html into slide 15...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_16.html into slide 16...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.3") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_17.html into slide 17...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.0") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_18.html into slide 18...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 7.8") don't match layout (13.3" x 7.5"). Scaling may occur.
+Processing page_19.html into slide 19...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_20.html into slide 20...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Processing page_21.html into slide 21...
+Browser console: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+Warning: HTML dimensions (13.3" x 8.5") don't match layout (13.3" x 7.5"). Scaling may occur.
+Skipping page_22.html (Size: 39 bytes - considered empty)...
+Saved output to /Users/1110846/Test/skill_html2pptx/test3_output.pptx (4938379 bytes)
+
+=== Comparing with Reference: /Users/1110846/Test/skill_html2pptx/test_data/test3/test3.pptx ===
+Overall Similarity: 75.8%
+Slides evaluated: 21
+Slide Scores: slide1.xml: 75.3%, slide10.xml: 74%, slide11.xml: 70.4%, slide12.xml: 75.9%, slide13.xml: 82.4%, slide14.xml: 80.9%, slide15.xml: 74.9%, slide16.xml: 73.6%, slide17.xml: 77.4%, slide18.xml: 78.7%, slide19.xml: 77.9%, slide2.xml: 73.3%, slide20.xml: 80.8%, slide21.xml: 81.4%, slide3.xml: 76.5%, slide4.xml: 68.6%, slide5.xml: 77.1%, slide6.xml: 74.3%, slide7.xml: 67.9%, slide8.xml: 77.3%, slide9.xml: 74.1%
+
+Test result logged to /Users/1110846/Test/skill_html2pptx/test_result/history.jsonl
+Report generated at /Users/1110846/Test/skill_html2pptx/test_result/HISTORY.md
+--- Running Test 4 ---
+
+=== Generating PPTX from /Users/1110846/Test/skill_html2pptx/test_data/test4 ===
+Found 16 HTML files.
+Processing page_1.html into slide 1...
+Warning: HTML content overflows body. Width: 59.25pt, Height: 59.25pt
+Processing page_2.html into slide 2...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 4.50pt
+Processing page_3.html into slide 3...
+Processing page_4.html into slide 4...
+Processing page_5.html into slide 5...
+Processing page_6.html into slide 6...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 64.50pt
+Warning: Text box "iOS 26 marks the beginning of Apple's new year-bas..." ends too close to bottom edge (-0.11" from bottom, minimum 0.5" required)
+Processing page_7.html into slide 7...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 357.00pt
+Processing page_8.html into slide 8...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 15.75pt
+Processing page_9.html into slide 9...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 11.25pt
+Processing page_10.html into slide 10...
+Warning: HTML content overflows body. Width: 3.75pt, Height: 0.00pt
+Processing page_11.html into slide 11...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 129.75pt
+Warning: Text box "Common Design Elements" ends too close to bottom edge (0.16" from bottom, minimum 0.5" required)
+Warning: Text box "More rounded corners" ends too close to bottom edge (-1.05" from bottom, minimum 0.5" required)
+Warning: Text box "Distinct functional layers" ends too close to bottom edge (-1.05" from bottom, minimum 0.5" required)
+Warning: Text box "Translucent materials" ends too close to bottom edge (-1.05" from bottom, minimum 0.5" required)
+Warning: Text box "Morphing controls" ends too close to bottom edge (-1.05" from bottom, minimum 0.5" required)
+Processing page_12.html into slide 12...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 45.75pt
+Processing page_13.html into slide 13...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 95.25pt
+Processing page_14.html into slide 14...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 98.25pt
+Processing page_15.html into slide 15...
+Warning: HTML content overflows body. Width: 0.00pt, Height: 26.25pt
+Skipping page_16.html (Size: 39 bytes - considered empty)...
+Saved output to /Users/1110846/Test/skill_html2pptx/test4_output.pptx (22825604 bytes)
+
+=== Comparing with Reference: /Users/1110846/Test/skill_html2pptx/test_data/test4/test4.pptx ===
+Overall Similarity: 82%
+Slides evaluated: 15
+Slide Scores: slide1.xml: 75.7%, slide10.xml: 63.6%, slide11.xml: 67.9%, slide12.xml: 71.8%, slide13.xml: 80.9%, slide14.xml: 82.3%, slide15.xml: 90.7%, slide2.xml: 93.8%, slide3.xml: 92.3%, slide4.xml: 83.8%, slide5.xml: 88.6%, slide6.xml: 82.9%, slide7.xml: 75.9%, slide8.xml: 94.5%, slide9.xml: 84.9%
+
+Test result logged to /Users/1110846/Test/skill_html2pptx/test_result/history.jsonl
+Report generated at /Users/1110846/Test/skill_html2pptx/test_result/HISTORY.md
+All tests completed.

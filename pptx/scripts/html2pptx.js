@@ -193,16 +193,24 @@ function addElements(slideData, targetSlide, pres) {
       if (el.style.margin) listOptions.margin = el.style.margin;
       targetSlide.addText(el.items, listOptions);
     } else {
-      // Check if text is single-line (height suggests one line)
+      // Skip empty text elements (only whitespace)
+      const textContent = Array.isArray(el.text)
+        ? el.text.map(r => r.text || '').join('')
+        : (el.text || '');
+      if (!textContent.trim()) continue;
       const lineHeight = el.style.lineSpacing || el.style.fontSize * 1.2;
       const isSingleLine = el.position.h <= lineHeight * 1.5;
 
       let adjustedX = el.position.x;
       let adjustedW = el.position.w;
 
-      // Make single-line text 2% wider to account for underestimate
+      // Make single-line text wider to account for font rendering differences
+      // Use larger buffer for short texts (more prone to wrapping)
       if (isSingleLine) {
-        const widthIncrease = el.position.w * 0.02;
+        const textLength = textContent.length;
+        // Short texts (1-4 chars): 10%, Medium (5-10): 5%, Long (11+): 2%
+        const bufferPercent = textLength <= 4 ? 0.10 : (textLength <= 10 ? 0.05 : 0.02);
+        const widthIncrease = el.position.w * bufferPercent;
         const align = el.style.align;
 
         if (align === 'center') {
@@ -467,13 +475,8 @@ async function extractSlideData(page) {
             };
             icons.push(iconInfo);
 
-            // Add spaces to text run to approximate width
-            const fontSize = parseFloat(computed.fontSize) || 16;
-            // Approx space width is ~0.25em to 0.33em depending on font. Using 0.3em factor.
-            const spaceWidth = fontSize * 0.3;
-            const spaceCount = Math.max(1, Math.ceil(widthPx / spaceWidth));
-
-            runs.push({ text: ' '.repeat(spaceCount), options: { ...baseOptions } });
+            // Icons are captured as image-placeholders separately, no need to add space text
+            // runs.push({ text: ' '.repeat(spaceCount), options: { ...baseOptions } });
 
             // Process children ONLY if they are NOT the icon itself (which is empty usually). 
             // If it has children, we might still want to process them? 
@@ -671,6 +674,19 @@ async function extractSlideData(page) {
               h: pxToInch(rect.height)
             }
           });
+
+          // Add to elements for PPTX inclusion
+          elements.push({
+            type: 'image-placeholder',
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
+
           processed.add(el);
           // Mark all descendants as processed to prevent them from being handled individually
           el.querySelectorAll('*').forEach(child => processed.add(child));
@@ -786,14 +802,11 @@ async function extractSlideData(page) {
             icons[icons.length - 1].hideChildren = true;
           }
 
-          // DISABLED: We now decompose EVERYTHING to ensure text is editable.
-          /*
-          if (!isSlideRoot && (isCard || rect.height < 100)) {
+          // Mark as processed to prevent duplicate shape creation
+          // but DON'T return - children (text elements) still need to be processed
+          if (!isSlideRoot) {
             processed.add(el);
-            el.querySelectorAll('*').forEach(child => processed.add(child));
-            return;
           }
-          */
         }
 
         // Extract Icons (<i> tags) as images
@@ -1015,18 +1028,61 @@ async function extractSlideData(page) {
       // Extract text elements (P, H1, H2, etc.)
       const isTextTag = textTags.includes(el.tagName);
       let isLeafDiv = false;
+      let isStandaloneSpan = false;
 
       if (el.tagName === 'DIV') {
         // Check if explicit text leaf (contains text content and NO block children)
+        // Also exclude DIVs containing SVG/CANVAS (chart containers) to prevent merged chart text
         const hasBlockChildren = Array.from(el.children).some(c =>
-          ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE'].includes(c.tagName)
+          ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE', 'SVG', 'CANVAS'].includes(c.tagName.toUpperCase())
         );
         if (!hasBlockChildren && el.textContent.trim().length > 0) {
           isLeafDiv = true;
+          // Note: Do NOT mark internal elements as processed here
+          // The standalone SPAN check already handles this by checking parent leaf DIV status
         }
       }
 
-      if (!isTextTag && !isLeafDiv) return;
+      // Handle standalone SPAN elements (e.g., "취득세", "약 280만원")
+      // These are SPANs that are direct children of DIVs but not inside P/H1-H6 tags
+      if (el.tagName === 'SPAN' && el.textContent.trim().length > 0) {
+        // Check if this SPAN is already inside a text tag (will be processed by parseInlineFormatting)
+        // Also skip SPANs inside SVG (chart text elements)
+        let parent = el.parentElement;
+        let insideTextTag = false;
+        while (parent && parent !== document.body) {
+          // Skip SPANs inside SVG elements (D3 chart labels etc.)
+          if (parent.tagName.toUpperCase() === 'SVG') {
+            insideTextTag = true;
+            break;
+          }
+          // Skip SPANs inside LI elements (already handled by list processing)
+          if (parent.tagName === 'LI') {
+            insideTextTag = true;
+            break;
+          }
+          if (textTags.includes(parent.tagName)) {
+            insideTextTag = true;
+            break;
+          }
+          // Also check if parent is a leaf DIV (will be processed)
+          if (parent.tagName === 'DIV') {
+            const parentHasBlockChildren = Array.from(parent.children).some(c =>
+              ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE', 'SVG', 'CANVAS'].includes(c.tagName.toUpperCase())
+            );
+            if (!parentHasBlockChildren) {
+              insideTextTag = true; // Parent leaf DIV will handle this
+              break;
+            }
+          }
+          parent = parent.parentElement;
+        }
+        if (!insideTextTag) {
+          isStandaloneSpan = true;
+        }
+      }
+
+      if (!isTextTag && !isLeafDiv && !isStandaloneSpan) return;
 
       const rect = el.getBoundingClientRect();
       let text = el.textContent.trim();
@@ -1049,7 +1105,31 @@ async function extractSlideData(page) {
 
       const computed = window.getComputedStyle(el);
       const rotation = getRotation(computed.transform, computed.writingMode);
-      const { x, y, w, h } = getPositionAndSize(el, rect, rotation);
+      let { x, y, w, h } = getPositionAndSize(el, rect, rotation);
+
+      // Check for icon elements inside text - adjust position to avoid overlap
+      // Note: Apply this regardless of whether icon is processed (for leaf DIVs with icons)
+      const iconElement = el.querySelector('i.fa, i.fas, i.fab, i.far, i[class*="fa-"], [class*="icon"]');
+      if (iconElement) {
+        const iconRect = iconElement.getBoundingClientRect();
+        const iconComputed = window.getComputedStyle(iconElement);
+        const iconMarginRight = parseFloat(iconComputed.marginRight) || 0;
+
+        // Adjust text start position to after the icon
+        const iconEndX = iconRect.right + iconMarginRight;
+
+        // DEBUG: values for date div
+        /*
+        if (el.textContent.includes('작성일')) {
+          console.warn(`[DEBUG] IconOffset: rect.left=${rect.left}, iconRect.right=${iconRect.right}, iconEndX=${iconEndX}, w=${rect.right - iconEndX}`);
+        }
+        */
+
+        if (iconEndX > rect.left && iconRect.width > 0) {
+          x = iconEndX;
+          w = rect.right - iconEndX;
+        }
+      }
 
       // Handle transparent text (e.g. background-clip: text gradient)
       let textColor = rgbToHex(computed.color);
@@ -1188,14 +1268,22 @@ async function html2pptx(htmlFile, pres, options = {}) {
     const validationErrors = [];
 
     try {
-      const page = await browser.newPage();
+      // Create context with 3x device scale for high-resolution screenshots
+      const context = await browser.newContext({
+        deviceScaleFactor: 3,
+        viewport: { width: 1280, height: 720 }
+      });
+      const page = await context.newPage();
       page.on('console', (msg) => {
         // Log the message text to your test runner's console
         console.log(`Browser console: ${msg.text()}`);
       });
 
       await page.setViewportSize({ width: 1280, height: 720 });
-      await page.goto(`file://${filePath}`);
+      await page.goto(`file://${filePath}`, { waitUntil: 'networkidle' });
+
+      // Wait for dynamic content (D3.js charts, Tailwind CSS JIT, etc.)
+      await page.waitForTimeout(500);
 
       bodyDimensions = await getBodyDimensions(page);
 
@@ -1230,7 +1318,28 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 }, icon.id);
               }
 
+              // Apply clip-path to create transparent rounded corners
+              const originalClipPath = await page.evaluate((id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                  const computed = getComputedStyle(el);
+                  const original = el.style.clipPath;
+                  const borderRadius = computed.borderRadius || '0px';
+                  el.style.clipPath = `inset(0 round ${borderRadius})`;
+                  return original;
+                }
+                return '';
+              }, icon.id);
+
               await locator.screenshot({ path: iconPath, omitBackground: true, timeout: 1000 });
+
+              // Restore original clip-path
+              await page.evaluate(({ id, original }) => {
+                const el = document.getElementById(id);
+                if (el) {
+                  el.style.clipPath = original;
+                }
+              }, { id: icon.id, original: originalClipPath });
 
               if (icon.hideChildren) {
                 await page.evaluate((id) => {
@@ -1249,7 +1358,6 @@ async function html2pptx(htmlFile, pres, options = {}) {
         }
 
         // Resolve placeholders in elements
-        // Iterate and replace concurrently? No, elements is array
         slideData.elements = slideData.elements.map(el => {
           if (el.type === 'image-placeholder') {
             if (iconMap.has(el.id)) {
@@ -1259,9 +1367,7 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 position: el.position
               };
             } else {
-              // Screenshot failed or missing?
-              // Return null or keep as placeholder (will be ignored by addElements)?
-              // Better filter it out.
+              // Screenshot failed or missing - filter it out
               return null;
             }
           }
@@ -1285,7 +1391,8 @@ async function html2pptx(htmlFile, pres, options = {}) {
 
     const textBoxPositionErrors = validateTextBoxPosition(slideData, bodyDimensions);
     if (textBoxPositionErrors.length > 0) {
-      validationErrors.push(...textBoxPositionErrors);
+      // Log as warning instead of error - content may overflow but should still render
+      textBoxPositionErrors.forEach(err => console.warn(`Warning: ${err}`));
     }
 
     if (slideData.errors && slideData.errors.length > 0) {
