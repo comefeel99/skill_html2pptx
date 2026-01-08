@@ -376,7 +376,20 @@ async function extractSlideData(page) {
     const icons = [];
     const textTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'TH', 'TD'];
     const processed = new Set();
+    const styledSpanParents = new Set(); // Track parent DIVs of styled SPANs
 
+    // First pass: identify styled SPANs and mark their parent DIVs
+    // This is needed because DOM traversal processes parents before children
+    document.querySelectorAll('span').forEach((el) => {
+      const computed = window.getComputedStyle(el);
+      const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
+      const rect = el.getBoundingClientRect();
+      if (hasBg && rect.width > 0 && rect.height > 0) {
+        if (el.parentElement && el.parentElement.tagName === 'DIV') {
+          styledSpanParents.add(el.parentElement);
+        }
+      }
+    });
 
     document.querySelectorAll('*').forEach((el) => {
       if (processed.has(el)) return;
@@ -550,6 +563,80 @@ async function extractSlideData(page) {
           processed.add(el);
           // Prevent processing children (usually SVG paths or empty text)
           el.querySelectorAll('*').forEach(child => processed.add(child));
+          return;
+        }
+      }
+
+      // Extract styled SPANs with backgrounds (e.g. .price-tag) as images + text
+      // Background is captured as image, text is extracted separately for editability
+      if (el.tagName === 'SPAN') {
+        const computed = window.getComputedStyle(el);
+        const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
+        const hasBorderRadius = parseFloat(computed.borderRadius) > 0;
+        const rect = el.getBoundingClientRect();
+
+        if (hasBg && rect.width > 0 && rect.height > 0) {
+          if (!el.id) el.id = `styled-span-${Math.random().toString(36).substr(2, 9)}`;
+
+          // Add as image placeholder for background capture
+          icons.push({
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            },
+            hideChildren: true  // Only capture the background, not the text
+          });
+
+          elements.push({
+            type: 'image-placeholder',
+            id: el.id,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            }
+          });
+
+          // Extract the text with correct position
+          const textContent = el.textContent.trim();
+          if (textContent) {
+            const textColor = rgbToHex(computed.color);
+            elements.push({
+              type: 'span',
+              text: textContent,
+              position: {
+                x: pxToInch(rect.left),
+                y: pxToInch(rect.top),
+                w: pxToInch(rect.width),
+                h: pxToInch(rect.height)
+              },
+              style: {
+                fontSize: pxToPoints(computed.fontSize),
+                fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+                color: textColor,
+                transparency: extractAlpha(computed.color),
+                bold: computed.fontWeight === 'bold' || parseInt(computed.fontWeight) >= 600,
+                italic: computed.fontStyle === 'italic',
+                underline: computed.textDecoration?.includes('underline') || false,
+                align: 'center',  // Price tags are usually centered
+                lineSpacing: pxToPoints(computed.lineHeight),
+                paraSpaceBefore: 0,
+                paraSpaceAfter: 0,
+                margin: [0, 0, 0, 0]
+              }
+            });
+          }
+
+          // Mark as processed to prevent standalone SPAN handler from re-processing
+          processed.add(el);
+          // Also mark parent DIV as processed to prevent leafDiv from extracting same text
+          if (el.parentElement && el.parentElement.tagName === 'DIV') {
+            processed.add(el.parentElement);
+          }
           return;
         }
       }
@@ -1095,7 +1182,11 @@ async function extractSlideData(page) {
         const hasBlockChildren = Array.from(el.children).some(c =>
           ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE', 'SVG', 'CANVAS'].includes(c.tagName.toUpperCase())
         );
-        if (!hasBlockChildren && el.textContent.trim().length > 0) {
+        // Also check if any child has already been processed (e.g., styled SPANs)
+        const hasProcessedChildren = Array.from(el.querySelectorAll('*')).some(c => processed.has(c));
+        // Skip if this DIV is a parent of a styled SPAN (identified in first pass)
+        const isStyledSpanParent = styledSpanParents.has(el);
+        if (!hasBlockChildren && !hasProcessedChildren && !isStyledSpanParent && el.textContent.trim().length > 0) {
           isLeafDiv = true;
           // Note: Do NOT mark internal elements as processed here
           // The standalone SPAN check already handles this by checking parent leaf DIV status
@@ -1104,7 +1195,8 @@ async function extractSlideData(page) {
 
       // Handle standalone SPAN elements (e.g., "취득세", "약 280만원")
       // These are SPANs that are direct children of DIVs but not inside P/H1-H6 tags
-      if (el.tagName === 'SPAN' && el.textContent.trim().length > 0) {
+      // Skip if already processed (e.g., styled SPANs with backgrounds)
+      if (el.tagName === 'SPAN' && el.textContent.trim().length > 0 && !processed.has(el)) {
         // Check if this SPAN is already inside a text tag (will be processed by parseInlineFormatting)
         // Also skip SPANs inside SVG (chart text elements)
         let parent = el.parentElement;
@@ -1372,7 +1464,10 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 await page.evaluate((id) => {
                   const el = document.getElementById(id);
                   if (el) {
+                    // Hide child elements
                     Array.from(el.children).forEach(child => child.style.opacity = '0');
+                    // Also hide text content inside the element (for SPAN with text nodes)
+                    el.style.color = 'transparent';
                   }
                 }, icon.id);
               }

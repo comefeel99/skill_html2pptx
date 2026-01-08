@@ -27,7 +27,8 @@ async function addBackground(slideData, targetSlide, tmpDir) {
  * @param {Object} pres - PptxGenJS presentation
  */
 function addElements(slideData, targetSlide, pres) {
-    for (const el of slideData.elements) {
+    const allElements = slideData.elements;
+    for (const el of allElements) {
         if (el.type === 'image') {
             addImageElement(el, targetSlide);
         } else if (el.type === 'line') {
@@ -37,7 +38,7 @@ function addElements(slideData, targetSlide, pres) {
         } else if (el.type === 'list') {
             addListElement(el, targetSlide);
         } else {
-            addTextElement(el, targetSlide);
+            addTextElement(el, targetSlide, allElements);
         }
     }
 }
@@ -120,9 +121,12 @@ function addListElement(el, targetSlide) {
 }
 
 /**
- * Add text element to slide
+ * Add text element to slide with space-aware width buffering
+ * @param {Object} el - The text element
+ * @param {Object} targetSlide - PptxGenJS slide
+ * @param {Array} allElements - All elements on the slide (for collision detection)
  */
-function addTextElement(el, targetSlide) {
+function addTextElement(el, targetSlide, allElements = []) {
     // Skip empty text elements (only whitespace)
     const textContent = Array.isArray(el.text)
         ? el.text.map(r => r.text || '').join('')
@@ -135,21 +139,77 @@ function addTextElement(el, targetSlide) {
     let adjustedX = el.position.x;
     let adjustedW = el.position.w;
 
-    // Make single-line text wider to account for font rendering differences
-    if (isSingleLine) {
+    // 단일 행 텍스트에 대해 공간 인식 버퍼 적용
+    // 높이가 0.35인치 이상이면 멀티라인으로 간주하여 버퍼 적용 안함
+    const isMultiLine = el.position.h > 0.35;
+    if (isSingleLine && !isMultiLine) {
+        const fontSize = el.style.fontSize || 12;
         const textLength = textContent.length;
-        const bufferPercent = textLength <= 4 ? 0.20 : (textLength <= 10 ? 0.10 : 0.05);
-        const widthIncrease = Math.max(el.position.w * bufferPercent, 0.20);
-        const align = el.style.align;
 
-        if (align === 'center') {
-            adjustedX = el.position.x - (widthIncrease / 2);
-            adjustedW = el.position.w + widthIncrease;
-        } else if (align === 'right') {
-            adjustedX = el.position.x - widthIncrease;
-            adjustedW = el.position.w + widthIncrease;
-        } else {
-            adjustedW = el.position.w + widthIncrease;
+        // 예상 텍스트 너비 계산 (한글/영문 혼합 고려)
+        const koreanCount = (textContent.match(/[\uAC00-\uD7AF]/g) || []).length;
+        const otherCount = textLength - koreanCount;
+        // 한글: ~폰트크기*0.75, 영문/숫자: ~폰트크기*0.45 (인치 변환: /72)
+        const estimatedWidth = ((koreanCount * fontSize * 0.75) + (otherCount * fontSize * 0.45)) / 72;
+
+        // 1단계: 최소 너비 보장 (텍스트가 잘리지 않도록)
+        const minWidth = estimatedWidth * 1.15;
+        if (el.position.w < minWidth) {
+            adjustedW = minWidth;
+        }
+
+        // 현재 요소의 경계 (이미 최소 너비가 적용된 상태)
+        const currentRight = el.position.x + adjustedW;
+        const currentTop = el.position.y;
+        const currentBottom = el.position.y + el.position.h;
+
+        // 사용 가능한 오른쪽 공간 계산 (같은 행의 다른 요소와 겹치지 않도록)
+        let availableSpace = 13.33 - currentRight; // 슬라이드 기본 너비
+
+        for (const other of allElements) {
+            if (other === el) continue;
+            if (!other.position) continue;
+
+            const otherLeft = other.position.x;
+            const otherTop = other.position.y;
+            const otherBottom = other.position.y + other.position.h;
+
+            // Y축이 겹치는지 확인 (같은 행에 있는 요소)
+            const yOverlap = !(otherBottom < currentTop || otherTop > currentBottom);
+
+            // 오른쪽에 있고 Y가 겹치는 요소
+            if (yOverlap && otherLeft > el.position.x) {
+                const gap = otherLeft - currentRight;
+                if (gap < availableSpace) {
+                    availableSpace = gap;
+                }
+            }
+        }
+
+        // 2단계: 추가 버퍼 적용 (공간이 있는 경우에만)
+        // 희망 버퍼: 텍스트 길이에 따라 15~25%
+        const desiredBufferPercent = textLength <= 10 ? 0.25 : (textLength <= 20 ? 0.20 : 0.15);
+        const desiredBuffer = estimatedWidth * desiredBufferPercent;
+
+        // 안전 마진 적용 (80%)
+        const safeSpace = Math.max(0, availableSpace * 0.8);
+
+        // 적용할 버퍼 결정: 희망 버퍼와 안전 공간 중 작은 값
+        const actualBuffer = Math.min(desiredBuffer, safeSpace);
+
+        // 버퍼가 양수이고 의미있는 크기일 때만 적용
+        if (actualBuffer > 0.05) {
+            const align = el.style.align;
+
+            if (align === 'center') {
+                adjustedX = el.position.x - (actualBuffer / 2);
+                adjustedW = adjustedW + actualBuffer;
+            } else if (align === 'right') {
+                adjustedX = el.position.x - actualBuffer;
+                adjustedW = adjustedW + actualBuffer;
+            } else {
+                adjustedW = adjustedW + actualBuffer;
+            }
         }
     }
 
