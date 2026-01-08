@@ -23,238 +23,24 @@
  *
  * RETURNS:
  *   { slide, placeholders } where placeholders is an array of { id, x, y, w, h }
+ *
+ * NOTE: extractSlideData runs inside page.evaluate() (browser context)
+ *       and cannot use Node.js require(). Browser-side helpers are defined inline.
  */
 
 const { chromium } = require('playwright');
 const path = require('path');
 const sharp = require('sharp');
 
+// Modular imports for Node.js-side operations
+const { getBodyDimensions, validateDimensions, validateTextBoxPosition } = require('./validators/validators');
+const { addBackground, addElements } = require('./renderers/slide-renderer');
+
+// Constants (also defined in browser context below for page.evaluate)
 const PT_PER_PX = 0.75;
 const PX_PER_IN = 96;
 const EMU_PER_IN = 914400;
 
-// Helper: Get body dimensions and check for overflow
-async function getBodyDimensions(page) {
-  const bodyDimensions = await page.evaluate(() => {
-    const body = document.body;
-    const style = window.getComputedStyle(body);
-
-    return {
-      width: parseFloat(style.width),
-      height: parseFloat(style.height),
-      scrollWidth: body.scrollWidth,
-      scrollHeight: body.scrollHeight
-    };
-  });
-
-  const errors = [];
-  const widthOverflowPx = Math.max(0, bodyDimensions.scrollWidth - bodyDimensions.width - 1);
-  const heightOverflowPx = Math.max(0, bodyDimensions.scrollHeight - bodyDimensions.height - 1);
-
-  const widthOverflowPt = widthOverflowPx * PT_PER_PX;
-  const heightOverflowPt = heightOverflowPx * PT_PER_PX;
-
-  if (widthOverflowPt > 0 || heightOverflowPt > 0) {
-    // Downgraded to warning
-    if (widthOverflowPt > 1 || heightOverflowPt > 1) { // Ignore micro overflows
-      console.warn(`Warning: HTML content overflows body. Width: ${widthOverflowPt.toFixed(2)}pt, Height: ${heightOverflowPt.toFixed(2)}pt`);
-    }
-  }
-
-  return { ...bodyDimensions, errors, icons: [] }; // Initial empty icons, populated later? No, this function is just getBodyDimensions.
-  // Wait, getBodyDimensions is separate. extractSlideData returns the real data.
-
-
-
-  return { ...bodyDimensions, errors };
-}
-
-// Helper: Validate dimensions match presentation layout
-function validateDimensions(bodyDimensions, pres) {
-  const errors = [];
-  const widthInches = bodyDimensions.width / PX_PER_IN;
-  const heightInches = bodyDimensions.height / PX_PER_IN;
-
-  if (pres.presLayout) {
-    const layoutWidth = pres.presLayout.width / EMU_PER_IN;
-    const layoutHeight = pres.presLayout.height / EMU_PER_IN;
-
-    if (Math.abs(layoutWidth - widthInches) > 0.1 || Math.abs(layoutHeight - heightInches) > 0.1) {
-      console.warn(`Warning: HTML dimensions (${widthInches.toFixed(1)}" x ${heightInches.toFixed(1)}") don't match layout (${layoutWidth.toFixed(1)}" x ${layoutHeight.toFixed(1)}"). Scaling may occur.`);
-      // Do not block conversion
-    }
-
-  }
-  return errors;
-}
-
-function validateTextBoxPosition(slideData, bodyDimensions) {
-  const errors = [];
-  const slideHeightInches = bodyDimensions.height / PX_PER_IN;
-  const minBottomMargin = 0.5; // 0.5 inches from bottom
-
-  for (const el of slideData.elements) {
-    // Check text elements (p, h1-h6, list)
-    if (['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'list'].includes(el.type)) {
-      const fontSize = el.style?.fontSize || 0;
-      const bottomEdge = el.position.y + el.position.h;
-      const distanceFromBottom = slideHeightInches - bottomEdge;
-
-      if (fontSize > 12 && distanceFromBottom < minBottomMargin) {
-        const getText = () => {
-          if (typeof el.text === 'string') return el.text;
-          if (Array.isArray(el.text)) return el.text.find(t => t.text)?.text || '';
-          if (Array.isArray(el.items)) return el.items.find(item => item.text)?.text || '';
-          return '';
-        };
-        const textPrefix = getText().substring(0, 50) + (getText().length > 50 ? '...' : '');
-
-        errors.push(
-          `Text box "${textPrefix}" ends too close to bottom edge ` +
-          `(${distanceFromBottom.toFixed(2)}" from bottom, minimum ${minBottomMargin}" required)`
-        );
-      }
-    }
-  }
-
-  return errors;
-}
-
-// Helper: Add background to slide
-async function addBackground(slideData, targetSlide, tmpDir) {
-  if (slideData.background.type === 'image' && slideData.background.path) {
-    let imagePath = slideData.background.path.startsWith('file://')
-      ? slideData.background.path.replace('file://', '')
-      : slideData.background.path;
-    targetSlide.background = { path: imagePath };
-  } else if (slideData.background.type === 'color' && slideData.background.value) {
-    targetSlide.background = { color: slideData.background.value };
-  }
-}
-
-// Helper: Add elements to slide
-function addElements(slideData, targetSlide, pres) {
-  for (const el of slideData.elements) {
-    if (el.type === 'image') {
-      let imagePath = el.src.startsWith('file://') ? el.src.replace('file://', '') : el.src;
-      targetSlide.addImage({
-        path: imagePath,
-        x: el.position.x,
-        y: el.position.y,
-        w: el.position.w,
-        h: el.position.h
-      });
-    } else if (el.type === 'line') {
-      targetSlide.addShape(pres.ShapeType.line, {
-        x: el.x1,
-        y: el.y1,
-        w: el.x2 - el.x1,
-        h: el.y2 - el.y1,
-        line: { color: el.color, width: el.width }
-      });
-    } else if (el.type === 'shape') {
-      const shapeOptions = {
-        x: el.position.x,
-        y: el.position.y,
-        w: el.position.w,
-        h: el.position.h,
-        shape: el.shape.rectRadius > 0 ? pres.ShapeType.roundRect : pres.ShapeType.rect
-      };
-
-      if (el.shape.fill) {
-        if (typeof el.shape.fill === 'object') {
-          shapeOptions.fill = el.shape.fill;
-        } else {
-          shapeOptions.fill = { color: el.shape.fill };
-          if (el.shape.transparency != null) shapeOptions.fill.transparency = el.shape.transparency;
-        }
-      }
-      if (el.shape.line) shapeOptions.line = el.shape.line;
-      if (el.shape.rectRadius > 0) shapeOptions.rectRadius = el.shape.rectRadius;
-      if (el.shape.shadow) shapeOptions.shadow = el.shape.shadow;
-
-      targetSlide.addText(el.text || '', shapeOptions);
-    } else if (el.type === 'list') {
-      const listOptions = {
-        x: el.position.x,
-        y: el.position.y,
-        w: el.position.w,
-        h: el.position.h,
-        fontSize: el.style.fontSize,
-        fontFace: el.style.fontFace,
-        color: el.style.color,
-        align: el.style.align,
-        valign: 'top',
-        lineSpacing: el.style.lineSpacing,
-        paraSpaceBefore: el.style.paraSpaceBefore,
-        paraSpaceAfter: el.style.paraSpaceAfter,
-        margin: el.style.margin
-      };
-      if (el.style.margin) listOptions.margin = el.style.margin;
-      targetSlide.addText(el.items, listOptions);
-    } else {
-      // Skip empty text elements (only whitespace)
-      const textContent = Array.isArray(el.text)
-        ? el.text.map(r => r.text || '').join('')
-        : (el.text || '');
-      if (!textContent.trim()) continue;
-      const lineHeight = el.style.lineSpacing || el.style.fontSize * 1.2;
-      const isSingleLine = el.position.h <= lineHeight * 1.5;
-
-      let adjustedX = el.position.x;
-      let adjustedW = el.position.w;
-
-      // Make single-line text wider to account for font rendering differences
-      // Use larger buffer for short texts (more prone to wrapping)
-      if (isSingleLine) {
-        const textLength = textContent.length;
-        // Short texts (1-4 chars): 10%, Medium (5-10): 5%, Long (11+): 2%
-        const bufferPercent = textLength <= 4 ? 0.10 : (textLength <= 10 ? 0.05 : 0.02);
-        const widthIncrease = el.position.w * bufferPercent;
-        const align = el.style.align;
-
-        if (align === 'center') {
-          // Center: expand both sides
-          adjustedX = el.position.x - (widthIncrease / 2);
-          adjustedW = el.position.w + widthIncrease;
-        } else if (align === 'right') {
-          // Right: expand to the left
-          adjustedX = el.position.x - widthIncrease;
-          adjustedW = el.position.w + widthIncrease;
-        } else {
-          // Left (default): expand to the right
-          adjustedW = el.position.w + widthIncrease;
-        }
-      }
-
-      const textOptions = {
-        x: adjustedX,
-        y: el.position.y,
-        w: adjustedW,
-        h: el.position.h,
-        fontSize: el.style.fontSize,
-        fontFace: el.style.fontFace,
-        color: el.style.color,
-        bold: el.style.bold,
-        italic: el.style.italic,
-        underline: el.style.underline,
-        valign: 'top',
-        lineSpacing: el.style.lineSpacing,
-        paraSpaceBefore: el.style.paraSpaceBefore,
-        paraSpaceAfter: el.style.paraSpaceAfter,
-        inset: 0  // Remove default PowerPoint internal padding
-      };
-
-      if (el.style.align) textOptions.align = el.style.align;
-      if (el.style.margin) textOptions.margin = el.style.margin;
-      if (el.style.fill) textOptions.fill = el.style.fill;
-      if (el.style.rotate !== undefined) textOptions.rotate = el.style.rotate;
-      if (el.style.transparency !== null && el.style.transparency !== undefined) textOptions.transparency = el.style.transparency;
-
-      targetSlide.addText(el.text, textOptions);
-    }
-  }
-}
 
 // Helper: Extract slide data from HTML page
 async function extractSlideData(page) {
@@ -643,6 +429,39 @@ async function extractSlideData(page) {
       if (el.tagName === 'IMG') {
         const rect = el.getBoundingClientRect();
         if (rect.width > 0 && rect.height > 0) {
+          const computed = window.getComputedStyle(el);
+          const objectFit = computed.objectFit;
+
+          // For object-fit: cover/contain, use screenshot to preserve correct cropping
+          if (objectFit === 'cover' || objectFit === 'contain') {
+            if (!el.id) el.id = `img-${Math.random().toString(36).substr(2, 9)}`;
+
+            icons.push({
+              id: el.id,
+              position: {
+                x: pxToInch(rect.left),
+                y: pxToInch(rect.top),
+                w: pxToInch(rect.width),
+                h: pxToInch(rect.height)
+              }
+            });
+
+            elements.push({
+              type: 'image-placeholder',
+              id: el.id,
+              position: {
+                x: pxToInch(rect.left),
+                y: pxToInch(rect.top),
+                w: pxToInch(rect.width),
+                h: pxToInch(rect.height)
+              }
+            });
+
+            processed.add(el);
+            return;
+          }
+
+          // Standard image - use original source
           elements.push({
             type: 'image',
             src: el.src,
@@ -913,6 +732,57 @@ async function extractSlideData(page) {
         // But the screenshot includes borders.
 
         if ((hasBg || hasBorder) && !hasBackgroundImage) { // Skip if rasterized
+          // Check if container has any meaningful text content
+          // If it only contains icons/empty elements, we should rasterize it as an image like 'hasBackgroundImage'
+          // rather than making it a shape, to preserve the icon+background grouping.
+          const hasTextContent = (element) => {
+            // Check direct text nodes
+            for (const node of element.childNodes) {
+              if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) return true;
+            }
+            // Check children recursively, but skip known icon tags/SVG
+            for (const child of element.children) {
+              const tag = child.tagName;
+              if (tag === 'I' || tag === 'SVG' || child.classList.contains('fa') || child.classList.contains('material-icons')) continue;
+              if (hasTextContent(child)) return true;
+            }
+            return false;
+          };
+
+          const hasText = hasTextContent(el);
+
+          // If no text, treat as image (rasterize)
+          if (!hasText) {
+            if (!el.id) el.id = `bg-icon-${Math.random().toString(36).substr(2, 9)}`;
+
+            icons.push({
+              id: el.id,
+              position: {
+                x: pxToInch(rect.left),
+                y: pxToInch(rect.top),
+                w: pxToInch(rect.width),
+                h: pxToInch(rect.height)
+              },
+              hideChildren: false // Don't hide children (icons), we want them in the screenshot
+            });
+
+            elements.push({
+              type: 'image-placeholder',
+              id: el.id,
+              position: {
+                x: pxToInch(rect.left),
+                y: pxToInch(rect.top),
+                w: pxToInch(rect.width),
+                h: pxToInch(rect.height)
+              }
+            });
+
+            // Mark descendants as processed
+            el.querySelectorAll('*').forEach(child => processed.add(child));
+            processed.add(el);
+            return;
+          }
+
           // const rect = el.getBoundingClientRect(); // Already defined above
           if (rect.width > 0 && rect.height > 0) {
             const shadow = parseBoxShadow(computed.boxShadow);
@@ -966,11 +836,196 @@ async function extractSlideData(page) {
       }
 
       // Extract bullet lists as single text block
+      // BUT: if li has flex layout (justify-between), extract children as separate text boxes
       if (el.tagName === 'UL' || el.tagName === 'OL') {
         const rect = el.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
 
         const liElements = Array.from(el.querySelectorAll('li'));
+
+        // Check if any li uses flex layout (common for key-value pairs)
+        const hasFlexLi = liElements.some(li => {
+          const liStyle = window.getComputedStyle(li);
+          return liStyle.display === 'flex' || liStyle.display === 'inline-flex';
+        });
+
+        if (hasFlexLi) {
+          // Extract flex li children as individual text boxes
+          liElements.forEach(li => {
+            const liStyle = window.getComputedStyle(li);
+            const isFlex = liStyle.display === 'flex' || liStyle.display === 'inline-flex';
+
+            if (isFlex) {
+              // Extract each direct child as separate text box
+              Array.from(li.children).forEach(child => {
+                // Skip icons (will be handled by icon extraction)
+                if (child.tagName === 'I' || child.classList.contains('fa') ||
+                  child.classList.contains('fas') || child.classList.contains('fab')) {
+                  // Mark as icon for screenshot
+                  if (!child.id) child.id = `icon-${Math.random().toString(36).substr(2, 9)}`;
+                  const childRect = child.getBoundingClientRect();
+                  if (childRect.width > 0 && childRect.height > 0) {
+                    icons.push({
+                      id: child.id,
+                      position: {
+                        x: pxToInch(childRect.left),
+                        y: pxToInch(childRect.top),
+                        w: pxToInch(childRect.width),
+                        h: pxToInch(childRect.height)
+                      }
+                    });
+                    elements.push({
+                      type: 'image-placeholder',
+                      id: child.id,
+                      position: {
+                        x: pxToInch(childRect.left),
+                        y: pxToInch(childRect.top),
+                        w: pxToInch(childRect.width),
+                        h: pxToInch(childRect.height)
+                      }
+                    });
+                  }
+                  processed.add(child);
+                  return;
+                }
+
+                const childRect = child.getBoundingClientRect();
+                const text = child.textContent.trim();
+                if (childRect.width > 0 && childRect.height > 0 && text) {
+                  const childComputed = window.getComputedStyle(child);
+                  const textColor = rgbToHex(childComputed.color);
+                  const isBold = childComputed.fontWeight === 'bold' || parseInt(childComputed.fontWeight) >= 600;
+
+                  // Check if span contains an icon - adjust text position to start after icon
+                  let textStartX = childRect.left;
+                  let textWidth = childRect.width;
+                  const iconInChild = child.querySelector('i.fa, i.fas, i.fab, i.far, i[class*="fa-"], [class*="icon"]');
+                  if (iconInChild) {
+                    const iconRect = iconInChild.getBoundingClientRect();
+                    const iconComputed = window.getComputedStyle(iconInChild);
+                    const iconMarginRight = parseFloat(iconComputed.marginRight) || 0;
+
+                    // Move text start to after icon
+                    if (iconRect.right > childRect.left) {
+                      textStartX = iconRect.right + iconMarginRight;
+                      textWidth = childRect.right - textStartX;
+                    }
+
+                    // Also extract the icon as a separate image
+                    if (!iconInChild.id) iconInChild.id = `icon-${Math.random().toString(36).substr(2, 9)}`;
+                    if (iconRect.width > 0 && iconRect.height > 0) {
+                      icons.push({
+                        id: iconInChild.id,
+                        position: {
+                          x: pxToInch(iconRect.left),
+                          y: pxToInch(iconRect.top),
+                          w: pxToInch(iconRect.width),
+                          h: pxToInch(iconRect.height)
+                        }
+                      });
+                      elements.push({
+                        type: 'image-placeholder',
+                        id: iconInChild.id,
+                        position: {
+                          x: pxToInch(iconRect.left),
+                          y: pxToInch(iconRect.top),
+                          w: pxToInch(iconRect.width),
+                          h: pxToInch(iconRect.height)
+                        }
+                      });
+                      processed.add(iconInChild);
+                    }
+                  }
+
+                  // Special handling for DIV children with multiple P tags
+                  if (child.tagName === 'DIV') {
+                    const pElements = child.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
+                    if (pElements.length > 0) {
+                      // Extract each P tag as individual text box
+                      pElements.forEach(p => {
+                        const pRect = p.getBoundingClientRect();
+                        const pText = p.textContent.trim();
+                        if (pRect.width > 0 && pRect.height > 0 && pText) {
+                          const pComputed = window.getComputedStyle(p);
+                          const pBold = pComputed.fontWeight === 'bold' || parseInt(pComputed.fontWeight) >= 600;
+
+                          elements.push({
+                            type: 'p',
+                            text: pText,
+                            position: {
+                              x: pxToInch(pRect.left),
+                              y: pxToInch(pRect.top),
+                              w: pxToInch(pRect.width),
+                              h: pxToInch(pRect.height)
+                            },
+                            style: {
+                              fontSize: pxToPoints(pComputed.fontSize),
+                              fontFace: pComputed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+                              color: rgbToHex(pComputed.color),
+                              transparency: extractAlpha(pComputed.color),
+                              bold: pBold && !shouldSkipBold(pComputed.fontFamily),
+                              italic: pComputed.fontStyle === 'italic',
+                              underline: pComputed.textDecoration?.includes('underline') || false,
+                              align: pComputed.textAlign === 'start' ? 'left' : pComputed.textAlign,
+                              lineSpacing: pxToPoints(pComputed.lineHeight),
+                              paraSpaceBefore: 0,
+                              paraSpaceAfter: 0,
+                              margin: [0, 0, 0, 0]
+                            }
+                          });
+                          processed.add(p);
+                        }
+                      });
+                      processed.add(child);
+                      return; // Skip the default DIV extraction below
+                    }
+                  }
+
+                  elements.push({
+                    type: 'span',
+                    text: text,
+                    position: {
+                      x: pxToInch(textStartX),
+                      y: pxToInch(childRect.top),
+                      w: pxToInch(textWidth),
+                      h: pxToInch(childRect.height)
+                    },
+                    style: {
+                      fontSize: pxToPoints(childComputed.fontSize),
+                      fontFace: childComputed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+                      color: textColor,
+                      transparency: extractAlpha(childComputed.color),
+                      bold: isBold && !shouldSkipBold(childComputed.fontFamily),
+                      italic: childComputed.fontStyle === 'italic',
+                      underline: childComputed.textDecoration?.includes('underline') || false,
+                      align: childComputed.textAlign === 'start' ? 'left' : childComputed.textAlign,
+                      lineSpacing: pxToPoints(childComputed.lineHeight),
+                      paraSpaceBefore: 0,
+                      paraSpaceAfter: 0,
+                      margin: [0, 0, 0, 0]
+                    }
+                  });
+                  processed.add(child);
+                }
+              });
+              processed.add(li);
+            } else {
+              // Non-flex li: process as normal bullet item (handled below by fallback)
+            }
+          });
+
+          // Mark list as processed if all li were flex
+          const allFlexLi = liElements.every(li => {
+            const s = window.getComputedStyle(li);
+            return s.display === 'flex' || s.display === 'inline-flex';
+          });
+          if (allFlexLi) {
+            processed.add(el);
+            return;
+          }
+        }
+
+        // Fallback: Standard list processing for non-flex lists
         const items = [];
         const ulComputed = window.getComputedStyle(el);
         const ulPaddingLeftPt = pxToPoints(ulComputed.paddingLeft);
@@ -981,6 +1036,7 @@ async function extractSlideData(page) {
         const textIndent = ulPaddingLeftPt * 0.5;
 
         liElements.forEach((li, idx) => {
+          if (processed.has(li)) return; // Skip already processed flex li
           const isLast = idx === liElements.length - 1;
           const runs = parseInlineFormatting(li, { breakLine: false });
           // Clean manual bullets from first run
@@ -995,32 +1051,35 @@ async function extractSlideData(page) {
           items.push(...runs);
         });
 
-        const computed = window.getComputedStyle(liElements[0] || el);
+        if (items.length > 0) {
+          const computed = window.getComputedStyle(liElements[0] || el);
 
-        elements.push({
-          type: 'list',
-          items: items,
-          position: {
-            x: pxToInch(rect.left),
-            y: pxToInch(rect.top),
-            w: pxToInch(rect.width),
-            h: pxToInch(rect.height)
-          },
-          style: {
-            fontSize: pxToPoints(computed.fontSize),
-            fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
-            color: rgbToHex(computed.color),
-            transparency: extractAlpha(computed.color),
-            align: computed.textAlign === 'start' ? 'left' : computed.textAlign,
-            lineSpacing: computed.lineHeight && computed.lineHeight !== 'normal' ? pxToPoints(computed.lineHeight) : null,
-            paraSpaceBefore: 0,
-            paraSpaceAfter: pxToPoints(computed.marginBottom),
-            // PptxGenJS margin array is [left, right, bottom, top]
-            margin: [marginLeft, 0, 0, 0]
-          }
-        });
+          elements.push({
+            type: 'list',
+            items: items,
+            position: {
+              x: pxToInch(rect.left),
+              y: pxToInch(rect.top),
+              w: pxToInch(rect.width),
+              h: pxToInch(rect.height)
+            },
+            style: {
+              fontSize: pxToPoints(computed.fontSize),
+              fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+              color: rgbToHex(computed.color),
+              transparency: extractAlpha(computed.color),
+              align: computed.textAlign === 'start' ? 'left' : computed.textAlign,
+              lineSpacing: computed.lineHeight && computed.lineHeight !== 'normal' ? pxToPoints(computed.lineHeight) : null,
+              paraSpaceBefore: 0,
+              paraSpaceAfter: pxToPoints(computed.marginBottom),
+              // PptxGenJS margin array is [left, right, bottom, top]
+              margin: [marginLeft, 0, 0, 0]
+            }
+          });
+        }
 
         liElements.forEach(li => processed.add(li));
+
         processed.add(el);
         return;
       }
@@ -1331,7 +1390,54 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 return '';
               }, icon.id);
 
+              // Hide ancestor backgrounds to ensure transparency outside border-radius
+              const ancestorStyles = await page.evaluate((id) => {
+                const el = document.getElementById(id);
+                const styles = [];
+                if (el) {
+                  let parent = el.parentElement;
+                  while (parent) {
+                    // Save original style
+                    styles.push({
+                      id: parent.id || '', // Use ID if available, otherwise just use the element reference in a map if we could, but here we perform actions directly
+                      tag: parent.tagName,
+                      originalBg: parent.style.background,
+                      originalBgColor: parent.style.backgroundColor,
+                      originalBgImage: parent.style.backgroundImage
+                    });
+
+                    // Set to transparent
+                    parent.style.background = 'none';
+                    parent.style.backgroundColor = 'transparent';
+                    parent.style.backgroundImage = 'none';
+
+                    parent = parent.parentElement;
+                  }
+                }
+                return styles; // Returning this is just for debugging if needed, we can't easily pass element refs back
+              }, icon.id);
+
               await locator.screenshot({ path: iconPath, omitBackground: true, timeout: 1000 });
+
+              // Restore ancestor backgrounds
+              await page.evaluate(({ id, styles }) => {
+                const el = document.getElementById(id);
+                if (el) {
+                  let parent = el.parentElement;
+                  let i = 0;
+                  while (parent && i < styles.length) {
+                    const style = styles[i];
+                    // We assume the hierarchy hasn't changed. 
+                    // To be safer, we could have assigned temp IDs, but simple traversal is usually fine for this short duration.
+                    parent.style.background = style.originalBg;
+                    parent.style.backgroundColor = style.originalBgColor;
+                    parent.style.backgroundImage = style.originalBgImage;
+
+                    parent = parent.parentElement;
+                    i++;
+                  }
+                }
+              }, { id: icon.id, styles: ancestorStyles });
 
               // Restore original clip-path
               await page.evaluate(({ id, original }) => {

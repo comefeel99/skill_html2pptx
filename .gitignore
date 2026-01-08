@@ -5,3 +5,6 @@ temp_pptx_inspect_layout
 test_data/.DS_Store
 temp_check
 ~$*
+gradient_test_out
+temp_diff
+
