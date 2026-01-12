@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-12T03:42:21.981Z",
+  "summary": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "errors": 0
+  },
+  "results": [
+    {
+      "id": "issue_missing_2024",
+      "description": "슬라이드1 2024 텍스트 누락 방지",
+      "testDir": "test3",
+      "slideNum": 1,
+      "status": "PASS",
+      "message": "Text \"2024\" found"
+    },
+    {
+      "id": "issue_missing_date_slide10",
+      "description": "test3 슬라이드10 날짜 텍스트 누락 방지",
+      "testDir": "test3",
+      "slideNum": 10,
+      "status": "FAIL",
+      "message": "Text \"2024년 12월 1일\" NOT found"
+    }
+  ]
+}

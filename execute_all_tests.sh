@@ -13,4 +13,8 @@ node run_test.js test_data/test3
 echo "--- Running Test 4 ---"
 node run_test.js test_data/test4
 
+echo ""
+echo "=== Running Regression Tests ==="
+node run_regression.js
+
 echo "All tests completed."

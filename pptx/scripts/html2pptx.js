@@ -633,10 +633,8 @@ async function extractSlideData(page) {
 
           // Mark as processed to prevent standalone SPAN handler from re-processing
           processed.add(el);
-          // Also mark parent DIV as processed to prevent leafDiv from extracting same text
-          if (el.parentElement && el.parentElement.tagName === 'DIV') {
-            processed.add(el.parentElement);
-          }
+          // NOTE: Do NOT mark parent DIV as processed - this would cause sibling SPANs
+          // (like date/price text) to be skipped. styledSpanParents handles leafDiv exclusion.
           return;
         }
       }
@@ -916,8 +914,7 @@ async function extractSlideData(page) {
             // Add partial border lines
             elements.push(...borderLines);
 
-            processed.add(el);
-            return;
+            // Fall through to allow text extraction if it's a leaf node
           }
         }
       }
@@ -1217,11 +1214,15 @@ async function extractSlideData(page) {
             break;
           }
           // Also check if parent is a leaf DIV (will be processed)
+          // BUT: if parent is in styledSpanParents, it won't be processed as leafDiv,
+          // so we should NOT skip this SPAN in that case
           if (parent.tagName === 'DIV') {
             const parentHasBlockChildren = Array.from(parent.children).some(c =>
               ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE', 'SVG', 'CANVAS'].includes(c.tagName.toUpperCase())
             );
-            if (!parentHasBlockChildren) {
+            const parentIsStyledSpanParent = styledSpanParents.has(parent);
+            // Only treat as "handled by parent" if parent will actually be processed as leafDiv
+            if (!parentHasBlockChildren && !parentIsStyledSpanParent) {
               insideTextTag = true; // Parent leaf DIV will handle this
               break;
             }
@@ -1236,7 +1237,7 @@ async function extractSlideData(page) {
       if (!isTextTag && !isLeafDiv && !isStandaloneSpan) return;
 
       const rect = el.getBoundingClientRect();
-      let text = el.textContent.trim();
+      let text = el.textContent.trim().replace(/\s+/g, ' ');
       // If Leaf Div has 0 size (e.g. float clear), skip
       if (rect.width === 0 || rect.height === 0 || !text) return;
 
@@ -1464,8 +1465,8 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 await page.evaluate((id) => {
                   const el = document.getElementById(id);
                   if (el) {
-                    // Hide child elements
-                    Array.from(el.children).forEach(child => child.style.opacity = '0');
+                    // Hide all descendant elements (not just direct children)
+                    el.querySelectorAll('*').forEach(desc => desc.style.opacity = '0');
                     // Also hide text content inside the element (for SPAN with text nodes)
                     el.style.color = 'transparent';
                   }
@@ -1512,6 +1513,62 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 return styles; // Returning this is just for debugging if needed, we can't easily pass element refs back
               }, icon.id);
 
+              // Hide ALL overlapping elements (not just siblings) to prevent them from appearing in the screenshot
+              // This handles cases where position: absolute elements overlap with elements from different parts of the DOM tree
+              const hiddenElements = await page.evaluate((id) => {
+                const el = document.getElementById(id);
+                const hidden = [];
+                if (!el) return hidden;
+
+                const targetRect = el.getBoundingClientRect();
+
+                // Helper: check if two rectangles overlap
+                const rectsOverlap = (r1, r2) => {
+                  return !(r1.right < r2.left || r1.left > r2.right ||
+                    r1.bottom < r2.top || r1.top > r2.bottom);
+                };
+
+                // Helper: check if element is ancestor of target
+                const isAncestor = (potentialAncestor, target) => {
+                  let parent = target.parentElement;
+                  while (parent) {
+                    if (parent === potentialAncestor) return true;
+                    parent = parent.parentElement;
+                  }
+                  return false;
+                };
+
+                // Helper: check if element is descendant of target
+                const isDescendant = (potentialDesc, target) => {
+                  return target.contains(potentialDesc);
+                };
+
+                // Find all elements in the document that overlap with target
+                document.querySelectorAll('*').forEach(other => {
+                  if (other === el) return;
+                  if (isAncestor(other, el)) return; // Don't hide ancestors
+                  if (isDescendant(other, el)) return; // Don't hide descendants
+
+                  const otherRect = other.getBoundingClientRect();
+                  if (otherRect.width === 0 || otherRect.height === 0) return;
+
+                  if (rectsOverlap(targetRect, otherRect)) {
+                    // Store original values
+                    hidden.push({
+                      // We can't pass element references, so mark them with a temp attribute
+                      tempId: `__hide_${Math.random().toString(36).substr(2, 9)}`
+                    });
+                    other.dataset.tempHideId = hidden[hidden.length - 1].tempId;
+                    other.dataset.origOpacity = other.style.opacity;
+                    other.dataset.origVisibility = other.style.visibility;
+                    other.style.opacity = '0';
+                    other.style.visibility = 'hidden';
+                  }
+                });
+
+                return hidden;
+              }, icon.id);
+
               await locator.screenshot({ path: iconPath, omitBackground: true, timeout: 1000 });
 
               // Restore ancestor backgrounds
@@ -1534,6 +1591,20 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 }
               }, { id: icon.id, styles: ancestorStyles });
 
+              // Restore all hidden overlapping elements
+              await page.evaluate(() => {
+                // Find all elements that were hidden (marked with tempHideId)
+                document.querySelectorAll('[data-temp-hide-id]').forEach(el => {
+                  if (el.dataset.origOpacity !== undefined) {
+                    el.style.opacity = el.dataset.origOpacity;
+                    el.style.visibility = el.dataset.origVisibility;
+                    delete el.dataset.origOpacity;
+                    delete el.dataset.origVisibility;
+                    delete el.dataset.tempHideId;
+                  }
+                });
+              });
+
               // Restore original clip-path
               await page.evaluate(({ id, original }) => {
                 const el = document.getElementById(id);
@@ -1546,7 +1617,8 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 await page.evaluate((id) => {
                   const el = document.getElementById(id);
                   if (el) {
-                    Array.from(el.children).forEach(child => child.style.opacity = '');
+                    // Restore all descendant elements (must match the hiding logic that uses querySelectorAll)
+                    el.querySelectorAll('*').forEach(desc => desc.style.opacity = '');
                   }
                 }, icon.id);
               }

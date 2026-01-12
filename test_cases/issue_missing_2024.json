@@ -1,0 +1,12 @@
+{
+  "id": "issue_missing_2024",
+  "description": "슬라이드1 2024 텍스트 누락 방지",
+  "testDir": "test3",
+  "slideNum": 1,
+  "assertion": {
+    "type": "text_exists",
+    "content": "2024"
+  },
+  "status": "active",
+  "createdAt": "2026-01-08T17:16:31.882Z"
+}

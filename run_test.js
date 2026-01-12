@@ -2,8 +2,9 @@ const PptxGenJS = require('pptxgenjs');
 const path = require('path');
 const fs = require('fs');
 const html2pptx = require('./pptx/scripts/html2pptx');
-const { comparePptx } = require('./compare_pptx'); // Import function
-const { generateReport } = require('./generate_report'); // Import function
+const { comparePptx } = require('./lib/compare-pptx');
+const { generateReport } = require('./lib/report-generator');
+
 
 async function runTest() {
     const startTime = Date.now();
