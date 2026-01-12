@@ -374,6 +374,7 @@ async function extractSlideData(page) {
     const elements = [];
     const placeholders = [];
     const icons = [];
+    const deferredIcons = [];  // Icons to add at the end for correct z-order (on top of all backgrounds)
     const textTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'TH', 'TD'];
     const processed = new Set();
     const styledSpanParents = new Set(); // Track parent DIVs of styled SPANs
@@ -705,6 +706,43 @@ async function extractSlideData(page) {
           if (icons.length > 0) {
             icons[icons.length - 1].hideChildren = true;
           }
+
+          // Solution 2: Separately capture Font Awesome icons inside this background DIV
+          // After capturing background with hideChildren, also add icons as separate captures
+          const iconElements = el.querySelectorAll('i.fa, i.fas, i.fab, i.far, i[class*="fa-"]');
+          iconElements.forEach(iconEl => {
+            if (processed.has(iconEl)) return; // Skip already processed icons
+
+            if (!iconEl.id) iconEl.id = `icon-${Math.random().toString(36).substr(2, 9)}`;
+            const iconRect = iconEl.getBoundingClientRect();
+
+            if (iconRect.width > 0 && iconRect.height > 0) {
+              icons.push({
+                id: iconEl.id,
+                position: {
+                  x: pxToInch(iconRect.left),
+                  y: pxToInch(iconRect.top),
+                  w: pxToInch(iconRect.width),
+                  h: pxToInch(iconRect.height)
+                }
+                // Note: no hideChildren - capture the icon itself
+              });
+
+              // Defer icon insertion to end of DOM traversal for correct z-order
+              deferredIcons.push({
+                type: 'image-placeholder',
+                id: iconEl.id,
+                position: {
+                  x: pxToInch(iconRect.left),
+                  y: pxToInch(iconRect.top),
+                  w: pxToInch(iconRect.width),
+                  h: pxToInch(iconRect.height)
+                }
+              });
+
+              processed.add(iconEl);
+            }
+          });
 
           // Mark as processed to prevent duplicate shape creation
           // but DON'T return - children (text elements) still need to be processed
@@ -1393,6 +1431,9 @@ async function extractSlideData(page) {
 
       processed.add(el);
     });
+
+    // Append deferred icons to elements at the end for correct z-order (icons on top of all backgrounds)
+    elements.push(...deferredIcons);
 
     return { background, elements, placeholders, errors, icons };
   });
