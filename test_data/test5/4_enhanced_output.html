@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KODEX 나스닥100 데일리커버드콜 OTM 투자 분석 (Enhanced)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        body {
+            background: #0f172a;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .source-tag {
+            font-size: 10px;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #64748b;
+        }
+
+        .ticker-badge {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .key-takeaway {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide flex">
+        <div
+            class="w-1/2 bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 h-full flex flex-col justify-center px-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full opacity-10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-400 rounded-full opacity-10 blur-3xl"></div>
+            <div class="z-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="ticker-badge">494300</span>
+                    <span class="text-emerald-400 text-sm font-semibold">2026 Investment Analysis</span>
+                </div>
+                <h1 class="text-4xl font-black text-white leading-tight mb-4">KODEX<br>미국나스닥100<br><span
+                        class="text-emerald-400">데일리커버드콜OTM</span></h1>
+                <p class="text-slate-400 font-light text-lg">2세대 커버드콜 ETF<br>인컴 + 성장의 하이브리드 전략</p>
+            </div>
+        </div>
+        <div class="w-1/2 bg-white h-full p-10 flex flex-col justify-center">
+            <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                <i class="fas fa-star text-amber-500 mr-3"></i>Key Highlights
+            </h2>
+            <div class="space-y-4">
+                <div class="flex items-start p-4 bg-emerald-50 rounded-xl border-l-4 border-emerald-500">
+                    <div
+                        class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                        <i class="fas fa-arrow-up text-emerald-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-700 font-bold">Daily 1% OTM</p>
+                        <p class="text-slate-500 text-sm">매일 1% 상승 참여 + 옵션 프리미엄 수취</p>
+                    </div>
+                </div>
+                <div class="flex items-start p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                        <i class="fas fa-coins text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-700 font-bold">연 10~20% 분배율</p>
+                        <p class="text-slate-500 text-sm">변동성을 현금으로 치환하는 Volatility Harvesting</p>
+                    </div>
+                </div>
+                <div class="flex items-start p-4 bg-purple-50 rounded-xl border-l-4 border-purple-500">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                        <i class="fas fa-shield-halved text-purple-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-700 font-bold">하락장 방어</p>
+                        <p class="text-slate-500 text-sm">옵션 프리미엄으로 손실 일부 상쇄</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-200">
+                <p class="text-xs text-slate-400">출처: 삼성자산운용, Goldman Sachs, McKinsey</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: 1세대 vs 2세대 진화 + 비교 다이어그램 -->
+    <div class="slide p-12 bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold text-slate-800">커버드콜 ETF의 <span class="text-blue-600">진화</span></h1>
+            <p class="text-slate-500 mt-2">월간 ATM에서 일간 OTM으로 - 상방 막힘 문제 해소</p>
+        </div>
+
+        <!-- 비교 다이어그램 -->
+        <div class="flex gap-6 flex-grow">
+            <!-- Option A: 1세대 -->
+            <div class="flex-1 bg-slate-100 rounded-2xl p-6 border-2 border-slate-300 relative">
+                <div class="text-center mb-4">
+                    <span class="px-4 py-1 bg-slate-500 text-white rounded-full text-sm font-bold">1세대 QYLD</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-calendar-week text-slate-400 mr-3 w-6"></i>
+                        <span class="text-slate-600">옵션 주기: <strong>월간</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-equals text-slate-400 mr-3 w-6"></i>
+                        <span class="text-slate-600">행사 가격: <strong>ATM (등가격)</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-red-50 rounded-lg border border-red-200">
+                        <i class="fas fa-lock text-red-400 mr-3 w-6"></i>
+                        <span class="text-red-600">상승 참여: <strong>없음</strong></span>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-red-100 rounded-xl">
+                    <p class="text-sm text-red-700"><i class="fas fa-exclamation-triangle mr-2"></i>장기 원금 잠식 위험</p>
+                </div>
+            </div>
+
+            <!-- VS -->
+            <div class="flex items-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center font-bold text-white text-xl shadow-lg">
+                    VS</div>
+            </div>
+
+            <!-- Option B: 2세대 -->
+            <div class="flex-1 bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-400 relative">
+                <div class="absolute -top-3 -right-3">
+                    <span class="px-3 py-1 bg-amber-400 text-slate-800 rounded-full text-xs font-bold shadow">추천</span>
+                </div>
+                <div class="text-center mb-4">
+                    <span class="px-4 py-1 bg-emerald-500 text-white rounded-full text-sm font-bold">2세대 KODEX
+                        OTM</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-calendar-day text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-slate-600">옵션 주기: <strong class="text-emerald-600">일간 (0DTE)</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-arrow-up text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-slate-600">행사 가격: <strong class="text-emerald-600">1% OTM</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-emerald-100 rounded-lg border border-emerald-300">
+                        <i class="fas fa-unlock text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-emerald-700">상승 참여: <strong>일간 1%</strong></span>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-emerald-200 rounded-xl">
+                    <p class="text-sm text-emerald-800"><i class="fas fa-check-circle mr-2"></i>80%+ 거래일 상승분 향유</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaway -->
+        <div class="mt-4">
+            <div class="key-takeaway rounded-xl p-4 text-white flex items-center">
+                <i class="fas fa-lightbulb text-2xl text-amber-300 mr-4"></i>
+                <div>
+                    <p class="font-bold">Key Takeaway</p>
+                    <p class="text-blue-100 text-sm">2세대 Daily OTM 전략은 시간 가치(Theta)를 매일 현금화하면서도 일간 상승 여력을 확보</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: 시나리오별 수익 구조 + PROCESS FLOW -->
+    <div class="slide p-12 bg-white flex flex-col">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold text-slate-800">시나리오별 <span class="text-emerald-600">수익 구조</span></h1>
+            <p class="text-slate-500 mt-2">Daily 1% OTM 룰의 실제 작동 방식</p>
+        </div>
+
+        <!-- Process Flow: 시나리오 B -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-amber-700 mb-4">시나리오 B: 지수 +2.0% 폭등 시</h3>
+            <div class="flex items-center justify-center gap-4">
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                        <i class="fas fa-chart-line text-3xl text-blue-600"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-700">지수 상승</p>
+                    <p class="text-lg font-black text-blue-600">+2.0%</p>
+                </div>
+
+                <!-- Arrow -->
+                <div class="text-4xl text-gray-300">→</div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center mb-2">
+                        <i class="fas fa-lock text-3xl text-amber-600"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-700">1% 캡 적용</p>
+                    <p class="text-lg font-black text-amber-600">+1% Only</p>
+                </div>
+
+                <!-- Arrow -->
+                <div class="text-4xl text-gray-300">→</div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                        <i class="fas fa-hand-holding-dollar text-3xl text-red-500"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-700">초과분 양도</p>
+                    <p class="text-lg font-black text-red-500">-1%</p>
+                </div>
+
+                <!-- Arrow -->
+                <div class="text-4xl text-gray-300">→</div>
+
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mb-2">
+                        <i class="fas fa-coins text-3xl text-emerald-600"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-700">최종 수익</p>
+                    <p class="text-lg font-black text-emerald-600">+1% + α</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3 시나리오 요약 카드 -->
+        <div class="grid grid-cols-3 gap-4 flex-grow">
+            <div class="bg-emerald-50 rounded-xl p-5 border-t-4 border-emerald-500">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-emerald-700">시나리오 A</span>
+                    <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-bold">BEST</span>
+                </div>
+                <p class="text-3xl font-black text-emerald-600 mb-2">+0.5%</p>
+                <p class="text-sm text-slate-600">상승분 온전히 수익 + 프리미엄</p>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-5 border-t-4 border-amber-500">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-amber-700">시나리오 B</span>
+                    <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs font-bold">CAP</span>
+                </div>
+                <p class="text-3xl font-black text-amber-600 mb-2">+2.0%</p>
+                <p class="text-sm text-slate-600">+1%만 수익, 나머지 포기</p>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-5 border-t-4 border-blue-500">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-blue-700">시나리오 C</span>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold">방어</span>
+                </div>
+                <p class="text-3xl font-black text-red-500 mb-2">-1.0%</p>
+                <p class="text-sm text-slate-600">프리미엄으로 손실 일부 상쇄</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: TIGER 비교 + 파이 차트 -->
+    <div class="slide p-12 bg-slate-50 flex flex-col">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold text-slate-800">TIGER의 <span class="text-orange-600">타겟 프리미엄</span> 전략</h1>
+            <p class="text-slate-500 mt-2">왜 100% 옵션 매도 대신 10~20%만 매도하는가?</p>
+        </div>
+
+        <div class="flex gap-8 flex-grow">
+            <!-- 파이 차트 영역 -->
+            <div class="w-1/2 bg-white rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+                <h3 class="text-lg font-bold text-slate-700 mb-4 text-center">TIGER 자산 배분</h3>
+                <div class="flex justify-center" id="pie-chart-tiger"></div>
+            </div>
+
+            <!-- 설명 카드 -->
+            <div class="w-1/2 space-y-4">
+                <div class="bg-blue-50 rounded-xl p-5 border-l-4 border-blue-500">
+                    <div class="flex items-center mb-2">
+                        <div class="w-6 h-6 rounded-full bg-blue-500 mr-3"></div>
+                        <h3 class="font-bold text-blue-700">나스닥 지수 추종 90%</h3>
+                    </div>
+                    <p class="text-sm text-slate-600">옵션 매도 없이 지수 상승분 100% 참여</p>
+                    <p class="text-xs text-blue-600 mt-2">→ 강세장에서 수익 극대화</p>
+                </div>
+                <div class="bg-emerald-50 rounded-xl p-5 border-l-4 border-emerald-500">
+                    <div class="flex items-center mb-2">
+                        <div class="w-6 h-6 rounded-full bg-emerald-500 mr-3"></div>
+                        <h3 class="font-bold text-emerald-700">옵션 매도 10~20%</h3>
+                    </div>
+                    <p class="text-sm text-slate-600">연 15% 목표 분배금 확보용</p>
+                    <p class="text-xs text-emerald-600 mt-2">→ 최소한의 상방 제한</p>
+                </div>
+                <div class="bg-slate-100 rounded-xl p-5">
+                    <h3 class="font-bold text-slate-700 mb-2">Core Philosophy</h3>
+                    <p class="text-sm text-slate-600">"인컴보다 성장이 우선" (Growth over Income)</p>
+                    <p class="text-sm text-slate-600">강력한 상승장(Bull Market)에서 지수 추종력 우수</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-right">
+            <span class="source-tag">출처: 미래에셋자산운용</span>
+        </div>
+    </div>
+
+    <!-- Slide 5: 2026년 시장 전망 + 주석 라인 차트 -->
+    <div class="slide p-12 bg-white flex flex-col">
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-bold text-slate-800">2026년 <span class="text-blue-600">시장 전망</span></h1>
+                <p class="text-slate-500 mt-2">소프트 랜딩 + AI 2차 붐 = Sweet Spot</p>
+            </div>
+            <span class="source-tag">출처: Goldman Sachs 2026 Outlook</span>
+        </div>
+
+        <div class="flex gap-8 flex-grow">
+            <!-- 라인 차트 영역 -->
+            <div class="w-2/3 bg-slate-50 rounded-2xl p-6" id="line-chart-sp500"></div>
+
+            <!-- 인사이트 카드 -->
+            <div class="w-1/3 space-y-4">
+                <div class="bg-blue-50 rounded-xl p-5 border-l-4 border-blue-500">
+                    <h3 class="font-bold text-blue-700 mb-2">
+                        <i class="fas fa-bullseye mr-2"></i>S&P 500 목표
+                    </h3>
+                    <p class="text-3xl font-black text-blue-600">7,600pt</p>
+                    <p class="text-sm text-slate-500">연 10~12% 상승 여력</p>
+                </div>
+                <div class="bg-purple-50 rounded-xl p-5 border-l-4 border-purple-500">
+                    <h3 class="font-bold text-purple-700 mb-2">
+                        <i class="fas fa-robot mr-2"></i>AI 2차 붐
+                    </h3>
+                    <p class="text-sm text-slate-600">Capex → SW 매출 실현 원년</p>
+                </div>
+                <div class="bg-amber-50 rounded-xl p-5 border-l-4 border-amber-500">
+                    <h3 class="font-bold text-amber-700 mb-2">
+                        <i class="fas fa-chart-line mr-2"></i>Sweet Spot
+                    </h3>
+                    <p class="text-sm text-slate-600">고변동성 + 완만한 상승<br>= 커버드콜 최적 환경</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaway -->
+        <div class="mt-4">
+            <div class="key-takeaway rounded-xl p-4 text-white flex items-center">
+                <i class="fas fa-lightbulb text-2xl text-amber-300 mr-4"></i>
+                <div>
+                    <p class="font-bold">Key Takeaway</p>
+                    <p class="text-blue-100 text-sm">2026년 예상되는 "고변동성 + 완만 상승" 국면은 데일리 커버드콜 전략 Sweet Spot</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: 수익률 시나리오 테이블 -->
+    <div class="slide p-12 bg-gradient-to-br from-slate-900 to-blue-900 flex flex-col text-white">
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-bold">KODEX <span class="text-emerald-400">수익률 시나리오</span></h1>
+                <p class="text-blue-200 mt-2">2026년 시장 상황별 예상 성과</p>
+            </div>
+        </div>
+
+        <div class="flex-grow bg-white/5 rounded-2xl p-6 border border-white/10">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-white/20">
+                        <th class="text-left py-3 px-4 text-blue-300 font-bold">시나리오</th>
+                        <th class="text-center py-3 px-4 text-blue-300">나스닥100</th>
+                        <th class="text-center py-3 px-4 text-blue-300">분배율</th>
+                        <th class="text-center py-3 px-4 text-blue-300">주가변동</th>
+                        <th class="text-center py-3 px-4 text-blue-300 font-bold">총수익</th>
+                        <th class="text-center py-3 px-4 text-blue-300">평가</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">강세장 (Bull)</td>
+                        <td class="py-4 px-4 text-center text-green-400 font-bold">+20%+</td>
+                        <td class="py-4 px-4 text-center">15~18%</td>
+                        <td class="py-4 px-4 text-center">+5~8%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+20~26%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-amber-500/30 text-amber-300 rounded text-xs">지수 대비 ↓</span></td>
+                    </tr>
+                    <tr class="border-b border-white/10 bg-emerald-500/20">
+                        <td class="py-4 px-4 font-bold text-emerald-400">완만상승 ⭐</td>
+                        <td class="py-4 px-4 text-center text-emerald-400 font-bold">+10%</td>
+                        <td class="py-4 px-4 text-center text-emerald-400">16~20%</td>
+                        <td class="py-4 px-4 text-center text-emerald-400">+8~10%</td>
+                        <td class="py-4 px-4 text-center text-2xl font-black text-emerald-400">+24~30%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-emerald-500/30 text-emerald-300 rounded text-xs">SWEET SPOT</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">횡보장 (Flat)</td>
+                        <td class="py-4 px-4 text-center text-slate-400">0%</td>
+                        <td class="py-4 px-4 text-center">18~22%</td>
+                        <td class="py-4 px-4 text-center">-2~+2%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+16~24%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-blue-500/30 text-blue-300 rounded text-xs">지수 대비 ↑↑</span></td>
+                    </tr>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">하락장 (Bear)</td>
+                        <td class="py-4 px-4 text-center text-red-400 font-bold">-10%</td>
+                        <td class="py-4 px-4 text-center">20~25%</td>
+                        <td class="py-4 px-4 text-center">-10%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+10~15%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-blue-500/30 text-blue-300 rounded text-xs">수익 창출</span></td>
+                    </tr>
+                    <tr>
+                        <td class="py-4 px-4 font-medium">폭락장 (Crash)</td>
+                        <td class="py-4 px-4 text-center text-red-500 font-bold">-20%-</td>
+                        <td class="py-4 px-4 text-center">25%+</td>
+                        <td class="py-4 px-4 text-center">-20%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+5% 내외</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-purple-500/30 text-purple-300 rounded text-xs">손실 축소</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 flex justify-between items-center">
+            <p class="text-sm text-blue-300">
+                <i class="fas fa-info-circle mr-2"></i>
+                분배율이 높아도 주가 하락 시 총수익 감소 가능
+            </p>
+            <span class="px-3 py-1 bg-white/10 rounded text-xs text-slate-300">출처: 삼성자산운용</span>
+        </div>
+    </div>
+
+    <!-- Slide 7: 위험 요인 -->
+    <div class="slide p-12 bg-white flex flex-col">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-slate-800"><span class="text-red-600">위험</span> 요인 분석</h1>
+            <p class="text-slate-500 mt-2">보이지 않는 비용과 리스크</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6 flex-grow">
+            <!-- 변동성 드래그 -->
+            <div class="bg-red-50 rounded-2xl p-6 border border-red-200">
+                <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-chart-area text-2xl text-red-500"></i>
+                </div>
+                <h3 class="text-xl font-bold text-red-700 mb-3">변동성 드래그</h3>
+
+                <div class="bg-white rounded-xl p-4 mb-4">
+                    <p class="text-xs text-slate-500 mb-2">예시: 월 -2% → 화 +2%</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>일반 지수</span>
+                            <span class="text-green-600 font-bold">~0%</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>KODEX</span>
+                            <span class="text-red-600 font-bold">-1%</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-red-600">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    "녹아내림" 현상 누적
+                </p>
+            </div>
+
+            <!-- 환율 리스크 -->
+            <div class="bg-amber-50 rounded-2xl p-6 border border-amber-200">
+                <div class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-won-sign text-2xl text-amber-500"></i>
+                </div>
+                <h3 class="text-xl font-bold text-amber-700 mb-3">환율 리스크</h3>
+
+                <div class="bg-white rounded-lg p-3 mb-3">
+                    <p class="text-xs text-slate-500">현재 환율</p>
+                    <p class="text-xl font-bold text-amber-600">1,400원대</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="bg-green-50 rounded-lg p-2 border border-green-200">
+                        <p class="text-xs text-green-700"><i class="fas fa-plus-circle mr-1"></i>위기 시 달러 강세 → 방어</p>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+                        <p class="text-xs text-red-700"><i class="fas fa-minus-circle mr-1"></i>달러 약세 시 환차손</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 세금 -->
+            <div class="bg-purple-50 rounded-2xl p-6 border border-purple-200">
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-receipt text-2xl text-purple-500"></i>
+                </div>
+                <h3 class="text-xl font-bold text-purple-700 mb-3">세금 이슈</h3>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between p-2 bg-white rounded-lg">
+                        <span class="text-slate-600 text-sm">분배금 과세</span>
+                        <span class="font-bold text-purple-600">15.4%</span>
+                    </div>
+                    <div class="flex justify-between p-2 bg-white rounded-lg">
+                        <span class="text-slate-600 text-sm">종합과세 MAX</span>
+                        <span class="font-bold text-red-600">49.5%</span>
+                    </div>
+                    <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <p class="text-sm text-emerald-700 font-bold">
+                            <i class="fas fa-shield-halved mr-1"></i>ISA/연금 필수
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: 투자 전략 -->
+    <div class="slide p-12 bg-gradient-to-br from-slate-900 to-emerald-900 flex flex-col text-white">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold">투자 전략 & <span class="text-emerald-400">실행 가이드</span></h1>
+            <p class="text-emerald-200 mt-2">투자자 유형별 맞춤 전략</p>
+        </div>
+
+        <div class="flex gap-8 flex-grow">
+            <div class="w-1/2 space-y-4">
+                <h3 class="text-lg font-bold text-emerald-300 mb-2">
+                    <i class="fas fa-user-tie mr-2"></i>투자자 유형별 추천
+                </h3>
+
+                <div class="bg-white/10 backdrop-blur rounded-xl p-5 border border-white/20">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-lg font-bold">은퇴/현금흐름 중시</span>
+                        <span class="px-3 py-1 bg-emerald-500 text-white rounded-full text-xs font-bold">강력 매수</span>
+                    </div>
+                    <p class="text-emerald-200 text-sm">KODEX 비중 높게 → 월 1%+ 분배금, 하락 방어</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur rounded-xl p-5 border border-white/20">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-lg font-bold">직장인/자산 증식</span>
+                        <span class="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-bold">혼합 전략</span>
+                    </div>
+                    <p class="text-blue-200 text-sm">TIGER:KODEX = 5:5 바벨 전략</p>
+                    <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-orange-500/20 p-2 rounded-lg text-center text-orange-300">강세장 → TIGER</div>
+                        <div class="bg-emerald-500/20 p-2 rounded-lg text-center text-emerald-300">횡보/하락 → KODEX</div>
+                    </div>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur rounded-xl p-5 border border-white/20">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-lg font-bold">종합과세 대상자</span>
+                        <span class="px-3 py-1 bg-purple-500 text-white rounded-full text-xs font-bold">절세 필수</span>
+                    </div>
+                    <p class="text-purple-200 text-sm">ISA / 연금저축 / IRP 계좌 활용</p>
+                </div>
+            </div>
+
+            <div class="w-1/2 space-y-4">
+                <h3 class="text-lg font-bold text-amber-300 mb-2">
+                    <i class="fas fa-rocket mr-2"></i>실행 가이드
+                </h3>
+
+                <div class="bg-white/10 backdrop-blur rounded-xl p-5 border border-white/20">
+                    <h4 class="font-bold mb-3 flex items-center">
+                        <i class="fas fa-clock text-amber-400 mr-2"></i>매수 타이밍
+                    </h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-emerald-400 mt-1 mr-2"></i>
+                            나스닥 단기 급등 후 조정 시
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-emerald-400 mt-1 mr-2"></i>
+                            <span><strong class="text-amber-300">VIX 20 이상</strong> (프리미엄 ↑)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-emerald-400 mt-1 mr-2"></i>
+                            분할 매수 전략 권장
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-emerald-500/20 backdrop-blur rounded-xl p-5 border border-emerald-400/30">
+                    <h4 class="font-bold mb-2 flex items-center text-emerald-300">
+                        <i class="fas fa-rotate text-emerald-400 mr-2"></i>핵심: 재투자
+                    </h4>
+                    <p class="text-emerald-100 text-sm">분배금 반드시 재투자(Reinvestment)</p>
+                    <p class="text-xs text-emerald-200 mt-2">→ 주식 수 증가 → 상승장 시 기하급수적 성장</p>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-4 border border-white/10 text-center">
+                    <p class="text-sm text-slate-300">
+                        <i class="fas fa-quote-left text-slate-500 mr-2"></i>
+                        "대박이 아닌 <strong class="text-white">중박을 쌓아가는 마라톤</strong>"
+                        <i class="fas fa-quote-right text-slate-500 ml-2"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. TIGER 파이 차트
+            const pieWidth = 280, pieHeight = 280;
+            const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 20;
+
+            const pieSvg = d3.select("#pie-chart-tiger").append("svg")
+                .attr("width", pieWidth).attr("height", pieHeight)
+                .append("g")
+                .attr("transform", `translate(${pieWidth / 2},${pieHeight / 2})`);
+
+            const pieData = [
+                { label: "지수 추종", value: 90, color: "#3b82f6" },
+                { label: "옵션 매도", value: 10, color: "#10b981" }
+            ];
+
+            const pie = d3.pie().value(d => d.value).sort(null);
+            const arc = d3.arc().innerRadius(pieRadius * 0.55).outerRadius(pieRadius);
+
+            pieSvg.selectAll("path")
+                .data(pie(pieData))
+                .enter().append("path")
+                .attr("d", arc)
+                .attr("fill", d => d.data.color)
+                .attr("stroke", "white")
+                .attr("stroke-width", 3);
+
+            // 중앙 텍스트
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "-0.3em")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#1e293b")
+                .text("TIGER");
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "1em")
+                .attr("font-size", "12px")
+                .attr("fill", "#64748b")
+                .text("자산 배분");
+
+            // 레이블
+            const labelArc = d3.arc().innerRadius(pieRadius * 0.75).outerRadius(pieRadius * 0.75);
+            pieSvg.selectAll("text.label")
+                .data(pie(pieData))
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("transform", d => `translate(${labelArc.centroid(d)})`)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "white")
+                .text(d => d.data.value + "%");
+
+            // 2. S&P 500 라인 차트
+            const lineWidth = 720, lineHeight = 380;
+            const margin = { top: 40, right: 40, bottom: 50, left: 70 };
+
+            const lineSvg = d3.select("#line-chart-sp500").append("svg")
+                .attr("width", lineWidth).attr("height", lineHeight);
+
+            const lineData = [
+                { year: 2024, value: 5000 },
+                { year: 2024.5, value: 5800 },
+                { year: 2025, value: 6200 },
+                { year: 2025.5, value: 6800 },
+                { year: 2026, value: 7600 }
+            ];
+
+            const xScale = d3.scaleLinear()
+                .domain([2024, 2026])
+                .range([margin.left, lineWidth - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                .domain([4000, 8500])
+                .range([lineHeight - margin.bottom, margin.top]);
+
+            // 음영 영역 (Sweet Spot)
+            lineSvg.append("rect")
+                .attr("x", xScale(2025))
+                .attr("y", margin.top)
+                .attr("width", xScale(2026) - xScale(2025))
+                .attr("height", lineHeight - margin.top - margin.bottom)
+                .attr("fill", "rgba(16, 185, 129, 0.15)");
+
+            // Sweet Spot 레이블
+            lineSvg.append("text")
+                .attr("x", xScale(2025.5))
+                .attr("y", margin.top + 25)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#10b981")
+                .attr("font-size", "13px")
+                .attr("font-weight", "bold")
+                .text("Sweet Spot: 고변동성 + 완만 상승");
+
+            // 라인
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.value))
+                .curve(d3.curveMonotoneX);
+
+            lineSvg.append("path")
+                .datum(lineData)
+                .attr("fill", "none")
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 4)
+                .attr("d", line);
+
+            // 데이터 포인트
+            lineSvg.selectAll("circle")
+                .data(lineData)
+                .enter().append("circle")
+                .attr("cx", d => xScale(d.year))
+                .attr("cy", d => yScale(d.value))
+                .attr("r", 6)
+                .attr("fill", "#3b82f6")
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+
+            // 타겟 어노테이션
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600))
+                .attr("fill", "#3b82f6")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text("7,600pt");
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600) + 15)
+                .attr("fill", "#64748b")
+                .attr("font-size", "11px")
+                .text("(Goldman Target)");
+
+            // 축
+            lineSvg.append("g")
+                .attr("transform", `translate(0,${lineHeight - margin.bottom})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(3))
+                .selectAll("text")
+                .attr("font-size", "12px");
+
+            lineSvg.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d.toLocaleString()))
+                .selectAll("text")
+                .attr("font-size", "11px");
+
+            // Y축 레이블
+            lineSvg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(lineHeight / 2))
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#64748b")
+                .attr("font-size", "12px")
+                .text("S&P 500 Index");
+        });
+    </script>
+</body>
+
+</html>

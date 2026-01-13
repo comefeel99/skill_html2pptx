@@ -224,7 +224,7 @@ function addTextElement(el, targetSlide, allElements = []) {
         bold: el.style.bold,
         italic: el.style.italic,
         underline: el.style.underline,
-        valign: 'top',
+        valign: el.style.valign || 'top',
         lineSpacing: el.style.lineSpacing,
         paraSpaceBefore: el.style.paraSpaceBefore,
         paraSpaceAfter: el.style.paraSpaceAfter,

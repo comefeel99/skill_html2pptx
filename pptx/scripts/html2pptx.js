@@ -386,7 +386,8 @@ async function extractSlideData(page) {
       const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
       const rect = el.getBoundingClientRect();
       if (hasBg && rect.width > 0 && rect.height > 0) {
-        if (el.parentElement && el.parentElement.tagName === 'DIV') {
+        // Track all parents of styled SPANs (DIV, TD, TH, etc.)
+        if (el.parentElement) {
           styledSpanParents.add(el.parentElement);
         }
       }
@@ -624,6 +625,7 @@ async function extractSlideData(page) {
                 italic: computed.fontStyle === 'italic',
                 underline: computed.textDecoration?.includes('underline') || false,
                 align: 'center',  // Price tags are usually centered
+                valign: 'middle', // Vertical center to match HTML padding-based centering
                 lineSpacing: pxToPoints(computed.lineHeight),
                 paraSpaceBefore: 0,
                 paraSpaceAfter: 0,
@@ -1218,7 +1220,16 @@ async function extractSlideData(page) {
           ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'SECTION', 'ARTICLE', 'SVG', 'CANVAS'].includes(c.tagName.toUpperCase())
         );
         // Also check if any child has already been processed (e.g., styled SPANs)
-        const hasProcessedChildren = Array.from(el.querySelectorAll('*')).some(c => processed.has(c));
+        // EXCEPTION: Ignore processed ICONS (deferred icons) - they shouldn't block text extraction
+        const hasProcessedChildren = Array.from(el.querySelectorAll('*')).some(c => {
+          if (processed.has(c)) {
+            // Check if it's an icon type
+            const tag = c.tagName;
+            const isIcon = tag === 'I' || tag === 'SVG' || c.classList.contains('fa') || c.classList.contains('fas') || c.classList.contains('fab');
+            return !isIcon; // If it's an icon, we ignore it (return false for "hasProcessedChildren")
+          }
+          return false;
+        });
         // Skip if this DIV is a parent of a styled SPAN (identified in first pass)
         const isStyledSpanParent = styledSpanParents.has(el);
         if (!hasBlockChildren && !hasProcessedChildren && !isStyledSpanParent && el.textContent.trim().length > 0) {
@@ -1269,6 +1280,15 @@ async function extractSlideData(page) {
         }
         if (!insideTextTag) {
           isStandaloneSpan = true;
+        }
+      }
+
+      // Skip text tags (TH, TD, etc.) that contain styled SPANs
+      // styledSpanParents is populated in first pass, so it works regardless of DOM traversal order
+      if (isTextTag && !isLeafDiv && !isStandaloneSpan) {
+        if (styledSpanParents.has(el)) {
+          processed.add(el);
+          return;
         }
       }
 
@@ -1503,18 +1523,23 @@ async function html2pptx(htmlFile, pres, options = {}) {
             // Ensure element is visible/attached
             if (await locator.count() > 0) {
               if (icon.hideChildren) {
+                // Store original opacity to restore later
                 await page.evaluate((id) => {
                   const el = document.getElementById(id);
                   if (el) {
-                    // Hide all descendant elements (not just direct children)
-                    el.querySelectorAll('*').forEach(desc => desc.style.opacity = '0');
-                    // Also hide text content inside the element (for SPAN with text nodes)
+                    el.dataset.originalOpacity = el.style.opacity || '';
+                    el.querySelectorAll('*').forEach(desc => {
+                      desc.dataset.originalOpacity = desc.style.opacity || '';
+                      desc.style.opacity = '0';
+                    });
+                    // Also hide text content inside the element
                     el.style.color = 'transparent';
                   }
                 }, icon.id);
               }
 
               // Apply clip-path to create transparent rounded corners
+
               const originalClipPath = await page.evaluate((id) => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -1658,8 +1683,22 @@ async function html2pptx(htmlFile, pres, options = {}) {
                 await page.evaluate((id) => {
                   const el = document.getElementById(id);
                   if (el) {
-                    // Restore all descendant elements (must match the hiding logic that uses querySelectorAll)
-                    el.querySelectorAll('*').forEach(desc => desc.style.opacity = '');
+                    el.style.color = ''; // Restore color
+                    if (el.dataset.originalOpacity !== undefined) {
+                      el.style.opacity = el.dataset.originalOpacity;
+                      delete el.dataset.originalOpacity;
+                    } else {
+                      el.style.opacity = '';
+                    }
+
+                    el.querySelectorAll('*').forEach(desc => {
+                      if (desc.dataset.originalOpacity !== undefined) {
+                        desc.style.opacity = desc.dataset.originalOpacity;
+                        delete desc.dataset.originalOpacity;
+                      } else {
+                        desc.style.opacity = '';
+                      }
+                    });
                   }
                 }, icon.id);
               }

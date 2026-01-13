@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KODEX 나스닥100 데일리커버드콜 OTM 투자 분석 (Enhanced)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        body {
+            background: #0f172a;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .source-tag {
+            font-size: 10px;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #64748b;
+        }
+
+        .ticker-badge {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .key-takeaway {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+        }
+    </style>
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a; /* Keep dark bg preference if any */
+            display: block; /* Remove flex */
+        }
+        .slide {
+            margin: 0 auto; /* Center if needed, though html2pptx uses absolute positioning based on rects */
+            box-shadow: none; /* Remove shadow for flat text extraction? OR keep it. Keep it. */
+        }
+    </style>
+</head>
+<body>
+    <div class="slide p-12 bg-gradient-to-br from-slate-900 to-blue-900 flex flex-col text-white">
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-bold">KODEX <span class="text-emerald-400">수익률 시나리오</span></h1>
+                <p class="text-blue-200 mt-2">2026년 시장 상황별 예상 성과</p>
+            </div>
+        </div>
+
+        <div class="flex-grow bg-white/5 rounded-2xl p-6 border border-white/10">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-white/20">
+                        <th class="text-left py-3 px-4 text-blue-300 font-bold">시나리오</th>
+                        <th class="text-center py-3 px-4 text-blue-300">나스닥100</th>
+                        <th class="text-center py-3 px-4 text-blue-300">분배율</th>
+                        <th class="text-center py-3 px-4 text-blue-300">주가변동</th>
+                        <th class="text-center py-3 px-4 text-blue-300 font-bold">총수익</th>
+                        <th class="text-center py-3 px-4 text-blue-300">평가</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">강세장 (Bull)</td>
+                        <td class="py-4 px-4 text-center text-green-400 font-bold">+20%+</td>
+                        <td class="py-4 px-4 text-center">15~18%</td>
+                        <td class="py-4 px-4 text-center">+5~8%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+20~26%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-amber-500/30 text-amber-300 rounded text-xs">지수 대비 ↓</span></td>
+                    </tr>
+                    <tr class="border-b border-white/10 bg-emerald-500/20">
+                        <td class="py-4 px-4 font-bold text-emerald-400">완만상승 ⭐</td>
+                        <td class="py-4 px-4 text-center text-emerald-400 font-bold">+10%</td>
+                        <td class="py-4 px-4 text-center text-emerald-400">16~20%</td>
+                        <td class="py-4 px-4 text-center text-emerald-400">+8~10%</td>
+                        <td class="py-4 px-4 text-center text-2xl font-black text-emerald-400">+24~30%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-emerald-500/30 text-emerald-300 rounded text-xs">SWEET SPOT</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">횡보장 (Flat)</td>
+                        <td class="py-4 px-4 text-center text-slate-400">0%</td>
+                        <td class="py-4 px-4 text-center">18~22%</td>
+                        <td class="py-4 px-4 text-center">-2~+2%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+16~24%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-blue-500/30 text-blue-300 rounded text-xs">지수 대비 ↑↑</span></td>
+                    </tr>
+                    <tr class="border-b border-white/10">
+                        <td class="py-4 px-4 font-medium">하락장 (Bear)</td>
+                        <td class="py-4 px-4 text-center text-red-400 font-bold">-10%</td>
+                        <td class="py-4 px-4 text-center">20~25%</td>
+                        <td class="py-4 px-4 text-center">-10%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+10~15%</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-blue-500/30 text-blue-300 rounded text-xs">수익 창출</span></td>
+                    </tr>
+                    <tr>
+                        <td class="py-4 px-4 font-medium">폭락장 (Crash)</td>
+                        <td class="py-4 px-4 text-center text-red-500 font-bold">-20%-</td>
+                        <td class="py-4 px-4 text-center">25%+</td>
+                        <td class="py-4 px-4 text-center">-20%</td>
+                        <td class="py-4 px-4 text-center text-xl font-black">+5% 내외</td>
+                        <td class="py-4 px-4 text-center"><span
+                                class="px-2 py-1 bg-purple-500/30 text-purple-300 rounded text-xs">손실 축소</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 flex justify-between items-center">
+            <p class="text-sm text-blue-300">
+                <i class="fas fa-info-circle mr-2"></i>
+                분배율이 높아도 주가 하락 시 총수익 감소 가능
+            </p>
+            <span class="px-3 py-1 bg-white/10 rounded text-xs text-slate-300">출처: 삼성자산운용</span>
+        </div>
+    </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. TIGER 파이 차트
+            const pieWidth = 280, pieHeight = 280;
+            const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 20;
+
+            const pieSvg = d3.select("#pie-chart-tiger").append("svg")
+                .attr("width", pieWidth).attr("height", pieHeight)
+                .append("g")
+                .attr("transform", `translate(${pieWidth / 2},${pieHeight / 2})`);
+
+            const pieData = [
+                { label: "지수 추종", value: 90, color: "#3b82f6" },
+                { label: "옵션 매도", value: 10, color: "#10b981" }
+            ];
+
+            const pie = d3.pie().value(d => d.value).sort(null);
+            const arc = d3.arc().innerRadius(pieRadius * 0.55).outerRadius(pieRadius);
+
+            pieSvg.selectAll("path")
+                .data(pie(pieData))
+                .enter().append("path")
+                .attr("d", arc)
+                .attr("fill", d => d.data.color)
+                .attr("stroke", "white")
+                .attr("stroke-width", 3);
+
+            // 중앙 텍스트
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "-0.3em")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#1e293b")
+                .text("TIGER");
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "1em")
+                .attr("font-size", "12px")
+                .attr("fill", "#64748b")
+                .text("자산 배분");
+
+            // 레이블
+            const labelArc = d3.arc().innerRadius(pieRadius * 0.75).outerRadius(pieRadius * 0.75);
+            pieSvg.selectAll("text.label")
+                .data(pie(pieData))
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("transform", d => `translate(${labelArc.centroid(d)})`)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "white")
+                .text(d => d.data.value + "%");
+
+            // 2. S&P 500 라인 차트
+            const lineWidth = 720, lineHeight = 380;
+            const margin = { top: 40, right: 40, bottom: 50, left: 70 };
+
+            const lineSvg = d3.select("#line-chart-sp500").append("svg")
+                .attr("width", lineWidth).attr("height", lineHeight);
+
+            const lineData = [
+                { year: 2024, value: 5000 },
+                { year: 2024.5, value: 5800 },
+                { year: 2025, value: 6200 },
+                { year: 2025.5, value: 6800 },
+                { year: 2026, value: 7600 }
+            ];
+
+            const xScale = d3.scaleLinear()
+                .domain([2024, 2026])
+                .range([margin.left, lineWidth - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                .domain([4000, 8500])
+                .range([lineHeight - margin.bottom, margin.top]);
+
+            // 음영 영역 (Sweet Spot)
+            lineSvg.append("rect")
+                .attr("x", xScale(2025))
+                .attr("y", margin.top)
+                .attr("width", xScale(2026) - xScale(2025))
+                .attr("height", lineHeight - margin.top - margin.bottom)
+                .attr("fill", "rgba(16, 185, 129, 0.15)");
+
+            // Sweet Spot 레이블
+            lineSvg.append("text")
+                .attr("x", xScale(2025.5))
+                .attr("y", margin.top + 25)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#10b981")
+                .attr("font-size", "13px")
+                .attr("font-weight", "bold")
+                .text("Sweet Spot: 고변동성 + 완만 상승");
+
+            // 라인
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.value))
+                .curve(d3.curveMonotoneX);
+
+            lineSvg.append("path")
+                .datum(lineData)
+                .attr("fill", "none")
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 4)
+                .attr("d", line);
+
+            // 데이터 포인트
+            lineSvg.selectAll("circle")
+                .data(lineData)
+                .enter().append("circle")
+                .attr("cx", d => xScale(d.year))
+                .attr("cy", d => yScale(d.value))
+                .attr("r", 6)
+                .attr("fill", "#3b82f6")
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+
+            // 타겟 어노테이션
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600))
+                .attr("fill", "#3b82f6")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text("7,600pt");
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600) + 15)
+                .attr("fill", "#64748b")
+                .attr("font-size", "11px")
+                .text("(Goldman Target)");
+
+            // 축
+            lineSvg.append("g")
+                .attr("transform", `translate(0,${lineHeight - margin.bottom})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(3))
+                .selectAll("text")
+                .attr("font-size", "12px");
+
+            lineSvg.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d.toLocaleString()))
+                .selectAll("text")
+                .attr("font-size", "11px");
+
+            // Y축 레이블
+            lineSvg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(lineHeight / 2))
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#64748b")
+                .attr("font-size", "12px")
+                .text("S&P 500 Index");
+        });
+    </script>
+</body>
+</html>

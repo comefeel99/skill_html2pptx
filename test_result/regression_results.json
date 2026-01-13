@@ -1,13 +1,21 @@
 {
-  "timestamp": "2026-01-12T03:42:21.981Z",
+  "timestamp": "2026-01-13T00:50:21.185Z",
   "summary": {
-    "total": 2,
-    "passed": 1,
+    "total": 3,
+    "passed": 2,
     "failed": 1,
     "skipped": 0,
     "errors": 0
   },
   "results": [
+    {
+      "id": "issue_icon_dup_slide2",
+      "description": "Prevent duplicate icons on slide 2",
+      "testDir": "test4",
+      "slideNum": 2,
+      "status": "FAIL",
+      "message": "Images: 23 (expected: 13)"
+    },
     {
       "id": "issue_missing_2024",
       "description": "슬라이드1 2024 텍스트 누락 방지",
@@ -21,8 +29,8 @@
       "description": "test3 슬라이드10 날짜 텍스트 누락 방지",
       "testDir": "test3",
       "slideNum": 10,
-      "status": "FAIL",
-      "message": "Text \"2024년 12월 1일\" NOT found"
+      "status": "PASS",
+      "message": "Text \"2024년 12월 1일\" found"
     }
   ]
 }

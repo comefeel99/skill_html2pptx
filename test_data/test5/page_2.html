@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KODEX 나스닥100 데일리커버드콜 OTM 투자 분석 (Enhanced)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        body {
+            background: #0f172a;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .source-tag {
+            font-size: 10px;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #64748b;
+        }
+
+        .ticker-badge {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .key-takeaway {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+        }
+    </style>
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a; /* Keep dark bg preference if any */
+            display: block; /* Remove flex */
+        }
+        .slide {
+            margin: 0 auto; /* Center if needed, though html2pptx uses absolute positioning based on rects */
+            box-shadow: none; /* Remove shadow for flat text extraction? OR keep it. Keep it. */
+        }
+    </style>
+</head>
+<body>
+    <div class="slide p-12 bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold text-slate-800">커버드콜 ETF의 <span class="text-blue-600">진화</span></h1>
+            <p class="text-slate-500 mt-2">월간 ATM에서 일간 OTM으로 - 상방 막힘 문제 해소</p>
+        </div>
+
+        <!-- 비교 다이어그램 -->
+        <div class="flex gap-6 flex-grow">
+            <!-- Option A: 1세대 -->
+            <div class="flex-1 bg-slate-100 rounded-2xl p-6 border-2 border-slate-300 relative">
+                <div class="text-center mb-4">
+                    <span class="px-4 py-1 bg-slate-500 text-white rounded-full text-sm font-bold">1세대 QYLD</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-calendar-week text-slate-400 mr-3 w-6"></i>
+                        <span class="text-slate-600">옵션 주기: <strong>월간</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-equals text-slate-400 mr-3 w-6"></i>
+                        <span class="text-slate-600">행사 가격: <strong>ATM (등가격)</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-red-50 rounded-lg border border-red-200">
+                        <i class="fas fa-lock text-red-400 mr-3 w-6"></i>
+                        <span class="text-red-600">상승 참여: <strong>없음</strong></span>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-red-100 rounded-xl">
+                    <p class="text-sm text-red-700"><i class="fas fa-exclamation-triangle mr-2"></i>장기 원금 잠식 위험</p>
+                </div>
+            </div>
+
+            <!-- VS -->
+            <div class="flex items-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center font-bold text-white text-xl shadow-lg">
+                    VS</div>
+            </div>
+
+            <!-- Option B: 2세대 -->
+            <div class="flex-1 bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-400 relative">
+                <div class="absolute -top-3 -right-3">
+                    <span class="px-3 py-1 bg-amber-400 text-slate-800 rounded-full text-xs font-bold shadow">추천</span>
+                </div>
+                <div class="text-center mb-4">
+                    <span class="px-4 py-1 bg-emerald-500 text-white rounded-full text-sm font-bold">2세대 KODEX
+                        OTM</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-calendar-day text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-slate-600">옵션 주기: <strong class="text-emerald-600">일간 (0DTE)</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-white rounded-lg">
+                        <i class="fas fa-arrow-up text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-slate-600">행사 가격: <strong class="text-emerald-600">1% OTM</strong></span>
+                    </div>
+                    <div class="flex items-center p-3 bg-emerald-100 rounded-lg border border-emerald-300">
+                        <i class="fas fa-unlock text-emerald-500 mr-3 w-6"></i>
+                        <span class="text-emerald-700">상승 참여: <strong>일간 1%</strong></span>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-emerald-200 rounded-xl">
+                    <p class="text-sm text-emerald-800"><i class="fas fa-check-circle mr-2"></i>80%+ 거래일 상승분 향유</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaway -->
+        <div class="mt-4">
+            <div class="key-takeaway rounded-xl p-4 text-white flex items-center">
+                <i class="fas fa-lightbulb text-2xl text-amber-300 mr-4"></i>
+                <div>
+                    <p class="font-bold">Key Takeaway</p>
+                    <p class="text-blue-100 text-sm">2세대 Daily OTM 전략은 시간 가치(Theta)를 매일 현금화하면서도 일간 상승 여력을 확보</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. TIGER 파이 차트
+            const pieWidth = 280, pieHeight = 280;
+            const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 20;
+
+            const pieSvg = d3.select("#pie-chart-tiger").append("svg")
+                .attr("width", pieWidth).attr("height", pieHeight)
+                .append("g")
+                .attr("transform", `translate(${pieWidth / 2},${pieHeight / 2})`);
+
+            const pieData = [
+                { label: "지수 추종", value: 90, color: "#3b82f6" },
+                { label: "옵션 매도", value: 10, color: "#10b981" }
+            ];
+
+            const pie = d3.pie().value(d => d.value).sort(null);
+            const arc = d3.arc().innerRadius(pieRadius * 0.55).outerRadius(pieRadius);
+
+            pieSvg.selectAll("path")
+                .data(pie(pieData))
+                .enter().append("path")
+                .attr("d", arc)
+                .attr("fill", d => d.data.color)
+                .attr("stroke", "white")
+                .attr("stroke-width", 3);
+
+            // 중앙 텍스트
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "-0.3em")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#1e293b")
+                .text("TIGER");
+            pieSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "1em")
+                .attr("font-size", "12px")
+                .attr("fill", "#64748b")
+                .text("자산 배분");
+
+            // 레이블
+            const labelArc = d3.arc().innerRadius(pieRadius * 0.75).outerRadius(pieRadius * 0.75);
+            pieSvg.selectAll("text.label")
+                .data(pie(pieData))
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("transform", d => `translate(${labelArc.centroid(d)})`)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "white")
+                .text(d => d.data.value + "%");
+
+            // 2. S&P 500 라인 차트
+            const lineWidth = 720, lineHeight = 380;
+            const margin = { top: 40, right: 40, bottom: 50, left: 70 };
+
+            const lineSvg = d3.select("#line-chart-sp500").append("svg")
+                .attr("width", lineWidth).attr("height", lineHeight);
+
+            const lineData = [
+                { year: 2024, value: 5000 },
+                { year: 2024.5, value: 5800 },
+                { year: 2025, value: 6200 },
+                { year: 2025.5, value: 6800 },
+                { year: 2026, value: 7600 }
+            ];
+
+            const xScale = d3.scaleLinear()
+                .domain([2024, 2026])
+                .range([margin.left, lineWidth - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                .domain([4000, 8500])
+                .range([lineHeight - margin.bottom, margin.top]);
+
+            // 음영 영역 (Sweet Spot)
+            lineSvg.append("rect")
+                .attr("x", xScale(2025))
+                .attr("y", margin.top)
+                .attr("width", xScale(2026) - xScale(2025))
+                .attr("height", lineHeight - margin.top - margin.bottom)
+                .attr("fill", "rgba(16, 185, 129, 0.15)");
+
+            // Sweet Spot 레이블
+            lineSvg.append("text")
+                .attr("x", xScale(2025.5))
+                .attr("y", margin.top + 25)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#10b981")
+                .attr("font-size", "13px")
+                .attr("font-weight", "bold")
+                .text("Sweet Spot: 고변동성 + 완만 상승");
+
+            // 라인
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.value))
+                .curve(d3.curveMonotoneX);
+
+            lineSvg.append("path")
+                .datum(lineData)
+                .attr("fill", "none")
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 4)
+                .attr("d", line);
+
+            // 데이터 포인트
+            lineSvg.selectAll("circle")
+                .data(lineData)
+                .enter().append("circle")
+                .attr("cx", d => xScale(d.year))
+                .attr("cy", d => yScale(d.value))
+                .attr("r", 6)
+                .attr("fill", "#3b82f6")
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+
+            // 타겟 어노테이션
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600))
+                .attr("fill", "#3b82f6")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text("7,600pt");
+            lineSvg.append("text")
+                .attr("x", xScale(2026) + 5)
+                .attr("y", yScale(7600) + 15)
+                .attr("fill", "#64748b")
+                .attr("font-size", "11px")
+                .text("(Goldman Target)");
+
+            // 축
+            lineSvg.append("g")
+                .attr("transform", `translate(0,${lineHeight - margin.bottom})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(3))
+                .selectAll("text")
+                .attr("font-size", "12px");
+
+            lineSvg.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d.toLocaleString()))
+                .selectAll("text")
+                .attr("font-size", "11px");
+
+            // Y축 레이블
+            lineSvg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(lineHeight / 2))
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#64748b")
+                .attr("font-size", "12px")
+                .text("S&P 500 Index");
+        });
+    </script>
+</body>
+</html>
