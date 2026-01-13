@@ -604,7 +604,7 @@ async function extractSlideData(page) {
           });
 
           // Extract the text with correct position
-          const textContent = el.textContent.trim();
+          const textContent = el.textContent.trim().replace(/\s+/g, ' ');
           if (textContent) {
             const textColor = rgbToHex(computed.color);
             elements.push({
@@ -624,8 +624,9 @@ async function extractSlideData(page) {
                 bold: computed.fontWeight === 'bold' || parseInt(computed.fontWeight) >= 600,
                 italic: computed.fontStyle === 'italic',
                 underline: computed.textDecoration?.includes('underline') || false,
-                align: 'center',  // Price tags are usually centered
-                valign: 'middle', // Vertical center to match HTML padding-based centering
+                // Badge-style spans with backgrounds: use center unless explicitly set to right
+                align: computed.textAlign === 'right' ? 'right' : 'center',
+                valign: 'middle',
                 lineSpacing: pxToPoints(computed.lineHeight),
                 paraSpaceBefore: 0,
                 paraSpaceAfter: 0,

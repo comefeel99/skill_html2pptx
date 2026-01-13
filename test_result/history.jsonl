@@ -75,3 +75,5 @@
 {"timestamp":"2026-01-13T08:01:10.616Z","durationMs":33277,"testDir":"test5","generatedFile":"test5_output.pptx","generatedSize":4216429,"generatedSlides":8,"inputFiles":8,"comparison":null}
 {"timestamp":"2026-01-13T08:43:51.237Z","durationMs":82441,"testDir":"test5","generatedFile":"test5_output.pptx","generatedSize":4227386,"generatedSlides":8,"inputFiles":8,"comparison":null}
 {"timestamp":"2026-01-13T08:54:56.382Z","durationMs":31975,"testDir":"test5","generatedFile":"test5_output.pptx","generatedSize":4227420,"generatedSlides":8,"inputFiles":8,"comparison":null}
+{"timestamp":"2026-01-13T11:34:06.031Z","durationMs":25829,"testDir":"test5","generatedFile":"test5_output.pptx","generatedSize":4226904,"generatedSlides":8,"inputFiles":8,"comparison":null}
+{"timestamp":"2026-01-13T11:42:13.685Z","durationMs":24372,"testDir":"test5","generatedFile":"test5_output.pptx","generatedSize":4226921,"generatedSlides":8,"inputFiles":8,"comparison":null}
